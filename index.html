@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Building Audit Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      color: #555;
+    }
+
+    .header {
+      background-color: #a85c42;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+    }
+
+    .header img {
+      height: 60px;
+      width: auto;
+    }
+
+    .title {
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    h2 {
+      background-color: #a85c42;
+      color: white;
+      padding: 10px 15px;
+      margin: 20px 10px 0 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 1.2rem;
+      font-weight: normal;
+    }
+
+    .section {
+      margin: 0 10px 20px 10px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ddd;
+      display: none;
+      border-radius: 0 0 4px 4px;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      overflow-x: auto;
+    }
+
+    .form-row:last-child {
+      border-bottom: none;
+    }
+
+    .form-label {
+      flex: 0 0 150px;
+      font-weight: bold;
+      color: #555;
+      margin-right: 15px;
+      white-space: nowrap;
+    }
+
+    .form-label.required:after {
+      content: " *";
+      color: #e32;
+      font-weight: bold;
+    }
+
+    .form-inputs {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 15px;
+      overflow-x: auto;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .input-group input[type="text"],
+    .input-group input[type="number"] {
+      width: 80px;
+    }
+
+    .input-group select {
+      width: auto;
+    }
+
+    input, select, textarea {
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #a85c42;
+      outline: none;
+    }
+
+    /* Checkbox styling */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: nowrap;
+    }
+
+    .checkbox-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .checkbox-option input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+
+    /* Radio buttons styling */
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      flex-wrap: nowrap;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .radio-option input[type="radio"] {
+      width: auto;
+      margin: 0;
+    }
+
+    /* Unit selector */
+    .unit-selector {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .unit-selector select {
+      border: none;
+      border-left: 1px solid #ccc;
+      border-radius: 0;
+      padding: 8px 5px;
+      background-color: #f9f9f9;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .form-actions button {
+      padding: 12px 30px;
+      font-size: 1rem;
+      background-color: #a85c42;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .form-actions button:hover {
+      background-color: #8b4c34;
+    }
+
+    .field-hint {
+      font-size: 12px;
+      color: #777;
+      margin-left: 5px;
+    }
+
+    /* Category and Subcategory Styling */
+    .category-header {
+      background-color: #c17a62;
+      color: white;
+      padding: 8px 15px;
+      margin: 15px 0 10px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .category-header:after {
+      content: '▼';
+      position: absolute;
+      right: 15px;
+      transition: transform 0.3s;
+    }
+    
+    .category-header.collapsed:after {
+      transform: rotate(-90deg);
+    }
+    
+    .category-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      max-height: 2000px; /* Arbitrary large value */
+    }
+    
+    .category-content.collapsed {
+      max-height: 0;
+    }
+
+    .subcategory {
+      margin: 5px 0;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .subcategory-header {
+      background-color: #f0d9d2;
+      color: #8b4c34;
+      padding: 8px 15px;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s;
+    }
+    
+    .subcategory-header:hover {
+      background-color: #e8c9be;
+    }
+    
+    .subcategory-header:after {
+      content: '▼';
+      position: absolute;
+      right: 15px;
+      transition: transform 0.3s;
+    }
+    
+    .subcategory-header.collapsed:after {
+      transform: rotate(-90deg);
+    }
+    
+    .subcategory-content {
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      max-height: 500px; /* Arbitrary large value */
+    }
+    
+    .subcategory-content.collapsed {
+      max-height: 0;
+    }
+    
+    /* Tree structure styling */
+    .tree-level-1 {
+      margin-left: 0;
+    }
+    
+    .tree-level-2 {
+      margin-left: 20px;
+    }
+    
+    .tree-level-3 {
+      margin-left: 40px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .form-label {
+        margin-bottom: 10px;
+      }
+      
+      .form-inputs {
+        width: 100%;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="title">Building Audit Form</div>
+</div>
+
+<h2 onclick="toggleSection('buildingInfo')">Building Information</h2>
+<div id="buildingInfo" class="section">
+  <div class="form-row">
+    <div class="form-label required">Building Info</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>State:</span>
+        <select required id="stateDropdown">
+          <option value="">Please select</option>
+          <option value="AP">Andhra Pradesh</option>
+          <option value="AR">Arunachal Pradesh</option>
+          <option value="AS">Assam</option>
+          <option value="BR">Bihar</option>
+          <option value="CG">Chhattisgarh</option>
+          <option value="GA">Goa</option>
+          <option value="GJ">Gujarat</option>
+          <option value="HR">Haryana</option>
+          <option value="HP">Himachal Pradesh</option>
+          <option value="JH">Jharkhand</option>
+          <option value="KA">Karnataka</option>
+          <option value="KL">Kerala</option>
+          <option value="MP">Madhya Pradesh</option>
+          <option value="MH">Maharashtra</option>
+          <option value="MN">Manipur</option>
+          <option value="ML">Meghalaya</option>
+          <option value="MZ">Mizoram</option>
+          <option value="NL">Nagaland</option>
+          <option value="OR">Odisha</option>
+          <option value="PB">Punjab</option>
+          <option value="RJ">Rajasthan</option>
+          <option value="SK">Sikkim</option>
+          <option value="TN">Tamil Nadu</option>
+          <option value="TG">Telangana</option>
+          <option value="TR">Tripura</option>
+          <option value="UP">Uttar Pradesh</option>
+          <option value="UK">Uttarakhand</option>
+          <option value="WB">West Bengal</option>
+          <option value="DL">Delhi</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>City:</span>
+        <select required id="cityDropdown">
+          <option value="">Please select a state first</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>Area:</span>
+        <input type="text" style="width: 80px;">
+        <select>
+          <option value="sqm">sq.m</option>
+          <option value="sqft">sq.ft</option>
+          <option value="acre">acre</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>Year of Construction:</span>
+        <input type="date" required style="width: 80px;">
+      </div>
+      <div class="input-group">
+        <span>Last Renovation:</span>
+        <input type="date" style="width: 80px;">
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-label required">Floors & Ownership</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Floors Above:</span>
+        <input type="number" min="0" max="99" required style="width: 60px;">
+      </div>
+      <div class="input-group">
+        <span>Floors Below:</span>
+        <input type="number" min="0" max="9" style="width: 60px;">
+      </div>
+      <div class="input-group">
+        <span>Ownership:</span>
+        <select required>
+          <option value="">Please select</option>
+          <option>Owned</option>
+          <option>Leased</option>
+          <option>Managed</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('siteArea')">Site & Area</h2>
+<div id="siteArea" class="section">
+  <div class="form-row">
+    <div class="form-label required">Site Details</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Site Area:</span>
+        <input type="text" required style="width: 80px;">
+        <select>
+          <option value="sqm">sq.m</option>
+          <option value="sqft">sq.ft</option>
+          <option value="acre">acre</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>Built-up Area:</span>
+        <input type="text" required style="width: 80px;">
+        <select>
+          <option value="sqm">sq.m</option>
+          <option value="sqft">sq.ft</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>Basement Parking:</span>
+        <input type="text" style="width: 80px;">
+        <select>
+          <option value="sqm">sq.m</option>
+          <option value="sqft">sq.ft</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <span>Ground Coverage:</span>
+        <input type="text" maxlength="3" style="width: 60px;">
+        <span>%</span>
+      </div>
+      <div class="input-group">
+        <span>Open Area:</span>
+        <input type="text" style="width: 80px;">
+        <select>
+          <option value="sqm">sq.m</option>
+          <option value="sqft">sq.ft</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('occupancy')">Occupancy</h2>
+<div id="occupancy" class="section">
+  <div class="form-row">
+    <div class="form-label required">Occupancy Details</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Number of Keys/Rooms:</span>
+        <input type="number" required style="width: 60px;">
+      </div>
+      <div class="input-group">
+        <span>Peak Occupancy Rate:</span>
+        <input type="number" min="0" max="100" style="width: 60px;">
+        <span>%</span>
+      </div>
+      <div class="input-group">
+        <span>Average Guests/Day:</span>
+        <input type="number" style="width: 60px;">
+      </div>
+      <div class="input-group">
+        <span>Total Staff:</span>
+        <input type="number" style="width: 60px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('energySystems')">Energy Systems</h2>
+<div id="energySystems" class="section">
+  <div class="form-row">
+    <div class="form-label required">Energy Details</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Connected Load:</span>
+        <input type="number" required style="width: 80px;">
+        <span>kW</span>
+      </div>
+      <div class="input-group">
+        <span>Contract Demand:</span>
+        <input type="number" style="width: 80px;">
+        <span>kVA</span>
+      </div>
+      <div class="input-group">
+        <span>Backup Power:</span>
+        <input type="number" style="width: 80px;">
+        <span>kVA</span>
+      </div>
+      <div class="input-group">
+        <span>Renewable Energy:</span>
+        <input type="number" style="width: 80px;">
+        <span>kWp</span>
+      </div>
+      <div class="input-group">
+        <span>Type:</span>
+        <select>
+          <option value="">Select type</option>
+          <option value="solar">Solar</option>
+          <option value="wind">Wind</option>
+          <option value="biomass">Biomass</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('waterSystems')">Water Systems</h2>
+<div id="waterSystems" class="section">
+  <div class="form-row">
+    <div class="form-label required">Water Source</div>
+    <div class="form-inputs">
+      <div class="checkbox-group">
+        <label class="checkbox-option">
+          <input type="checkbox" name="waterSource" value="Municipal"> Municipal
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="waterSource" value="Borewell"> Borewell
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="waterSource" value="Tanker"> Tanker
+        </label>
+        <label class="checkbox-option">
+          <input type="checkbox" name="waterSource" value="Other"> Other
+        </label>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-label required">Water Usage</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Daily Water Demand:</span>
+        <input type="number" required style="width: 80px;">
+        <span>KLD</span>
+      </div>
+      <div class="input-group">
+        <span>STP Capacity:</span>
+        <input type="number" style="width: 80px;">
+        <span>KLD</span>
+      </div>
+      <div class="input-group">
+        <span>Treated Water Reuse:</span>
+        <input type="number" min="0" max="100" style="width: 60px;">
+        <span>%</span>
+      </div>
+      <div class="input-group">
+        <span>Purpose:</span>
+        <select>
+          <option value="">Select purpose</option>
+          <option value="flushing">Flushing</option>
+          <option value="gardening">Gardening</option>
+          <option value="cooling">Cooling</option>
+          <option value="multiple">Multiple</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-label">Water Features</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Water-saving Fixtures:</span>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="waterFixtures" value="Yes"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="waterFixtures" value="No"> No
+          </label>
+        </div>
+      </div>
+      <div class="input-group">
+        <span>Rainwater Harvesting:</span>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="rainwaterHarvesting" value="Yes"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="rainwaterHarvesting" value="No"> No
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('wasteManagement')">Waste Management</h2>
+<div id="wasteManagement" class="section">
+  <div class="form-row">
+    <div class="form-label required">Waste Details</div>
+    <div class="form-inputs">
+      <div class="input-group">
+        <span>Total Waste Generation:</span>
+        <input type="text" required style="width: 80px;">
+        <span>kg/day</span>
+      </div>
+      <div class="input-group">
+        <span>Segregation at Source:</span>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="segregation" value="Yes"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="segregation" value="No"> No
+          </label>
+        </div>
+      </div>
+      <div class="input-group">
+        <span>Composting Facility:</span>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="composting" value="Yes"> Yes
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="composting" value="No"> No
+          </label>
+        </div>
+      </div>
+      <div class="input-group">
+        <span>Composting Capacity:</span>
+        <input type="text" style="width: 80px;">
+        <span>kg/day</span>
+      </div>
+      <div class="input-group">
+        <span>Waste Collection Agency:</span>
+        <input type="text" style="width: 120px;">
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2 onclick="toggleSection('spaceInfo')">Space Information</h2>
+<div id="spaceInfo" class="section">
+  <!-- Meeting and Event Spaces Category -->
+  <div class="category-header">Meeting and Event Spaces</div>
+  <div class="category-content">
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Banquet Halls</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Banquet Hall</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="banquetCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>Maximum capacity (people):</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>No. of Events/year:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Outdoor event Lawns</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Outdoor Lawn</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="outdoorLawnCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Max occupancy:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>No. of Events/month:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Conference Rooms/Boardrooms</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Conference Room</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="conferenceCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Seating Capacity:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>Usage hours/month:</span>
+              <input type="number" style="width: 80px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Business Centre</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Business Centre</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="businessCentreCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Number of workstations:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Usage hours/day:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Food and Beverage Outlets Category -->
+  <div class="category-header">Food and Beverage Outlets</div>
+  <div class="category-content">
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">All Day Dining Restaurants</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Restaurant</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="restaurantCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Number of seats:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Avg. daily covers (meals served/day):</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Speciality Restaurants</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Speciality Restaurant</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="specialityRestaurantCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Number of seats:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Avg. daily covers (meals served/day):</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Cafe/Coffee Shop</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Cafe</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="cafeCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Number of seats:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Operating Hours:</span>
+              <input type="text" style="width: 100px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Kitchen</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Kitchen</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="kitchenCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>No. of meals prepared per day:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Staff Cafetaria</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Staff Cafetaria</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="staffCafetariaCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>No. of meals prepared per day:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Wellness and Recreation Category -->
+  <div class="category-header">Wellness and Recreation</div>
+  <div class="category-content">
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Spa/Massage Rooms</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Spa</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="spaCheck"> 
+            </div>
+            <div class="input-group">
+              <span>No. of Rooms:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Salon</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Salon</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="salonCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Fitness center/gym</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Gym</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="gymCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Multipurpose Space</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Multipurpose Space</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="multipurposeCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Swimming Pool (Indoor)</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Indoor Pool</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="indoorPoolCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Swimming Pool (Outdoor)</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Outdoor Pool</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="outdoorPoolCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- BOH & Service Areas Category -->
+  <div class="category-header">BOH & Service Areas</div>
+  <div class="category-content">
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Laundry Rooms</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Laundry</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="laundryCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>Kg of laundry/day:</span>
+              <input type="number" style="width: 80px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Kitchen stores</div>
+      <div class="subcategory-content">
+        <div class="form-row tree-level-3">
+          <div class="form-label">Dry Storage</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="dryStorageCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Storage capacity:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="kg">kg</option>
+                <option value="L">L</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row tree-level-3">
+          <div class="form-label">Cold Storage</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="coldStorageCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Storage capacity:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="kg">kg</option>
+                <option value="L">L</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>Refrigeration hours:</span>
+              <input type="number" style="width: 80px;">
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-row tree-level-3">
+          <div class="form-label">Deep Freezer</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="deepFreezerCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Storage capacity:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="kg">kg</option>
+                <option value="L">L</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>Refrigeration hours:</span>
+              <input type="number" style="width: 80px;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Waste handling area</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Waste Area</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="wasteAreaCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Segregation:</span>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="wasteSegregation" value="Yes"> Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="wasteSegregation" value="No"> No
+                </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <span>Composting:</span>
+              <div class="radio-group">
+                <label class="radio-option">
+                  <input type="radio" name="wasteComposting" value="Yes"> Yes
+                </label>
+                <label class="radio-option">
+                  <input type="radio" name="wasteComposting" value="No"> No
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">Parking Basement</div>
+      <div class="subcategory-content">
+        <div class="form-row">
+          <div class="form-label">Parking</div>
+          <div class="form-inputs">
+            <div class="checkbox-option">
+              <input type="checkbox" id="parkingCheck"> 
+            </div>
+            <div class="input-group">
+              <span>Area:</span>
+              <input type="number" style="width: 80px;">
+              <select>
+                <option value="sqm">sq.m</option>
+                <option value="sqft">sq.ft</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <span>No. of Parking:</span>
+              <input type="number" style="width: 60px;">
+            </div>
+            <div class="input-group">
+              <span>Lighting Type:</span>
+              <select>
+                <option value="">Select type</option>
+                <option value="led">LED</option>
+                <option value="fluorescent">Fluorescent</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="form-actions">
+  <button type="button" onclick="saveForm()">Save</button>
+  <button type="submit" onclick="submitForm()">Submit</button>
+</div>
+
+<script>
+  // Show the first section by default
+  window.onload = function() {
+    document.getElementById('buildingInfo').style.display = 'block';
+    
+    // Initialize all subcategories to be expanded
+    initializeCollapsibles();
+  };
+
+  function toggleSection(id) {
+    const section = document.getElementById(id);
+    section.style.display = section.style.display === "block" ? "none" : "block";
+  }
+  
+  // Initialize collapsible elements
+  function initializeCollapsibles() {
+    // Set up category headers
+    const categoryHeaders = document.querySelectorAll('.category-header');
+    categoryHeaders.forEach(header => {
+      header.addEventListener('click', function() {
+        this.classList.toggle('collapsed');
+        const content = this.nextElementSibling;
+        content.classList.toggle('collapsed');
+      });
+    });
+    
+    // Set up subcategory headers
+    const subcategoryHeaders = document.querySelectorAll('.subcategory-header');
+    subcategoryHeaders.forEach(header => {
+      header.addEventListener('click', function() {
+        this.classList.toggle('collapsed');
+        const content = this.nextElementSibling;
+        content.classList.toggle('collapsed');
+      });
+    });
+  }
+
+  // City data based on state selection
+  const cityData = {
+    "AP": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool"],
+    "AR": ["Itanagar", "Naharlagun", "Pasighat", "Namsai"],
+    "AS": ["Guwahati", "Silchar", "Dibrugarh", "Jorhat", "Nagaon"],
+    "BR": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga"],
+    "CG": ["Raipur", "Bhilai", "Bilaspur", "Korba", "Durg"],
+    "GA": ["Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda"],
+    "GJ": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"],
+    "HR": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Karnal"],
+    "HP": ["Shimla", "Dharamshala", "Solan", "Mandi", "Kullu"],
+    "JH": ["Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh"],
+    "KA": ["Bengaluru", "Mysuru", "Hubli", "Mangaluru", "Belagavi"],
+    "KL": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur", "Kollam"],
+    "MP": ["Bhopal", "Indore", "Jabalpur", "Gwalior", "Ujjain"],
+    "MH": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik"],
+    "MN": ["Imphal", "Thoubal", "Bishnupur", "Churachandpur"],
+    "ML": ["Shillong", "Tura", "Jowai", "Nongstoin", "Williamnagar"],
+    "MZ": ["Aizawl", "Lunglei", "Champhai", "Serchhip", "Kolasib"],
+    "NL": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha"],
+    "OR": ["Bhubaneswar", "Cuttack", "Rourkela", "Berhampur", "Sambalpur"],
+    "PB": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda"],
+    "RJ": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Ajmer"],
+    "SK": ["Gangtok", "Namchi", "Gyalshing", "Mangan", "Singtam"],
+    "TN": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem"],
+    "TG": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam"],
+    "TR": ["Agartala", "Udaipur", "Dharmanagar", "Kailasahar", "Belonia"],
+    "UP": ["Lucknow", "Kanpur", "Agra", "Varanasi", "Meerut"],
+    "UK": ["Dehradun", "Haridwar", "Roorkee", "Haldwani", "Rudrapur"],
+    "WB": ["Kolkata", "Howrah", "Durgapur", "Asansol", "Siliguri"],
+    "DL": ["New Delhi", "Delhi", "Dwarka", "Rohini", "Pitampura"]
+  };
+
+  // Update city dropdown based on state selection
+  document.addEventListener('DOMContentLoaded', function() {
+    const stateDropdown = document.getElementById('stateDropdown');
+    const cityDropdown = document.getElementById('cityDropdown');
+    
+    if (stateDropdown && cityDropdown) {
+      stateDropdown.addEventListener('change', function() {
+        const selectedState = this.value;
+        cityDropdown.innerHTML = ''; // Clear existing options
+        
+        if (!selectedState) {
+          const defaultOption = document.createElement('option');
+          defaultOption.value = '';
+          defaultOption.textContent = 'Please select a state first';
+          cityDropdown.appendChild(defaultOption);
+          return;
+        }
+        
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Please select';
+        cityDropdown.appendChild(defaultOption);
+        
+        // Add cities for selected state
+        const cities = cityData[selectedState] || [];
+        cities.forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          cityDropdown.appendChild(option);
+        });
+      });
+    }
+    
+    // Toggle input fields based on checkbox selection
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const inputGroups = this.closest('.form-inputs').querySelectorAll('.input-group');
+        inputGroups.forEach(group => {
+          group.style.display = this.checked ? 'flex' : 'none';
+        });
+      });
+      
+      // Trigger the change event to initialize the state
+      const event = new Event('change');
+      checkbox.dispatchEvent(event);
+    });
+    
+    // Initialize collapsible elements
+    initializeCollapsibles();
+  });
+
+  function saveForm() {
+    alert("Form values saved locally (you can implement actual save logic here).");
+  }
+
+  function submitForm() {
+    // Basic validation for required fields
+    const requiredFields = document.querySelectorAll('input[required], select[required]');
+    let valid = true;
+    
+    requiredFields.forEach(field => {
+      if (!field.value) {
+        field.style.borderColor = '#e32';
+        valid = false;
+      } else {
+        field.style.borderColor = '#ccc';
+      }
+    });
+    
+    if (!valid) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    
+    alert("Form submitted (you can hook this up to a backend).");
+  }
+</script>
+
+</body>
+</html>
