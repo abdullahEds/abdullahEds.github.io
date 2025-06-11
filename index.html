@@ -4,13 +4,85 @@
   <meta charset="UTF-8">
   <title>Building Audit Form</title>
   <style>
+    
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       background: #f4f4f4;
       color: #555;
     }
+    /* Year Picker Styles */
+    .year-picker {
+      cursor: pointer;
+      background-color: #fff;
+    }
+    
+    .ui-datepicker {
+      z-index: 9999 !important;
+      padding: 0.5em;
+    }
+    
+    .ui-datepicker-year {
+      width: 100%;
+      padding: 0.2em;
+      margin: 0;
+      font-size: 1em;
+    }
+    
+    .ui-datepicker .ui-datepicker-buttonpane {
+      display: none;
+    }
+    
+    .ui-datepicker-title select {
+      font-size: 1em;
+      margin: 1px 0;
+    }
+    
+    .ui-datepicker-title {
+      margin: 0 2.3em;
+      line-height: 1.8em;
+      text-align: center;
+    }
+    
+    .ui-datepicker-header {
+      padding: 0.2em 0;
+    }
+    
+    .form-group, .form-control, td {
+      overflow: visible !important;
+      position: relative;
+    }
 
+
+    .chiller-col {
+    min-width: 200px;
+    width: 200px;
+  }
+  .chiller-col .form-control,
+  .chiller-col .input-group {
+    width: 100% !important;
+  }
+  .chiller-col input[type="number"],
+  .chiller-col input[type="text"],
+  .chiller-col select {
+    width: 100% !important;
+    min-width: 180px;
+  }
+  .chiller-col .input-group .form-control {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .chiller-col .input-group-text {
+    min-width: 40px;
+  }
+  .chiller-col .d-flex {
+    display: flex !important;
+    gap: 8px;
+  }
+  .chiller-col .d-flex > * {
+    flex: 1;
+    min-width: 0;
+  }
     .container {
       display: flex;
       justify-content: space-between;
@@ -386,8 +458,111 @@
     .add-row-btn {
       display: none; /* Hide the add row buttons */
     }
+    
+    /* Chiller table styles */
+    .table-responsive {
+      max-height: 70vh;
+      overflow-x: auto;
+      border: 1px solid #dee2e6;
+      margin: 20px 0;
+    }
+    .fixed-col {
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 2;
+      min-width: 250px;
+      white-space: nowrap;
+    }
+    .action-col {
+      position: sticky;
+      right: 0;
+      background: white;
+      z-index: 2;
+      min-width: 100px;
+    }
+    .chiller-col {
+      min-width: 180px;
+    }
+    .table thead th {
+      position: sticky;
+      top: 0;
+      background: #f8f9fa;
+      z-index: 3;
+    }
+    .form-control-sm {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    /* Chiller Column Styles - Fixed Width */
+    .chiller-col {
+      width: 180px !important;
+      min-width: 180px !important;
+      max-width: 180px !important;
+      padding: 0.25rem !important;
+    }
+
+    /* Force all form controls to be exactly the same size */
+    #chillerTableBody td:not(.fixed-col):not(.action-col) {
+      width: 180px !important;
+      min-width: 180px !important;
+      max-width: 180px !important;
+      padding: 0.25rem !important;
+    }
+
+    /* Reset all inputs and selects */
+    #chillerTableBody input:not([type=button]):not([type=checkbox]),
+    #chillerTableBody select,
+    #chillerTableBody .form-control,
+    #chillerTableBody .form-select {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      height: 31px !important;
+      padding: 0.25rem 0.5rem !important;
+      box-sizing: border-box !important;
+      font-size: 0.875rem !important;
+      margin: 0 !important;
+      border: 1px solid #ced4da !important;
+      border-radius: 0.2rem !important;
+    }
+
+    /* Input groups */
+    #chillerTableBody .input-group {
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      display: flex !important;
+    }
+
+    #chillerTableBody .input-group .form-control {
+      flex: 1 1 auto;
+      width: 1% !important;
+      min-width: 0 !important;
+    }
+
+    #chillerTableBody .input-group-text {
+      width: 40px !important;
+      min-width: 40px !important;
+      padding: 0.25rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Flex container for special layouts */
+    #chillerTableBody .d-flex {
+      display: flex !important;
+      gap: 4px;
+      width: 100% !important;
+    }
   </style>
 </head>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <body>
 
   <div class="header">
@@ -1378,306 +1553,319 @@
 <div id="hvacSystems" class="section">
   
   <!-- Chiller Section -->
-  <div class="category-header">Chiller</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="chillerCheck"> 
-        Chiller Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Type of Chiller</th>
-              <th>Type of Compressor</th>
-              <th>Adiabatic Cooling</th>
-              <th>Year of Installation</th>
-              <th>No. of Chillers</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="chillerTableBody">
-            <tr>
-              <td>
-                <select name="chiller_type[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="water">Water</option>
-                  <option value="air">Air</option>
-                </select>
-              </td>
-              <td>
-                <select name="compressor_type[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="screw">Screw</option>
-                  <option value="scroll">Scroll</option>
-                  <option value="centrifugal">Centrifugal</option>
-                </select>
-              </td>
-              <td>
-                <select name="adiabatic_cooling[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </td>
-              <td><input type="number" name="chiller_installation_year[]" min="1900" max="2100"></td>
-              <td><input type="number" name="chiller_quantity[]" min="0"></td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('chillerTableBody', 'chiller')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+  <div class="subcategory-header">
+    <input type="checkbox" id="chillerCheck"> 
+    Chiller Details 
   </div>
-
-  <!-- Cooling Tower Section -->
-  <div class="category-header">Cooling Tower</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="coolingTowerCheck"> 
-        Cooling Tower Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Year of Installation</th>
-              <th>Type of Cooling Tower</th>
-              <th>Low Approach CT (1-1.5°C)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="coolingTowerTableBody">
-            <tr>
-              <td><input type="number" name="cooling_tower_installation_year[]" min="1900" max="2100"></td>
-              <td>
-                <select name="cooling_tower_type[]" class="table-select">
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="chiller-col">Chiller 1</th>
+            <th class="action-col text-center">
+              <button type="button" class="btn btn-sm btn-success me-1" onclick="addChillerColumn()">+</button>
+              <button type="button" class="btn btn-sm btn-danger" onclick="removeChillerColumn()">-</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="chillerTableBody">
+          <tr>
+            <td class="fixed-col">Type of Chiller (Water/Air)</td>
+            <td>
+              <select name="chiller1_type" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Water</option>
+                <option>Air</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Type of Compressor</td>
+            <td>
+              <select name="chiller1_compressor_type" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Screw</option>
+                <option>Scroll</option>
+                <option>Centrifugal</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Adiabatic Cooling (Air-cooled)</td>
+            <td>
+              <select name="chiller1_adiabatic_cooling" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="chiller1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Number of Chillers</td>
+            <td><input type="number" name="chiller1_quantity" class="form-control form-control-sm" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Working</td>
+            <td><input type="number" name="chiller1_working" class="form-control form-control-sm" min="0" placeholder="Count"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Standby</td>
+            <td><input type="number" name="chiller1_standby" class="form-control form-control-sm" min="0" placeholder="Count"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Operating Schedule</td>
+            <td><input type="text" name="chiller1_schedule" class="form-control form-control-sm" placeholder="e.g. 24/7"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Running Hrs (Seasonal)</td>
+            <td><input type="number" name="chiller1_seasonal_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Running Hrs (Day/Night)</td>
+            <td><input type="number" name="chiller1_daynight_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Capacity (TR)</td>
+            <td><input type="number" name="chiller1_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Loading %</td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="number" name="chiller1_loading_pct" class="form-control" min="0" max="100">
+                <span class="input-group-text">%</span>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Condenser & Evaporator Approach</td>
+            <td><input type="text" name="chiller1_approach" class="form-control form-control-sm" placeholder="e.g. 5°C/3°C"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Setpoint (Seasonal)</td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="number" name="chiller1_seasonal_setpoint" class="form-control" step="0.1">
+                <span class="input-group-text">°C</span>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Setpoint (Day/Night)</td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="number" name="chiller1_daynight_setpoint" class="form-control" step="0.1">
+                <span class="input-group-text">°C</span>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Rated kW/TR</td>
+            <td><input type="number" name="chiller1_rated_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Actual kW/TR</td>
+            <td><input type="number" name="chiller1_actual_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">VFD/Non-VFD</td>
+            <td>
+              <select name="chiller1_vfd_status" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>VFD</option>
+                <option>Non-VFD</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">VFD Modulation %</td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="number" name="chiller1_vfd_modulation" class="form-control" min="0" max="100" disabled>
+                <span class="input-group-text">%</span>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Chiller Plant Manager Automation</td>
+            <td>
+              <select name="chiller1_automation" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Refrigerant Type</td>
+            <td>
+              <select name="chiller1_refrigerant" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>R134a</option>
+                <option>R404</option>
+                <option>R410a</option>
+                <option>Other</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Top-up per year (kg)</td>
+            <td><input type="number" name="chiller1_refrigerant_topup" class="form-control form-control-sm" step="0.1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">BTU Meter Installed</td>
+            <td>
+              <select name="chiller1_btu_meter" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Automated Tube Cleaning System</td>
+            <td>
+              <select name="chiller1_tube_cleaning" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Chilled Water Chemical Treatment</td>
+            <td>
+              <select name="chiller1_chemical_treatment" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Chilled Water Line Insulation Damage</td>
+            <td>
+              <div class="d-flex gap-2">
+                <select name="chiller1_insulation_damage" class="form-control form-control-sm" style="width: 60%;">
                   <option value="">Select</option>
-                  <option value="counter_flow">Counter Flow</option>
-                  <option value="cross_flow">Cross Flow</option>
+                  <option>Yes</option>
+                  <option>No</option>
                 </select>
-              </td>
-              <td>
-                <select name="low_approach_ct[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('coolingTowerTableBody', 'coolingTower')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <input type="number" name="chiller1_insulation_damage_pct" class="form-control form-control-sm" min="0" max="100" placeholder="%" disabled style="width: 40%;">
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
 
-  <!-- Air Handling Unit Section -->
-  <div class="category-header">Air Handling Unit (AHU)</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="ahuCheck"> 
-        AHU Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Year of Installation</th>
-              <th>Capacity (TR/CFM)</th>
-              <th>No. of Blowers</th>
-              <th>Motor Rating (kW/HP)</th>
-              <th>Efficiency Rating</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="ahuTableBody">
-            <tr>
-              <td><input type="number" name="ahu_installation_year[]" min="1900" max="2100"></td>
-              <td><input type="text" name="ahu_capacity[]"></td>
-              <td><input type="number" name="ahu_blowers[]" min="0"></td>
-              <td><input type="text" name="ahu_motor_rating[]"></td>
-              <td>
-                <select name="ahu_efficiency[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="IE2">IE2</option>
-                  <option value="IE3">IE3</option>
-                  <option value="IE4">IE4</option>
-                </select>
-              </td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('ahuTableBody', 'ahu')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+    <script>
+      let chillerCount = 1;
 
-  <!-- Fan Coil Unit Section -->
-  <div class="category-header">Fan Coil Unit (FCU)</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="fcuCheck"> 
-        FCU Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Year of Installation</th>
-              <th>Capacity (TR/CFM)</th>
-              <th>Thermostat Installed</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="fcuTableBody">
-            <tr>
-              <td><input type="number" name="fcu_installation_year[]" min="1900" max="2100"></td>
-              <td><input type="text" name="fcu_capacity[]"></td>
-              <td>
-                <select name="fcu_thermostat[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('fcuTableBody', 'fcu')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+      function addChillerColumn() {
+        chillerCount++;
+        const tbody = document.getElementById('chillerTableBody');
+        const rows = tbody.rows;
+        
+        // Update header
+        const headerRow = tbody.previousElementSibling.rows[0];
+        const newHeader = document.createElement('th');
+        newHeader.className = 'chiller-col';
+        newHeader.textContent = `Chiller ${chillerCount}`;
+        headerRow.insertBefore(newHeader, headerRow.lastElementChild);
+        
+        // Add cells to each row
+        for (let i = 0; i < rows.length; i++) {
+          const firstCell = rows[i].cells[1];
+          const newCell = firstCell.cloneNode(true);
+          
+          // Update input names
+          const inputs = newCell.getElementsByTagName('input');
+          const selects = newCell.getElementsByTagName('select');
+          
+          for (let input of inputs) {
+            input.name = input.name.replace('chiller1_', `chiller${chillerCount}_`);
+            input.value = '';
+            input.id = input.id ? input.id.replace('chiller1_', `chiller${chillerCount}_`) : '';
+            if (input.type === 'checkbox') {
+              input.checked = false;
+            }
+            // Remove any existing datepicker classes and data
+            if ($(input).hasClass('hasDatepicker')) {
+              $(input).removeClass('hasDatepicker');
+              $(input).removeAttr('id');
+              $(input).datepicker('destroy');
+            }
+          }
+          
+          for (let select of selects) {
+            select.name = select.name.replace('chiller1_', `chiller${chillerCount}_`);
+            select.id = select.id ? select.id.replace('chiller1_', `chiller${chillerCount}_`) : '';
+            select.selectedIndex = 0;
+          }
+          
+          rows[i].insertBefore(newCell, rows[i].lastElementChild);
+        }
+        
+        // Reinitialize year pickers and VFD fields for the new column
+        $(document).trigger('columnAdded');
+        $('[name^="chiller' + chillerCount + '_vfd_status"]').each(function() {
+          updateVFDModulationField(this);
+        });
+      }
 
-  <!-- Boiler Section -->
-  <div class="category-header">Boiler</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="boilerCheck"> 
-        Boiler Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Year of Installation</th>
-              <th>Type of Unit</th>
-              <th>Capacity (TPH)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="boilerTableBody">
-            <tr>
-              <td><input type="number" name="boiler_installation_year[]" min="1900" max="2100"></td>
-              <td>
-                <select name="boiler_type[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="fuel">Fuel</option>
-                  <option value="electric">Electric</option>
-                </select>
-              </td>
-              <td><input type="text" name="boiler_capacity[]"></td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('boilerTableBody', 'boiler')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+      function removeChillerColumn() {
+        if (chillerCount <= 1) return;
+        
+        const tbody = document.getElementById('chillerTableBody');
+        const headerRow = tbody.previousElementSibling.rows[0];
+        
+        // Remove header
+        headerRow.removeChild(headerRow.cells[headerRow.cells.length - 2]);
+        
+        // Remove cells from each row
+        const rows = tbody.rows;
+        for (let i = 0; i < rows.length; i++) {
+          rows[i].deleteCell(rows[i].cells.length - 2);
+        }
+        
+        chillerCount--;
+      }
+    </script>
   </div>
-
-  <!-- Lighting Section -->
-  <div class="category-header">Lighting</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="lightingCheck"> 
-        Lighting Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Percentage of LED lights</th>
-              <th>Occupancy/Motion Sensors Installed</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="lightingTableBody">
-            <tr>
-              <td><input type="number" name="led_percentage[]" min="0" max="100"></td>
-              <td>
-                <select name="occupancy_sensors[]" class="table-select">
-                  <option value="">Select</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('lightingTableBody', 'lighting')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Renewable Energy Section -->
-  <div class="category-header">Renewable Energy</div>
-  <div class="category-content">
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">
-        <input type="checkbox" id="renewableCheck"> 
-        Renewable Energy Details
-      </div>
-      <div class="subcategory-content">
-        <table class="input-table">
-          <thead>
-            <tr>
-              <th>Year of Installation</th>
-              <th>Installed Capacity (kW)</th>
-              <th>Peak Power (kWp)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="renewableTableBody">
-            <tr>
-              <td><input type="number" name="renewable_installation_year[]" min="1900" max="2100"></td>
-              <td><input type="number" name="installed_capacity[]" min="0" step="0.01"></td>
-              <td><input type="number" name="peak_power[]" min="0" step="0.01"></td>
-              <td class="action-buttons">
-                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
-                <button type="button" class="remove-row-btn" onclick="addRow('renewableTableBody', 'renewable')" style="color: #4CAF50;">+</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-</div> <!-- End of HVAC Systems section -->
+</div>
 
 <!-- <div class="form-actions">
   <button type="button" onclick="saveForm()">Save</button>
@@ -1687,16 +1875,75 @@
 <script>
   // Show the first section by default
   window.onload = function() {
-    document.querySelector('.section').style.display = 'block';
-    document.querySelector('.category-content').style.display = 'block';
+    // Initialize all collapsible elements first
+    if (typeof initializeCollapsibles === 'function') {
+      initializeCollapsibles();
+    }
     
-    // Initialize all collapsible elements
-    initializeCollapsibles();
+    // Show the first section and its first category
+    const firstSection = document.querySelector('.section');
+    if (firstSection) {
+      firstSection.style.display = 'block';
+      const firstCategory = firstSection.querySelector('.category-content');
+      if (firstCategory) {
+        firstCategory.style.display = 'block';
+        firstCategory.classList.remove('collapsed');
+        const header = firstCategory.previousElementSibling;
+        if (header && header.classList.contains('category-header')) {
+          header.classList.remove('collapsed');
+        }
+      }
+    }
+    
+    // Initialize year pickers
+    if (typeof initializeYearPickers === 'function') {
+      initializeYearPickers();
+    }
+    
+    // Initialize VFD modulation fields
+    if (typeof updateVFDModulationField === 'function') {
+      $('[name^="chiller"][name$="_vfd_status"]').each(function() {
+        updateVFDModulationField(this);
+      });
+    }
   };
 
+  // Toggle section visibility
   function toggleSection(id) {
     const section = document.getElementById(id);
-    section.style.display = section.style.display === "block" ? "none" : "block";
+    if (section) {
+      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+  }
+  
+  // Toggle collapsible element
+  function toggleCollapsible(header, forceState = null) {
+    const isCategory = header.classList.contains('category-header');
+    const content = header.nextElementSibling;
+    const isCollapsed = forceState !== null ? forceState : header.classList.contains('collapsed');
+    
+    // Toggle the collapsed state
+    if (isCollapsed) {
+      header.classList.add('collapsed');
+      if (content) {
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
+    } else {
+      header.classList.remove('collapsed');
+      if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+      }
+    }
+    
+    // Handle checkbox state for subcategories
+    if (!isCategory) {
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !isCollapsed;
+      }
+    }
   }
   
   // Initialize collapsible elements
@@ -1704,10 +1951,18 @@
     // Set up category headers
     const categoryHeaders = document.querySelectorAll('.category-header');
     categoryHeaders.forEach(header => {
-      header.addEventListener('click', function() {
-        this.classList.toggle('collapsed');
-        const content = this.nextElementSibling;
-        content.classList.toggle('collapsed');
+      // Initialize state
+      header.classList.add('collapsed');
+      const content = header.nextElementSibling;
+      if (content) {
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
+      
+      // Add click handler
+      header.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleCollapsible(this);
       });
     });
     
@@ -1717,93 +1972,84 @@
       const checkbox = header.querySelector('input[type="checkbox"]');
       const content = header.nextElementSibling;
       
-      // Initialize visibility based on checkbox state
+      // Initialize state
+      header.classList.add('collapsed');
       if (content) {
-        content.style.display = checkbox.checked ? 'block' : 'none';
-        // Show any tables in the content
-        const tables = content.querySelectorAll('.input-table');
-        tables.forEach(table => {
-          table.style.display = checkbox.checked ? 'table' : 'none';
-        });
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
+      if (checkbox) {
+        checkbox.checked = false;
       }
       
-      // Toggle on header click (but not on checkbox click)
+      // Add click handler for header (not checkbox)
       header.addEventListener('click', function(e) {
-        // Only toggle if the click wasn't on the checkbox
         if (e.target !== checkbox) {
-          checkbox.checked = !checkbox.checked;
-          const event = new Event('change');
-          checkbox.dispatchEvent(event);
+          e.stopPropagation();
+          toggleCollapsible(this);
         }
       });
       
-      // Toggle content on checkbox change
-      checkbox.addEventListener('change', function() {
-        if (content) {
-          content.style.display = this.checked ? 'block' : 'none';
-          // Show/hide all tables in this content
-          const tables = content.querySelectorAll('.input-table');
-          tables.forEach(table => {
-            table.style.display = this.checked ? 'table' : 'none';
-          });
-        }
-      });
+      // Add change handler for checkbox
+      if (checkbox) {
+        checkbox.addEventListener('click', function(e) {
+          e.stopPropagation();
+          // Toggle based on the new checked state, not the current collapsed state
+          toggleCollapsible(header, !this.checked);
+        });
+      }
     });
   }
   
   // Function to expand all sections
   function expandAll() {
-    // Expand main sections
-    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo', 'hvacSystems'];
-    sections.forEach(id => {
-      const section = document.getElementById(id);
-      if (section) {
-        section.style.display = 'block';
-      }
+    // Show all sections
+    document.querySelectorAll('.section').forEach(section => {
+      section.style.display = 'block';
     });
     
     // Expand all category headers
-    const categoryHeaders = document.querySelectorAll('.category-header');
-    categoryHeaders.forEach(header => {
-      header.classList.remove('collapsed');
-      const content = header.nextElementSibling;
-      content.classList.remove('collapsed');
+    document.querySelectorAll('.category-header').forEach(header => {
+      if (header.classList.contains('collapsed')) {
+        toggleCollapsible(header);
+      }
     });
     
-    // Expand all subcategory headers
-    const subcategoryHeaders = document.querySelectorAll('.subcategory-header');
-    subcategoryHeaders.forEach(header => {
-      header.classList.remove('collapsed');
-      const content = header.nextElementSibling;
-      content.classList.remove('collapsed');
+    // Expand all subcategory headers and check their checkboxes
+    document.querySelectorAll('.subcategory-header').forEach(header => {
+      if (header.classList.contains('collapsed')) {
+        toggleCollapsible(header);
+      }
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox && !checkbox.checked) {
+        checkbox.checked = true;
+      }
     });
   }
   
   // Function to collapse all sections
   function collapseAll() {
-    // Collapse main sections
-    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo', 'hvacSystems'];
-    sections.forEach(id => {
-      const section = document.getElementById(id);
-      if (section) {
-        section.style.display = 'none';
+    // Hide all sections
+    document.querySelectorAll('.section').forEach(section => {
+      section.style.display = 'none';
+    });
+    
+    // Collapse every category header
+    document.querySelectorAll('.category-header').forEach(header => {
+      if (!header.classList.contains('collapsed')) {
+        toggleCollapsible(header);
       }
     });
     
-    // Collapse all category headers
-    const categoryHeaders = document.querySelectorAll('.category-header');
-    categoryHeaders.forEach(header => {
-      header.classList.add('collapsed');
-      const content = header.nextElementSibling;
-      content.classList.add('collapsed');
-    });
-    
-    // Collapse all subcategory headers
-    const subcategoryHeaders = document.querySelectorAll('.subcategory-header');
-    subcategoryHeaders.forEach(header => {
-      header.classList.add('collapsed');
-      const content = header.nextElementSibling;
-      content.classList.add('collapsed');
+    // Collapse all subcategory headers and uncheck their checkboxes
+    document.querySelectorAll('.subcategory-header').forEach(header => {
+      if (!header.classList.contains('collapsed')) {
+        toggleCollapsible(header);
+      }
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox && checkbox.checked) {
+        checkbox.checked = false;
+      }
     });
   }
 
@@ -1880,16 +2126,22 @@
       
     checkboxes.forEach(checkbox => {
       // Find the closest subcategory content
-      const subcategoryContent = checkbox.closest('.subcategory').querySelector('.subcategory-content');
-      const inputGroups = subcategoryContent ? subcategoryContent.querySelectorAll('.input-group') : [];
-      
+      const header = checkbox.closest('.subcategory-header');
+      const subcategoryContent = header ? header.nextElementSibling : null;
+      if (!subcategoryContent) {
+        // Some headers (e.g., Chiller Details) may not have a dedicated content block
+        return;
+      }
+
+      const inputGroups = subcategoryContent.querySelectorAll('.input-group');
+
       // Initialize visibility based on checkbox state
       inputGroups.forEach(group => {
         group.style.display = checkbox.checked ? 'flex' : 'none';
       });
-      
-      // Add change event listener
-      checkbox.addEventListener('change', function() {
+
+      // Toggle visibility on checkbox change
+      checkbox.addEventListener('change', function () {
         inputGroups.forEach(group => {
           group.style.display = this.checked ? 'flex' : 'none';
         });
@@ -2005,5 +2257,93 @@
   }
 </script>
 
+<script>
+// Initialize year pickers
+function initializeYearPickers() {
+  $('.year-picker').not('.hasYearPicker').addClass('hasYearPicker').datepicker({
+    changeMonth: false,
+    changeYear: true,
+    showButtonPanel: true,
+    dateFormat: 'yy',
+    yearRange: '1900:2100',
+    beforeShow: function(input, inst) {
+      setTimeout(function() {
+        $(".ui-datepicker-month").hide();
+        $(".ui-datepicker-calendar").hide();
+        $(".ui-datepicker-close").hide();
+      }, 0);
+    },
+    onClose: function(dateText, inst) {
+      const year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+      if (year) {
+        $(this).val(year).trigger('change');
+      }
+    }
+  });
+}
+
+// Initialize on document ready
+$(document).ready(function() {
+  // Initialize collapsibles
+  if (typeof initializeCollapsibles === 'function') {
+    initializeCollapsibles();
+  }
+  
+  // Handle VFD status change
+  $(document).on('change', '[name$="_vfd_status"]', function() {
+    if (typeof updateVFDModulationField === 'function') {
+      updateVFDModulationField(this);
+    }
+  });
+  
+  // Initialize year pickers when new columns are added
+  $(document).on('columnAdded', function() {
+    if (typeof initializeYearPickers === 'function') {
+      initializeYearPickers();
+    }
+    
+    // Reinitialize VFD fields for new columns
+    if (typeof updateVFDModulationField === 'function') {
+      $('[name^="chiller"][name$="_vfd_status"]').each(function() {
+        if (!$(this).data('vfd-initialized')) {
+          updateVFDModulationField(this);
+          $(this).data('vfd-initialized', true);
+        }
+      });
+    }
+  });
+});
+
+  // Enable/disable VFD modulation field based on VFD status
+  function updateVFDModulationField(select) {
+    const vfdModulationInput = $(select).closest('tr').next().find('input[type="number"]');
+    const isVFD = $(select).val() === 'VFD';
+    vfdModulationInput.prop('disabled', !isVFD);
+    if (!isVFD) {
+      vfdModulationInput.val('');
+    }
+  }
+
+  // Initialize VFD modulation fields on page load
+  $('[name^="chiller"][name$="_vfd_status"]').each(function() {
+    updateVFDModulationField(this);
+  });
+
+  // Handle VFD status changes
+  $(document).on('change', '[name^="chiller"][name$="_vfd_status"]', function() {
+    updateVFDModulationField(this);
+  });
+
+  // Enable/disable insulation damage percentage
+  $(document).on('change', '[name^="chiller"][name$="_insulation_damage"]', function() {
+    const damagePercentInput = $(this).closest('td').find('input[type="number"]');
+    const hasDamage = $(this).val() === 'Yes';
+    damagePercentInput.prop('disabled', !hasDamage);
+    if (!hasDamage) {
+      damagePercentInput.val('');
+    }
+  });
+
+</script>
 </body>
 </html>
