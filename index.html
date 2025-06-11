@@ -288,6 +288,9 @@
       cursor: pointer;
       position: relative;
       transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
     
     .subcategory-header:hover {
@@ -344,6 +347,45 @@
         overflow-x: auto;
       }
     }
+    
+    /* Add table styles */
+    .input-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0;
+    }
+    .input-table:not(:first-child) {
+      display: none; /* Hide all tables by default except the first one */
+    }
+    .subcategory-content {
+      display: none; /* Hide content by default */
+    }
+    .subcategory-header input[type="checkbox"]:checked ~ .subcategory-content {
+      display: block; /* Show content when checkbox is checked */
+    }
+    .subcategory-header input[type="checkbox"]:checked ~ .subcategory-content .input-table {
+      display: table; /* Show table when parent content is shown */
+    }
+    .input-table th, .input-table td {
+      padding: 8px;
+      text-align: left;
+      border: 1px solid #ddd;
+    }
+    .action-buttons {
+      white-space: nowrap;
+    }
+    .remove-row-btn {
+      background: none;
+      border: none;
+      color: #f44336;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 0 3px;
+    }
+    .add-row-btn {
+      display: none; /* Hide the add row buttons */
+    }
   </style>
 </head>
 <body>
@@ -376,11 +418,11 @@
     <div class="form-inputs">
       <div class = "input-group">
         <span>Project Name:</span>
-        <input type="text" required style="width: 150px;">
+        <input type="text" required style="width: 150px;" name="project_name">
         </div>
         <div class = "input-group">
           <span>Brand:</span>
-          <select>
+          <select name="brand">
             <option value="">Select Brand</option>
             <option value="Taj">Taj</option>
             <option value="SeleQtions">SeleQtions</option>
@@ -391,14 +433,14 @@
         </div>
           <div class = "input-group">
             <span>Country:</span>
-            <select required id="stateDropdown">
+            <select required id="stateDropdown" name="country">
               <option value="">Please select</option>
               <option value="India">India</option>
             </select>
           </div>
       <div class="input-group">
         <span>State:</span>
-        <select required id="stateDropdown">
+        <select required id="stateDropdown" name="state">
           <option value="">Please select</option>
           <option value="AP">Andhra Pradesh</option>
           <option value="AR">Arunachal Pradesh</option>
@@ -433,7 +475,7 @@
       </div>
       <div class="input-group">
         <span>City:</span>
-        <select required id="cityDropdown">
+        <select required id="cityDropdown" name="city">
           <option value="">Please select a state first</option>
         </select>
       </div>
@@ -448,11 +490,11 @@
       </div> -->
       <div class="input-group">
         <span>Years of Construction:</span>
-        <input type="date" required style="width: 118px;">
+        <input type="date" required style="width: 118px;" name="construction_date">
       </div>
       <div class="input-group">
         <span>Last Renovation:</span>
-        <input type="date" style="width: 118px;">
+        <input type="date" style="width: 118px;" name="renovation_date">
       </div>
     <!-- </div> -->
   <!-- </div> -->
@@ -462,15 +504,15 @@
     <!-- <div class="form-inputs"> -->
       <div class="input-group">
         <span>No. of Floors Above grade:</span>
-        <input type="number" min="0" max="99" required style="width: 60px;">
+        <input type="number" min="0" max="99" required style="width: 60px;" name="floors_above_grade">
       </div>
       <div class="input-group">
         <span>No.of Floors Below Grade:</span>
-        <input type="number" min="0" max="9" style="width: 60px;">
+        <input type="number" min="0" max="9" style="width: 60px;" name="floors_below_grade">
       </div>
       <div class="input-group">
         <span>Ownership:</span>
-        <select required>
+        <select required name="ownership">
           <option value="">Please select</option>
           <option>Owned</option>
           <option>Leased</option>
@@ -480,7 +522,7 @@
     </div>
     <div class="input-group">
       <span>Certifications/Compliance</span>
-      <select required>
+      <select required name="certifications">
         <option value="">Please select</option>
         <option>LEED</option>
         <option>IGBC</option>
@@ -490,7 +532,7 @@
   </div>
   <div class="input-group">
     <span>Last Audit Conducted:</span>
-    <input type="date" required style="width: 118px;">
+    <input type="date" required style="width: 118px;" name="last_audit_date">
    
   </div>
   <!-- </div> -->
@@ -644,17 +686,17 @@
     <div class="form-inputs">
       <div class="input-group">
         <span>Daily Water Demand:</span>
-        <input type="number" required style="width: 80px;">
+        <input type="number" required style="width: 80px;" name="daily_water_demand">
         <span>KLD</span>
       </div>
       <div class="input-group">
         <span>STP Capacity:</span>
-        <input type="number" style="width: 80px;">
+        <input type="number" style="width: 80px;" name="stp_capacity">
         <span>KLD</span>
       </div>
       <div class="input-group">
         <span>Treated Water Reuse:</span>
-        <input type="number" min="0" max="100" style="width: 60px;">
+        <input type="number" min="0" max="100" style="width: 60px;" name="treated_water_reuse">
         <span>%</span>
       </div>
       <div class="input-group">
@@ -752,114 +794,141 @@
     
     <div class="subcategory tree-level-2">
       
-      <div class="subcategory-header">Banquet Halls</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="banquetCheck"> 
+        Banquet Halls
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Banquet Hall</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="banquetCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>Maximum capacity (people):</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>No. of Events/year:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Maximum Capacity (people)</th>
+              <th>No. of Events/Year</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="banquetTableBody">
+            <tr>
+              <td><input type="number" name="banquet_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="banquet_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="banquet_capacity[]" style="width: 60px;"></td>
+              <td><input type="number" name="banquet_events[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('banquetTableBody', 'banquet')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Outdoor event Lawns</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="outdoorLawnCheck"> 
+        Outdoor event Lawns
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Outdoor Lawn</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="outdoorLawnCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Max occupancy:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>No. of Events/month:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Max occupancy</th>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>No. of Events/month</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="outdoorLawnTableBody">
+            <tr>
+              <td><input type="number" name="outdoor_lawn_occupancy[]" style="width: 60px;"></td>
+              <td><input type="number" name="outdoor_lawn_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="outdoor_lawn_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="outdoor_lawn_events[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('outdoorLawnTableBody', 'outdoorLawn')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Conference Rooms/Boardrooms</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="conferenceCheck"> 
+        Conference Rooms/Boardrooms
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Conference Room</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="conferenceCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Seating Capacity:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>Usage hours/month:</span>
-              <input type="number" style="width: 80px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Seating Capacity</th>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Usage hours/month</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="conferenceTableBody">
+            <tr>
+              <td><input type="number" name="conference_capacity[]" style="width: 60px;"></td>
+              <td><input type="number" name="conference_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="conference_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="conference_hours[]" style="width: 80px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('conferenceTableBody', 'conference')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Business Centre</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="businessCentreCheck"> 
+        Business Centre
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Business Centre</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="businessCentreCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Number of workstations:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Usage hours/day:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of workstations</th>
+              <th>Usage hours/day</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="businessCentreTableBody">
+            <tr>
+              <td><input type="number" name="business_centre_workstations[]" style="width: 60px;"></td>
+              <td><input type="number" name="business_centre_hours[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('businessCentreTableBody', 'businessCentre')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -869,120 +938,156 @@
   <div class="category-content">
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">All Day Dining Restaurants</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="restaurantCheck"> 
+        All Day Dining Restaurants
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Restaurant</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="restaurantCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Number of seats:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Avg. daily covers (meals served/day):</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of seats</th>
+              <th>Avg. daily covers (meals served/day)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="restaurantTableBody">
+            <tr>
+              <td><input type="number" name="restaurant_seats[]" style="width: 60px;"></td>
+              <td><input type="number" name="restaurant_covers[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('restaurantTableBody', 'restaurant')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Speciality Restaurants</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="specialityRestaurantCheck"> 
+        Speciality Restaurants
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Speciality Restaurant</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="specialityRestaurantCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Number of seats:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Avg. daily covers (meals served/day):</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of seats</th>
+              <th>Avg. daily covers (meals served/day)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="specialityRestaurantTableBody">
+            <tr>
+              <td><input type="number" name="speciality_restaurant_seats[]" style="width: 60px;"></td>
+              <td><input type="number" name="speciality_restaurant_covers[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('specialityRestaurantTableBody', 'specialityRestaurant')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Cafe/Coffee Shop</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="cafeCheck"> 
+        Cafe/Coffee Shop
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Cafe</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="cafeCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Number of seats:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Operating Hours:</span>
-              <input type="text" style="width: 100px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of seats</th>
+              <th>Operating Hours</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="cafeTableBody">
+            <tr>
+              <td><input type="number" name="cafe_seats[]" style="width: 60px;"></td>
+              <td><input type="text" name="cafe_hours[]" style="width: 100px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('cafeTableBody', 'cafe')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Kitchen</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="kitchenCheck"> 
+        Kitchen
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Kitchen</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="kitchenCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>No. of meals prepared per day:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>No. of meals prepared per day</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="kitchenTableBody">
+            <tr>
+              <td><input type="number" name="kitchen_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="kitchen_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="kitchen_meals[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('kitchenTableBody', 'kitchen')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Staff Cafetaria</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="staffCafetariaCheck"> 
+        Staff Cafetaria
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Staff Cafetaria</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="staffCafetariaCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>No. of meals prepared per day:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>No. of meals prepared per day</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="staffCafetariaTableBody">
+            <tr>
+              <td><input type="number" name="staff_cafetaria_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="staff_cafetaria_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="staff_cafetaria_meals[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('staffCafetariaTableBody', 'staffCafetaria')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -992,130 +1097,193 @@
   <div class="category-content">
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Spa/Massage Rooms</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="spaCheck"> 
+        Spa/Massage Rooms
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Spa</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="spaCheck"> 
-            </div>
-            <div class="input-group">
-              <span>No. of Rooms:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of Rooms</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="spaTableBody">
+            <tr>
+              <td><input type="number" name="spa_rooms[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('spaTableBody', 'spa')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Salon</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="salonCheck"> 
+        Salon
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Salon</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="salonCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="salonTableBody">
+            <tr>
+              <td><input type="number" name="salon_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="salon_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('salonTableBody', 'salon')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Fitness center/gym</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="gymCheck"> 
+        Fitness center/gym
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Gym</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="gymCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="gymTableBody">
+            <tr>
+              <td><input type="number" name="gym_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="gym_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('gymTableBody', 'gym')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Multipurpose Space</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="multipurposeCheck"> 
+        Multipurpose Space
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Multipurpose Space</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="multipurposeCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="multipurposeTableBody">
+            <tr>
+              <td><input type="number" name="multipurpose_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="multipurpose_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('multipurposeTableBody', 'multipurpose')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Swimming Pool (Indoor)</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="indoorPoolCheck"> 
+        Swimming Pool (Indoor)
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Indoor Pool</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="indoorPoolCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="indoorPoolTableBody">
+            <tr>
+              <td><input type="number" name="indoor_pool_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="indoor_pool_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('indoorPoolTableBody', 'indoorPool')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Swimming Pool (Outdoor)</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="outdoorPoolCheck"> 
+        Swimming Pool (Outdoor)
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Outdoor Pool</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="outdoorPoolCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="outdoorPoolTableBody">
+            <tr>
+              <td><input type="number" name="outdoor_pool_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="outdoor_pool_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('outdoorPoolTableBody', 'outdoorPool')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -1125,169 +1293,391 @@
   <div class="category-content">
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Laundry Rooms</div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="laundryCheck"> 
+        Laundry Rooms
+      </div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Laundry</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="laundryCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>Kg of laundry/day:</span>
-              <input type="number" style="width: 80px;">
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Kg of laundry/day</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="laundryTableBody">
+            <tr>
+              <td><input type="number" name="laundry_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="laundry_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="laundry_kg[]" style="width: 80px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('laundryTableBody', 'laundry')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
     
     <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Kitchen stores</div>
-      <div class="subcategory-content">
-        <div class="form-row tree-level-3">
-          <div class="form-label">Dry Storage</div>
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="dryStorageCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Storage capacity:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="kg">kg</option>
-                <option value="L">L</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-row tree-level-3">
-          <div class="form-label">Cold Storage</div>
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="coldStorageCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Storage capacity:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="kg">kg</option>
-                <option value="L">L</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>Refrigeration hours:</span>
-              <input type="number" style="width: 80px;">
-            </div>
-          </div>
-        </div>
-        
-        <div class="form-row tree-level-3">
-          <div class="form-label">Deep Freezer</div>
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="deepFreezerCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Storage capacity:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="kg">kg</option>
-                <option value="L">L</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>Refrigeration hours:</span>
-              <input type="number" style="width: 80px;">
-            </div>
-          </div>
-        </div>
+      <div class="subcategory-header">
+        <input type="checkbox" id="parkingCheck"> 
+        Parking Basement
       </div>
-    </div>
-    
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Waste handling area</div>
       <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Waste Area</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="wasteAreaCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Segregation:</span>
-              <div class="radio-group">
-                <label class="radio-option">
-                  <input type="radio" name="wasteSegregation" value="Yes"> Yes
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="wasteSegregation" value="No"> No
-                </label>
-              </div>
-            </div>
-            <div class="input-group">
-              <span>Composting:</span>
-              <div class="radio-group">
-                <label class="radio-option">
-                  <input type="radio" name="wasteComposting" value="Yes"> Yes
-                </label>
-                <label class="radio-option">
-                  <input type="radio" name="wasteComposting" value="No"> No
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-
-    
-    <div class="subcategory tree-level-2">
-      <div class="subcategory-header">Parking Basement</div>
-      <div class="subcategory-content">
-        <div class="form-row">
-          <!-- <div class="form-label">Parking</div> -->
-          <div class="form-inputs">
-            <div class="checkbox-option">
-              <input type="checkbox" id="parkingCheck"> 
-            </div>
-            <div class="input-group">
-              <span>Area:</span>
-              <input type="number" style="width: 80px;">
-              <select>
-                <option value="sqm">sq.m</option>
-                <option value="sqft">sq.ft</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <span>No. of Parking:</span>
-              <input type="number" style="width: 60px;">
-            </div>
-            <div class="input-group">
-              <span>Lighting Type:</span>
-              <select>
-                <option value="">Select type</option>
-                <option value="led">LED</option>
-                <option value="fluorescent">Fluorescent</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>No. of Parking</th>
+              <th>Lighting Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="parkingTableBody">
+            <tr>
+              <td><input type="number" name="parking_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="parking_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="number" name="parking_spaces[]" style="width: 60px;"></td>
+              <td>
+                <select name="parking_lighting[]">
+                  <option value="">Select type</option>
+                  <option value="led">LED</option>
+                  <option value="fluorescent">Fluorescent</option>
+                  <option value="other">Other</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('parkingTableBody', 'parking')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
+
+<!-- HVAC Systems Section -->
+<h2 onclick="toggleSection('hvacSystems')">HVAC Systems</h2>
+<div id="hvacSystems" class="section">
+  
+  <!-- Chiller Section -->
+  <div class="category-header">Chiller</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="chillerCheck"> 
+        Chiller Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Type of Chiller</th>
+              <th>Type of Compressor</th>
+              <th>Adiabatic Cooling</th>
+              <th>Year of Installation</th>
+              <th>No. of Chillers</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="chillerTableBody">
+            <tr>
+              <td>
+                <select name="chiller_type[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="water">Water</option>
+                  <option value="air">Air</option>
+                </select>
+              </td>
+              <td>
+                <select name="compressor_type[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="screw">Screw</option>
+                  <option value="scroll">Scroll</option>
+                  <option value="centrifugal">Centrifugal</option>
+                </select>
+              </td>
+              <td>
+                <select name="adiabatic_cooling[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </td>
+              <td><input type="number" name="chiller_installation_year[]" min="1900" max="2100"></td>
+              <td><input type="number" name="chiller_quantity[]" min="0"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('chillerTableBody', 'chiller')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cooling Tower Section -->
+  <div class="category-header">Cooling Tower</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="coolingTowerCheck"> 
+        Cooling Tower Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Year of Installation</th>
+              <th>Type of Cooling Tower</th>
+              <th>Low Approach CT (1-1.5°C)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="coolingTowerTableBody">
+            <tr>
+              <td><input type="number" name="cooling_tower_installation_year[]" min="1900" max="2100"></td>
+              <td>
+                <select name="cooling_tower_type[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="counter_flow">Counter Flow</option>
+                  <option value="cross_flow">Cross Flow</option>
+                </select>
+              </td>
+              <td>
+                <select name="low_approach_ct[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('coolingTowerTableBody', 'coolingTower')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Air Handling Unit Section -->
+  <div class="category-header">Air Handling Unit (AHU)</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="ahuCheck"> 
+        AHU Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Year of Installation</th>
+              <th>Capacity (TR/CFM)</th>
+              <th>No. of Blowers</th>
+              <th>Motor Rating (kW/HP)</th>
+              <th>Efficiency Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ahuTableBody">
+            <tr>
+              <td><input type="number" name="ahu_installation_year[]" min="1900" max="2100"></td>
+              <td><input type="text" name="ahu_capacity[]"></td>
+              <td><input type="number" name="ahu_blowers[]" min="0"></td>
+              <td><input type="text" name="ahu_motor_rating[]"></td>
+              <td>
+                <select name="ahu_efficiency[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="IE2">IE2</option>
+                  <option value="IE3">IE3</option>
+                  <option value="IE4">IE4</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('ahuTableBody', 'ahu')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fan Coil Unit Section -->
+  <div class="category-header">Fan Coil Unit (FCU)</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="fcuCheck"> 
+        FCU Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Year of Installation</th>
+              <th>Capacity (TR/CFM)</th>
+              <th>Thermostat Installed</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="fcuTableBody">
+            <tr>
+              <td><input type="number" name="fcu_installation_year[]" min="1900" max="2100"></td>
+              <td><input type="text" name="fcu_capacity[]"></td>
+              <td>
+                <select name="fcu_thermostat[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('fcuTableBody', 'fcu')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Boiler Section -->
+  <div class="category-header">Boiler</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="boilerCheck"> 
+        Boiler Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Year of Installation</th>
+              <th>Type of Unit</th>
+              <th>Capacity (TPH)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="boilerTableBody">
+            <tr>
+              <td><input type="number" name="boiler_installation_year[]" min="1900" max="2100"></td>
+              <td>
+                <select name="boiler_type[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="fuel">Fuel</option>
+                  <option value="electric">Electric</option>
+                </select>
+              </td>
+              <td><input type="text" name="boiler_capacity[]"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('boilerTableBody', 'boiler')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lighting Section -->
+  <div class="category-header">Lighting</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="lightingCheck"> 
+        Lighting Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Percentage of LED lights</th>
+              <th>Occupancy/Motion Sensors Installed</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="lightingTableBody">
+            <tr>
+              <td><input type="number" name="led_percentage[]" min="0" max="100"></td>
+              <td>
+                <select name="occupancy_sensors[]" class="table-select">
+                  <option value="">Select</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('lightingTableBody', 'lighting')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Renewable Energy Section -->
+  <div class="category-header">Renewable Energy</div>
+  <div class="category-content">
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="renewableCheck"> 
+        Renewable Energy Details
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Year of Installation</th>
+              <th>Installed Capacity (kW)</th>
+              <th>Peak Power (kWp)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="renewableTableBody">
+            <tr>
+              <td><input type="number" name="renewable_installation_year[]" min="1900" max="2100"></td>
+              <td><input type="number" name="installed_capacity[]" min="0" step="0.01"></td>
+              <td><input type="number" name="peak_power[]" min="0" step="0.01"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('renewableTableBody', 'renewable')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div> <!-- End of HVAC Systems section -->
 
 <!-- <div class="form-actions">
   <button type="button" onclick="saveForm()">Save</button>
@@ -1297,9 +1687,10 @@
 <script>
   // Show the first section by default
   window.onload = function() {
-    document.getElementById('buildingInfo').style.display = 'block';
+    document.querySelector('.section').style.display = 'block';
+    document.querySelector('.category-content').style.display = 'block';
     
-    // Initialize all subcategories to be expanded
+    // Initialize all collapsible elements
     initializeCollapsibles();
   };
 
@@ -1320,13 +1711,42 @@
       });
     });
     
-    // Set up subcategory headers
+    // Set up subcategory headers with checkboxes
     const subcategoryHeaders = document.querySelectorAll('.subcategory-header');
     subcategoryHeaders.forEach(header => {
-      header.addEventListener('click', function() {
-        this.classList.toggle('collapsed');
-        const content = this.nextElementSibling;
-        content.classList.toggle('collapsed');
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      const content = header.nextElementSibling;
+      
+      // Initialize visibility based on checkbox state
+      if (content) {
+        content.style.display = checkbox.checked ? 'block' : 'none';
+        // Show any tables in the content
+        const tables = content.querySelectorAll('.input-table');
+        tables.forEach(table => {
+          table.style.display = checkbox.checked ? 'table' : 'none';
+        });
+      }
+      
+      // Toggle on header click (but not on checkbox click)
+      header.addEventListener('click', function(e) {
+        // Only toggle if the click wasn't on the checkbox
+        if (e.target !== checkbox) {
+          checkbox.checked = !checkbox.checked;
+          const event = new Event('change');
+          checkbox.dispatchEvent(event);
+        }
+      });
+      
+      // Toggle content on checkbox change
+      checkbox.addEventListener('change', function() {
+        if (content) {
+          content.style.display = this.checked ? 'block' : 'none';
+          // Show/hide all tables in this content
+          const tables = content.querySelectorAll('.input-table');
+          tables.forEach(table => {
+            table.style.display = this.checked ? 'table' : 'none';
+          });
+        }
       });
     });
   }
@@ -1334,7 +1754,7 @@
   // Function to expand all sections
   function expandAll() {
     // Expand main sections
-    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo'];
+    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo', 'hvacSystems'];
     sections.forEach(id => {
       const section = document.getElementById(id);
       if (section) {
@@ -1362,7 +1782,7 @@
   // Function to collapse all sections
   function collapseAll() {
     // Collapse main sections
-    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo'];
+    const sections = ['buildingInfo', 'energySystems', 'waterSystems', 'wasteManagement', 'spaceInfo', 'hvacSystems'];
     sections.forEach(id => {
       const section = document.getElementById(id);
       if (section) {
@@ -1456,22 +1876,25 @@
     }
     
     // Toggle input fields based on checkbox selection
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const checkboxes = document.querySelectorAll('.subcategory-header input[type="checkbox"]');
+      
     checkboxes.forEach(checkbox => {
+      // Find the closest subcategory content
+      const subcategoryContent = checkbox.closest('.subcategory').querySelector('.subcategory-content');
+      const inputGroups = subcategoryContent ? subcategoryContent.querySelectorAll('.input-group') : [];
+      
+      // Initialize visibility based on checkbox state
+      inputGroups.forEach(group => {
+        group.style.display = checkbox.checked ? 'flex' : 'none';
+      });
+      
+      // Add change event listener
       checkbox.addEventListener('change', function() {
-        const inputGroups = this.closest('.form-inputs').querySelectorAll('.input-group');
         inputGroups.forEach(group => {
           group.style.display = this.checked ? 'flex' : 'none';
         });
       });
-      
-      // Trigger the change event to initialize the state
-      const event = new Event('change');
-      checkbox.dispatchEvent(event);
     });
-    
-    // Initialize collapsible elements
-    initializeCollapsibles();
     
     // Add event listeners for expand/collapse all buttons
     const expandAllBtn = document.getElementById('expandAllBtn');
@@ -1510,6 +1933,75 @@
     }
     
     alert("Form submitted (you can hook this up to a backend).");
+  }
+
+  function addRow(tableId, type) {
+    const tbody = document.getElementById(tableId);
+    const newRow = tbody.insertRow();
+    
+    // Clone the first row's cells to maintain the same structure
+    const firstRow = tbody.rows[0];
+    newRow.innerHTML = firstRow.innerHTML;
+    
+    // Clear any values in the new row
+    const inputs = newRow.getElementsByTagName('input');
+    const selects = newRow.getElementsByTagName('select');
+    
+    for (let input of inputs) {
+      if (input.type !== 'button') {
+        input.value = '';
+      }
+    }
+    
+    for (let select of selects) {
+      select.selectedIndex = 0;
+    }
+    
+    // Show the table if it was hidden
+    const table = tbody.closest('table');
+    if (table) {
+      table.style.display = 'table';
+    }
+  }
+
+  function removeRow(button) {
+    const row = button.closest('tr');
+    const tbody = row.parentNode;
+    const table = tbody.closest('table');
+    
+    // Don't remove the last row
+    if (tbody.rows.length > 1) {
+      row.remove();
+    } else {
+      // Clear the row instead of removing it
+      const inputs = row.getElementsByTagName('input');
+      const selects = row.getElementsByTagName('select');
+      
+      for (let input of inputs) {
+        if (input.type !== 'button') {
+          input.value = '';
+        }
+      }
+      
+      for (let select of selects) {
+        select.selectedIndex = 0;
+      }
+      
+      // Hide the table if it's empty
+      if (table && tbody.rows.length === 1) {
+        const inputs = tbody.getElementsByTagName('input');
+        let isEmpty = true;
+        for (let input of inputs) {
+          if (input.type !== 'button' && input.value.trim() !== '') {
+            isEmpty = false;
+            break;
+          }
+        }
+        if (isEmpty) {
+          table.style.display = 'none';
+        }
+      }
+    }
   }
 </script>
 
