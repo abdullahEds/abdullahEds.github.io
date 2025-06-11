@@ -1917,31 +1917,31 @@
   }
   
   // Toggle collapsible element
-  function toggleCollapsible(header, forceState = null) {
+  function toggleCollapsible(header) {
     const isCategory = header.classList.contains('category-header');
     const content = header.nextElementSibling;
-    const isCollapsed = forceState !== null ? forceState : header.classList.contains('collapsed');
+    const isCollapsed = header.classList.contains('collapsed');
     
-    // Toggle the collapsed state
+    // Toggle the collapsed state - reversed logic
     if (isCollapsed) {
-      header.classList.add('collapsed');
-      if (content) {
-        content.style.display = 'none';
-        content.classList.add('collapsed');
-      }
-    } else {
       header.classList.remove('collapsed');
       if (content) {
         content.style.display = 'block';
         content.classList.remove('collapsed');
       }
+    } else {
+      header.classList.add('collapsed');
+      if (content) {
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
     }
     
-    // Handle checkbox state for subcategories
+    // Handle checkbox state for subcategories - reversed logic
     if (!isCategory) {
       const checkbox = header.querySelector('input[type="checkbox"]');
       if (checkbox) {
-        checkbox.checked = !isCollapsed;
+        checkbox.checked = isCollapsed; // Changed from !isCollapsed to isCollapsed
       }
     }
   }
@@ -1992,10 +1992,9 @@
       
       // Add change handler for checkbox
       if (checkbox) {
-        checkbox.addEventListener('click', function(e) {
+        checkbox.addEventListener('change', function(e) {
           e.stopPropagation();
-          // Toggle based on the new checked state, not the current collapsed state
-          toggleCollapsible(header, !this.checked);
+          toggleCollapsible(header);
         });
       }
     });
@@ -2343,7 +2342,7 @@ $(document).ready(function() {
       damagePercentInput.val('');
     }
   });
-
+});
 </script>
 </body>
 </html>
