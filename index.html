@@ -1,568 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Building Audit Form</title>
   <style>
-    
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: #f4f4f4;
-      color: #555;
-    }
-    /* Year Picker Styles */
-    .year-picker {
-      cursor: pointer;
-      background-color: #fff;
-    }
-    
-    .ui-datepicker {
-      z-index: 9999 !important;
-      padding: 0.5em;
-    }
-    
-    .ui-datepicker-year {
-      width: 100%;
-      padding: 0.2em;
-      margin: 0;
-      font-size: 1em;
-    }
-    
-    .ui-datepicker .ui-datepicker-buttonpane {
-      display: none;
-    }
-    
-    .ui-datepicker-title select {
-      font-size: 1em;
-      margin: 1px 0;
-    }
-    
-    .ui-datepicker-title {
-      margin: 0 2.3em;
-      line-height: 1.8em;
-      text-align: center;
-    }
-    
-    .ui-datepicker-header {
-      padding: 0.2em 0;
-    }
-    
-    .form-group, .form-control, td {
-      overflow: visible !important;
-      position: relative;
-    }
-
-
-    .chiller-col {
-    min-width: 200px;
-    width: 200px;
-  }
-  .chiller-col .form-control,
-  .chiller-col .input-group {
-    width: 100% !important;
-  }
-  .chiller-col input[type="number"],
-  .chiller-col input[type="text"],
-  .chiller-col select {
-    width: 100% !important;
-    min-width: 180px;
-  }
-  .chiller-col .input-group .form-control {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-  .chiller-col .input-group-text {
-    min-width: 40px;
-  }
-  .chiller-col .d-flex {
-    display: flex !important;
-    gap: 8px;
-  }
-  .chiller-col .d-flex > * {
-    flex: 1;
-    min-width: 0;
-  }
-    .container {
-      display: flex;
-      justify-content: space-between;
-    }
-    .header {
-      background-color: #a85c42;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-    }
-
-    .header img {
-      height: 60px;
-      width: auto;
-    }
-
-    .title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      text-align: center;
-      flex-grow: 1;
-    }
-    
-    /* Expand/Collapse All Buttons */
-    .expand-collapse-controls {
-      display: flex;
-      justify-content: flex-start;
-      gap: 10px;
-      margin:  10px 0 10px;
-    }
-    
-    .expand-collapse-controls button {
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      background-color: #a85c42;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-    
-    .expand-collapse-controls button:hover {
-      background-color: #8b4c34;
-    }
-
-    h2 {
-      background-color: #a85c42;
-      color: white;
-      padding: 10px 15px;
-      margin: 20px 10px 0 10px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-size: 1.2rem;
-      font-weight: normal;
-    }
-
-    .section {
-      margin: 0 10px 20px 10px;
-      padding: 20px;
-      background: #fff;
-      border: 1px solid #ddd;
-      display: none;
-      border-radius: 0 0 4px 4px;
-    }
-
-    .form-row {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      margin-bottom: 15px;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-      overflow-x: auto;
-    }
-
-    .form-row:last-child {
-      border-bottom: none;
-    }
-
-    .form-label {
-      flex: 0 0 150px;
-      font-weight: bold;
-      color: #555;
-      margin-right: 15px;
-      white-space: nowrap;
-    }
-
-    .form-label.required:after {
-      content: " *";
-      color: #e32;
-      font-weight: bold;
-    }
-
-    .form-inputs {
-      display: flex;
-      flex-wrap: wrap; /* Changed from nowrap to wrap */
-      align-items: center;
-      gap: 15px;
-      overflow-x: visible; /* Changed from auto to visible */
-    }
-    
-    /* New styles for multi-row form inputs */
-    .multi-row-section .form-inputs {
-      flex-wrap: wrap;
-      overflow-x: visible;
-      row-gap: 15px;
-    }
-    
-    .multi-row-section .input-group {
-      margin-bottom: 5px;
-    }
-
-    .input-group {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-
-    .input-group input[type="text"],
-    .input-group input[type="number"] {
-      width: 80px;
-    }
-
-    .input-group select {
-      width: auto;
-    }
-
-    input, select, textarea {
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: #a85c42;
-      outline: none;
-    }
-
-    /* Checkbox styling */
-    .checkbox-group {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      flex-wrap: nowrap;
-    }
-
-    .checkbox-option {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-
-    .checkbox-option input[type="checkbox"] {
-      width: auto;
-      margin: 0;
-    }
-
-    /* Radio buttons styling */
-    .radio-group {
-      display: flex;
-      gap: 15px;
-      flex-wrap: nowrap;
-    }
-
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      white-space: nowrap;
-    }
-
-    .radio-option input[type="radio"] {
-      width: auto;
-      margin: 0;
-    }
-
-    /* Unit selector */
-    .unit-selector {
-      display: flex;
-      align-items: center;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .unit-selector select {
-      border: none;
-      border-left: 1px solid #ccc;
-      border-radius: 0;
-      padding: 8px 5px;
-      background-color: #f9f9f9;
-    }
-
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-       gap: 10px;
-       margin:  10px 0 10px;
-    }
-
-    .form-actions button {
-      padding: 8px 15px;
-      font-size: 1rem;
-      background-color: #a85c42;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .form-actions button:hover {
-      background-color: #8b4c34;
-    }
-
-    .field-hint {
-      font-size: 12px;
-      color: #777;
-      margin-left: 5px;
-    }
-
-    /* Category and Subcategory Styling */
-    .category-header {
-      background-color: #c17a62;
-      color: white;
-      padding: 8px 15px;
-      margin: 15px 0 10px 0;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      position: relative;
-    }
-    
-    .category-header:after {
-      content: '▼';
-      position: absolute;
-      right: 15px;
-      transition: transform 0.3s;
-    }
-    
-    .category-header.collapsed:after {
-      transform: rotate(-90deg);
-    }
-    
-    .category-content {
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      max-height: 2000px; /* Arbitrary large value */
-    }
-    
-    .category-content.collapsed {
-      max-height: 0;
-    }
-
-    .subcategory {
-      margin: 5px 0;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .subcategory-header {
-      background-color: #f0d9d2;
-      color: #8b4c34;
-      padding: 8px 15px;
-      font-weight: bold;
-      cursor: pointer;
-      position: relative;
-      transition: background-color 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .subcategory-header:hover {
-      background-color: #e8c9be;
-    }
-    
-    .subcategory-header:after {
-      content: '▼';
-      position: absolute;
-      right: 15px;
-      transition: transform 0.3s;
-    }
-    
-    .subcategory-header.collapsed:after {
-      transform: rotate(-90deg);
-    }
-    
-    .subcategory-content {
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      max-height: 500px; /* Arbitrary large value */
-    }
-    
-    .subcategory-content.collapsed {
-      max-height: 0;
-    }
-    
-    /* Tree structure styling */
-    .tree-level-1 {
-      margin-left: 0;
-    }
-    
-    .tree-level-2 {
-      margin-left: 20px;
-    }
-    
-    .tree-level-3 {
-      margin-left: 40px;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .form-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .form-label {
-        margin-bottom: 10px;
-      }
-      
-      .form-inputs {
-        width: 100%;
-        overflow-x: auto;
-      }
-    }
-    
-    /* Add table styles */
-    .input-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 10px 0;
-    }
-    .input-table:not(:first-child) {
-      display: none; /* Hide all tables by default except the first one */
-    }
-    .subcategory-content {
-      display: none; /* Hide content by default */
-    }
-    .subcategory-header input[type="checkbox"]:checked ~ .subcategory-content {
-      display: block; /* Show content when checkbox is checked */
-    }
-    .subcategory-header input[type="checkbox"]:checked ~ .subcategory-content .input-table {
-      display: table; /* Show table when parent content is shown */
-    }
-    .input-table th, .input-table td {
-      padding: 8px;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
-    .action-buttons {
-      white-space: nowrap;
-    }
-    .remove-row-btn {
-      background: none;
-      border: none;
-      color: #f44336;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 0 3px;
-    }
-    .add-row-btn {
-      display: none; /* Hide the add row buttons */
-    }
-    
-    /* Chiller table styles */
-    .table-responsive {
-      max-height: 70vh;
-      overflow-x: auto;
-      border: 1px solid #dee2e6;
-      margin: 20px 0;
-    }
-    .fixed-col {
-      position: sticky;
-      left: 0;
-      background: white;
-      z-index: 2;
-      min-width: 250px;
-      white-space: nowrap;
-    }
-    .action-col {
-      position: sticky;
-      right: 0;
-      background: white;
-      z-index: 2;
-      min-width: 100px;
-    }
-    .chiller-col {
-      min-width: 180px;
-    }
-    .table thead th {
-      position: sticky;
-      top: 0;
-      background: #f8f9fa;
-      z-index: 3;
-    }
-    .form-control-sm {
-      padding: 0.25rem 0.5rem;
-      font-size: 0.875rem;
-    }
-
-    /* Chiller Column Styles - Fixed Width */
-    .chiller-col {
-      width: 180px !important;
-      min-width: 180px !important;
-      max-width: 180px !important;
-      padding: 0.25rem !important;
-    }
-
-    /* Force all form controls to be exactly the same size */
-    #chillerTableBody td:not(.fixed-col):not(.action-col) {
-      width: 180px !important;
-      min-width: 180px !important;
-      max-width: 180px !important;
-      padding: 0.25rem !important;
-    }
-
-    /* Reset all inputs and selects */
-    #chillerTableBody input:not([type=button]):not([type=checkbox]),
-    #chillerTableBody select,
-    #chillerTableBody .form-control,
-    #chillerTableBody .form-select {
-      width: 100% !important;
-      min-width: 100% !important;
-      max-width: 100% !important;
-      height: 31px !important;
-      padding: 0.25rem 0.5rem !important;
-      box-sizing: border-box !important;
-      font-size: 0.875rem !important;
-      margin: 0 !important;
-      border: 1px solid #ced4da !important;
-      border-radius: 0.2rem !important;
-    }
-
-    /* Input groups */
-    #chillerTableBody .input-group {
-      width: 100% !important;
-      min-width: 100% !important;
-      max-width: 100% !important;
-      display: flex !important;
-    }
-
-    #chillerTableBody .input-group .form-control {
-      flex: 1 1 auto;
-      width: 1% !important;
-      min-width: 0 !important;
-    }
-
-    #chillerTableBody .input-group-text {
-      width: 40px !important;
-      min-width: 40px !important;
-      padding: 0.25rem;
-      font-size: 0.8rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Flex container for special layouts */
-    #chillerTableBody .d-flex {
-      display: flex !important;
-      gap: 4px;
-      width: 100% !important;
+    input[type="number"], .number-format {
+      text-align: right;
     }
   </style>
+  <meta charset="UTF-8">
+  <title>Building Audit Form</title>
 </head>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="style.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+<script src="script.js"></script>
 <body>
 
   <div class="header">
@@ -571,17 +22,17 @@
     <img src="HCL-Technologies-Symbol.png" alt="Right Logo Placeholder">
   </div>
 
-<!-- Add expand/collapse all buttons -->
-<div class = "container">
-<div class="expand-collapse-controls">
-  <button type="button" id="expandAllBtn">Expand All</button>
-  <button type="button" id="collapseAllBtn">Collapse All</button>
-</div>
-<div class="form-actions">
-  <button type="button" onclick="saveForm()">Save</button>
-  <button type="submit" onclick="submitForm()">Submit</button>
-</div>
-</div>
+  <!-- Add expand/collapse all buttons -->
+  <div class = "container">
+    <div class="expand-collapse-controls">
+      <button type="button" id="expandAllBtn">Expand All</button>
+      <button type="button" id="collapseAllBtn">Collapse All</button>
+    </div>
+    <div class="form-actions">
+      <button type="button" onclick="saveForm()">Save</button>
+      <button type="submit" onclick="submitForm()">Submit</button>
+    </div>
+  </div>
 
 <h2 onclick="toggleSection('buildingInfo')">Building Information</h2>
 <div id="buildingInfo" class="section">
@@ -679,11 +130,11 @@
     <!-- <div class="form-inputs"> -->
       <div class="input-group">
         <span>No. of Floors Above grade:</span>
-        <input type="number" min="0" max="99" required style="width: 60px;" name="floors_above_grade">
+        <input type="text" class="number-format" min="0" max="99" required style="width: 60px;" name="floors_above_grade">
       </div>
       <div class="input-group">
         <span>No.of Floors Below Grade:</span>
-        <input type="number" min="0" max="9" style="width: 60px;" name="floors_below_grade">
+        <input type="text" class="number-format" min="0" max="9" style="width: 60px;" name="floors_below_grade">
       </div>
       <div class="input-group">
         <span>Ownership:</span>
@@ -725,7 +176,7 @@
     <div class="form-inputs">
       <div class="input-group">
         <span>Site Area:</span>
-        <input type="number" min="0" required style="width: 80px;">
+        <input type="text" class="number-format" min="0" required style="width: 80px;">
         <select>
           <option value="sqm">sq.m</option>
           <option value="sqft">sq.ft</option>
@@ -734,7 +185,7 @@
       </div>
       <div class="input-group">
         <span>Built-up Area:</span>
-        <input type="number" min="0" required style="width: 80px;">
+        <input type="text" class="number-format" min="0" required style="width: 80px;">
         <select>
           <option value="sqm">sq.m</option>
           <option value="sqft">sq.ft</option>
@@ -742,7 +193,7 @@
       </div>
       <div class="input-group">
         <span>Basement Parking:</span>
-        <input type="number" min="0" style="width: 80px;">
+        <input type="text" class="number-format" min="0" style="width: 80px;">
         <select>
           <option value="sqm">sq.m</option>
           <option value="sqft">sq.ft</option>
@@ -750,12 +201,12 @@
       </div>
       <div class="input-group">
         <span>Ground Coverage:</span>
-        <input type="number" min="0" maxlength="3" style="width: 60px;">
+        <input type="text" class="number-format" min="0" maxlength="3" style="width: 60px;">
         <span>%</span>
       </div>
       <div class="input-group">
         <span>Open Area:</span>
-        <input type="number" min="0" style="width: 80px;">
+        <input type="text" class="number-format" min="0" style="width: 80px;">
         <select>
           <option value="sqm">sq.m</option>
           <option value="sqft">sq.ft</option>
@@ -774,20 +225,20 @@
     <div class="form-inputs">
       <div class="input-group">
         <span>Number of Keys/Rooms:</span>
-        <input type="number" required style="width: 60px;">
+        <input type="text" class="number-format" required style="width: 60px;">
       </div>
       <div class="input-group">
         <span>Peak Occupancy Rate:</span>
-        <input type="number" min="0" max="100" style="width: 60px;">
+        <input type="text" class="number-format" min="0" max="100" style="width: 60px;">
         <span>%</span>
       </div>
       <div class="input-group">
         <span>Average Guests/Day:</span>
-        <input type="number" style="width: 60px;">
+        <input type="text" class="number-format" style="width: 60px;">
       </div>
       <div class="input-group">
         <span>Total Staff:</span>
-        <input type="number" style="width: 60px;">
+        <input type="text" class="number-format" style="width: 60px;">
       </div>
     </div>
   </div>
@@ -802,22 +253,22 @@
     <div class="form-inputs">
       <div class="input-group">
         <span>Connected Load:</span>
-        <input type="number" required style="width: 80px;">
+        <input type="text" class="number-format" required style="width: 80px;">
         <span>kW</span>
       </div>
       <div class="input-group">
         <span>Contract Demand:</span>
-        <input type="number" style="width: 80px;">
+        <input type="text" class="number-format" style="width: 80px;">
         <span>kVA</span>
       </div>
       <div class="input-group">
         <span>Backup Power:</span>
-        <input type="number" style="width: 80px;">
+        <input type="text" class="number-format" style="width: 80px;">
         <span>kVA</span>
       </div>
       <div class="input-group">
         <span>Renewable Energy:</span>
-        <input type="number" style="width: 80px;">
+        <input type="text" class="number-format" style="width: 80px;">
         <span>kWp</span>
       </div>
       <div class="input-group">
@@ -861,17 +312,17 @@
     <div class="form-inputs">
       <div class="input-group">
         <span>Daily Water Demand:</span>
-        <input type="number" required style="width: 80px;" name="daily_water_demand">
+        <input type="text" class="number-format" required style="width: 80px;" name="daily_water_demand">
         <span>KLD</span>
       </div>
       <div class="input-group">
         <span>STP Capacity:</span>
-        <input type="number" style="width: 80px;" name="stp_capacity">
+        <input type="text" class="number-format" style="width: 80px;" name="stp_capacity">
         <span>KLD</span>
       </div>
       <div class="input-group">
         <span>Treated Water Reuse:</span>
-        <input type="number" min="0" max="100" style="width: 60px;" name="treated_water_reuse">
+        <input type="text" class="number-format" min="0" max="100" style="width: 60px;" name="treated_water_reuse">
         <span>%</span>
       </div>
       <div class="input-group">
@@ -986,15 +437,15 @@
           </thead>
           <tbody id="banquetTableBody">
             <tr>
-              <td><input type="number" name="banquet_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="banquet_area[]" style="width: 80px;"></td>
               <td>
                 <select name="banquet_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="banquet_capacity[]" style="width: 60px;"></td>
-              <td><input type="number" name="banquet_events[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="banquet_capacity[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="banquet_events[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('banquetTableBody', 'banquet')" style="color: #4CAF50;">+</button>
@@ -1023,15 +474,15 @@
           </thead>
           <tbody id="outdoorLawnTableBody">
             <tr>
-              <td><input type="number" name="outdoor_lawn_occupancy[]" style="width: 60px;"></td>
-              <td><input type="number" name="outdoor_lawn_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="outdoor_lawn_occupancy[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="outdoor_lawn_area[]" style="width: 80px;"></td>
               <td>
                 <select name="outdoor_lawn_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="outdoor_lawn_events[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="outdoor_lawn_events[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('outdoorLawnTableBody', 'outdoorLawn')" style="color: #4CAF50;">+</button>
@@ -1060,15 +511,15 @@
           </thead>
           <tbody id="conferenceTableBody">
             <tr>
-              <td><input type="number" name="conference_capacity[]" style="width: 60px;"></td>
-              <td><input type="number" name="conference_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="conference_capacity[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="conference_area[]" style="width: 80px;"></td>
               <td>
                 <select name="conference_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="conference_hours[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="conference_hours[]" style="width: 80px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('conferenceTableBody', 'conference')" style="color: #4CAF50;">+</button>
@@ -1095,8 +546,8 @@
           </thead>
           <tbody id="businessCentreTableBody">
             <tr>
-              <td><input type="number" name="business_centre_workstations[]" style="width: 60px;"></td>
-              <td><input type="number" name="business_centre_hours[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="business_centre_workstations[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="business_centre_hours[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('businessCentreTableBody', 'businessCentre')" style="color: #4CAF50;">+</button>
@@ -1128,8 +579,8 @@
           </thead>
           <tbody id="restaurantTableBody">
             <tr>
-              <td><input type="number" name="restaurant_seats[]" style="width: 60px;"></td>
-              <td><input type="number" name="restaurant_covers[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="restaurant_seats[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="restaurant_covers[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('restaurantTableBody', 'restaurant')" style="color: #4CAF50;">+</button>
@@ -1156,8 +607,8 @@
           </thead>
           <tbody id="specialityRestaurantTableBody">
             <tr>
-              <td><input type="number" name="speciality_restaurant_seats[]" style="width: 60px;"></td>
-              <td><input type="number" name="speciality_restaurant_covers[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="speciality_restaurant_seats[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="speciality_restaurant_covers[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('specialityRestaurantTableBody', 'specialityRestaurant')" style="color: #4CAF50;">+</button>
@@ -1184,7 +635,7 @@
           </thead>
           <tbody id="cafeTableBody">
             <tr>
-              <td><input type="number" name="cafe_seats[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="cafe_seats[]" style="width: 60px;"></td>
               <td><input type="text" name="cafe_hours[]" style="width: 100px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
@@ -1213,14 +664,14 @@
           </thead>
           <tbody id="kitchenTableBody">
             <tr>
-              <td><input type="number" name="kitchen_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="kitchen_area[]" style="width: 80px;"></td>
               <td>
                 <select name="kitchen_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="kitchen_meals[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="kitchen_meals[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('kitchenTableBody', 'kitchen')" style="color: #4CAF50;">+</button>
@@ -1248,14 +699,14 @@
           </thead>
           <tbody id="staffCafetariaTableBody">
             <tr>
-              <td><input type="number" name="staff_cafetaria_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="staff_cafetaria_area[]" style="width: 80px;"></td>
               <td>
                 <select name="staff_cafetaria_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="staff_cafetaria_meals[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="staff_cafetaria_meals[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('staffCafetariaTableBody', 'staffCafetaria')" style="color: #4CAF50;">+</button>
@@ -1286,7 +737,7 @@
           </thead>
           <tbody id="spaTableBody">
             <tr>
-              <td><input type="number" name="spa_rooms[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="spa_rooms[]" style="width: 60px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('spaTableBody', 'spa')" style="color: #4CAF50;">+</button>
@@ -1313,7 +764,7 @@
           </thead>
           <tbody id="salonTableBody">
             <tr>
-              <td><input type="number" name="salon_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="salon_area[]" style="width: 80px;"></td>
               <td>
                 <select name="salon_area_unit[]">
                   <option value="sqm">sq.m</option>
@@ -1346,7 +797,7 @@
           </thead>
           <tbody id="gymTableBody">
             <tr>
-              <td><input type="number" name="gym_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="gym_area[]" style="width: 80px;"></td>
               <td>
                 <select name="gym_area_unit[]">
                   <option value="sqm">sq.m</option>
@@ -1379,7 +830,7 @@
           </thead>
           <tbody id="multipurposeTableBody">
             <tr>
-              <td><input type="number" name="multipurpose_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="multipurpose_area[]" style="width: 80px;"></td>
               <td>
                 <select name="multipurpose_area_unit[]">
                   <option value="sqm">sq.m</option>
@@ -1412,7 +863,7 @@
           </thead>
           <tbody id="indoorPoolTableBody">
             <tr>
-              <td><input type="number" name="indoor_pool_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="indoor_pool_area[]" style="width: 80px;"></td>
               <td>
                 <select name="indoor_pool_area_unit[]">
                   <option value="sqm">sq.m</option>
@@ -1445,7 +896,7 @@
           </thead>
           <tbody id="outdoorPoolTableBody">
             <tr>
-              <td><input type="number" name="outdoor_pool_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="outdoor_pool_area[]" style="width: 80px;"></td>
               <td>
                 <select name="outdoor_pool_area_unit[]">
                   <option value="sqm">sq.m</option>
@@ -1484,14 +935,14 @@
           </thead>
           <tbody id="laundryTableBody">
             <tr>
-              <td><input type="number" name="laundry_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="laundry_area[]" style="width: 80px;"></td>
               <td>
                 <select name="laundry_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="laundry_kg[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="laundry_kg[]" style="width: 80px;"></td>
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('laundryTableBody', 'laundry')" style="color: #4CAF50;">+</button>
@@ -1520,14 +971,14 @@
           </thead>
           <tbody id="parkingTableBody">
             <tr>
-              <td><input type="number" name="parking_area[]" style="width: 80px;"></td>
+              <td><input type="text" class="number-format" name="parking_area[]" style="width: 80px;"></td>
               <td>
                 <select name="parking_area_unit[]">
                   <option value="sqm">sq.m</option>
                   <option value="sqft">sq.ft</option>
                 </select>
               </td>
-              <td><input type="number" name="parking_spaces[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="parking_spaces[]" style="width: 60px;"></td>
               <td>
                 <select name="parking_lighting[]">
                   <option value="">Select type</option>
@@ -1563,10 +1014,14 @@
         <thead>
           <tr>
             <th class="fixed-col">Parameter</th>
-            <th class="chiller-col">Chiller 1</th>
-            <th class="action-col text-center">
-              <button type="button" class="btn btn-sm btn-success me-1" onclick="addChillerColumn()">+</button>
-              <button type="button" class="btn btn-sm btn-danger" onclick="removeChillerColumn()">-</button>
+            <th class="chiller-col">
+              <div class="chiller-header">
+                <span>Chiller 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="chillerCount = removeColumn(chillerCount, 1, 'chillerTableBody', 'chiller', 'Chiller')" title="Remove Chiller" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="chillerCount = addTableColumn(chillerCount, 'chillerTableBody', 'chiller', 'Chiller')" title="Add Chiller">+</button>
             </th>
           </tr>
         </thead>
@@ -1612,17 +1067,17 @@
           </tr>
           <tr>
             <td class="fixed-col">Number of Chillers</td>
-            <td><input type="number" name="chiller1_quantity" class="form-control form-control-sm" min="1"></td>
+            <td><input type="text" class="number-format" name="chiller1_quantity" class="form-control form-control-sm" min="1"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Working</td>
-            <td><input type="number" name="chiller1_working" class="form-control form-control-sm" min="0" placeholder="Count"></td>
+            <td><input type="text" class="number-format" name="chiller1_working" class="form-control form-control-sm" min="0" placeholder="Count"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Standby</td>
-            <td><input type="number" name="chiller1_standby" class="form-control form-control-sm" min="0" placeholder="Count"></td>
+            <td><input type="text" class="number-format" name="chiller1_standby" class="form-control form-control-sm" min="0" placeholder="Count"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
@@ -1632,24 +1087,24 @@
           </tr>
           <tr>
             <td class="fixed-col">Avg Running Hrs (Seasonal)</td>
-            <td><input type="number" name="chiller1_seasonal_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
+            <td><input type="text" class="number-format" name="chiller1_seasonal_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Avg Running Hrs (Day/Night)</td>
-            <td><input type="number" name="chiller1_daynight_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
+            <td><input type="text" class="number-format" name="chiller1_daynight_hrs" class="form-control form-control-sm" step="0.1" min="0" placeholder="Hours"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Capacity (TR)</td>
-            <td><input type="number" name="chiller1_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td><input type="text" class="number-format" name="chiller1_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Avg Loading %</td>
             <td>
               <div class="input-group input-group-sm">
-                <input type="number" name="chiller1_loading_pct" class="form-control" min="0" max="100">
+                <input type="text" class="number-format" name="chiller1_loading_pct" class="form-control" min="0" max="100">
                 <span class="input-group-text">%</span>
               </div>
             </td>
@@ -1664,7 +1119,7 @@
             <td class="fixed-col">Avg Setpoint (Seasonal)</td>
             <td>
               <div class="input-group input-group-sm">
-                <input type="number" name="chiller1_seasonal_setpoint" class="form-control" step="0.1">
+                <input type="text" class="number-format" name="chiller1_seasonal_setpoint" class="form-control" step="0.1">
                 <span class="input-group-text">°C</span>
               </div>
             </td>
@@ -1674,7 +1129,7 @@
             <td class="fixed-col">Avg Setpoint (Day/Night)</td>
             <td>
               <div class="input-group input-group-sm">
-                <input type="number" name="chiller1_daynight_setpoint" class="form-control" step="0.1">
+                <input type="text" class="number-format" name="chiller1_daynight_setpoint" class="form-control" step="0.1">
                 <span class="input-group-text">°C</span>
               </div>
             </td>
@@ -1682,21 +1137,21 @@
           </tr>
           <tr>
             <td class="fixed-col">Rated kW/TR</td>
-            <td><input type="number" name="chiller1_rated_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td><input type="text" class="number-format" name="chiller1_rated_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
             <td class="fixed-col">Actual kW/TR</td>
-            <td><input type="number" name="chiller1_actual_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td><input type="text" class="number-format" name="chiller1_actual_kwtr" class="form-control form-control-sm" step="0.01" min="0"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
-            <td class="fixed-col">VFD/Non-VFD</td>
+            <td class="fixed-col">VFD</td>
             <td>
-              <select name="chiller1_vfd_status" class="form-control form-control-sm">
+              <select name="chiller1_vfd_status" class="form-control form-control-sm" onchange="updateVFDModulationField(this)">
                 <option value="">Select</option>
-                <option>VFD</option>
-                <option>Non-VFD</option>
+                <option>Yes</option>
+                <option>No</option>
               </select>
             </td>
             <td class="action-col"></td>
@@ -1705,7 +1160,7 @@
             <td class="fixed-col">VFD Modulation %</td>
             <td>
               <div class="input-group input-group-sm">
-                <input type="number" name="chiller1_vfd_modulation" class="form-control" min="0" max="100" disabled>
+                <input type="text" class="number-format" name="chiller1_vfd_modulation" class="form-control" min="0" max="100" disabled>
                 <span class="input-group-text">%</span>
               </div>
             </td>
@@ -1737,7 +1192,7 @@
           </tr>
           <tr>
             <td class="fixed-col">Avg Top-up per year (kg)</td>
-            <td><input type="number" name="chiller1_refrigerant_topup" class="form-control form-control-sm" step="0.1" min="0"></td>
+            <td><input type="text" class="number-format" name="chiller1_refrigerant_topup" class="form-control form-control-sm" step="0.1" min="0"></td>
             <td class="action-col"></td>
           </tr>
           <tr>
@@ -1776,13 +1231,13 @@
           <tr>
             <td class="fixed-col">Chilled Water Line Insulation Damage</td>
             <td>
-              <div class="d-flex gap-2">
-                <select name="chiller1_insulation_damage" class="form-control form-control-sm" style="width: 60%;">
+              <div class="d-grid" style="grid-template-columns: 60% 40%; gap: 0.5rem;">
+                <select name="chiller1_insulation_damage" class="form-control form-control-sm">
                   <option value="">Select</option>
                   <option>Yes</option>
                   <option>No</option>
                 </select>
-                <input type="number" name="chiller1_insulation_damage_pct" class="form-control form-control-sm" min="0" max="100" placeholder="%" disabled style="width: 40%;">
+                <input type="text" class="number-format" name="chiller1_insulation_damage_pct" class="form-control form-control-sm" min="0" max="100" placeholder="%" disabled>
               </div>
             </td>
             <td class="action-col"></td>
@@ -1793,78 +1248,415 @@
 
     <script>
       let chillerCount = 1;
-
       function addChillerColumn() {
-        chillerCount++;
-        const tbody = document.getElementById('chillerTableBody');
-        const rows = tbody.rows;
-        
-        // Update header
-        const headerRow = tbody.previousElementSibling.rows[0];
-        const newHeader = document.createElement('th');
-        newHeader.className = 'chiller-col';
-        newHeader.textContent = `Chiller ${chillerCount}`;
-        headerRow.insertBefore(newHeader, headerRow.lastElementChild);
-        
-        // Add cells to each row
-        for (let i = 0; i < rows.length; i++) {
-          const firstCell = rows[i].cells[1];
-          const newCell = firstCell.cloneNode(true);
-          
-          // Update input names
-          const inputs = newCell.getElementsByTagName('input');
-          const selects = newCell.getElementsByTagName('select');
-          
-          for (let input of inputs) {
-            input.name = input.name.replace('chiller1_', `chiller${chillerCount}_`);
-            input.value = '';
-            input.id = input.id ? input.id.replace('chiller1_', `chiller${chillerCount}_`) : '';
-            if (input.type === 'checkbox') {
-              input.checked = false;
-            }
-            // Remove any existing datepicker classes and data
-            if ($(input).hasClass('hasDatepicker')) {
-              $(input).removeClass('hasDatepicker');
-              $(input).removeAttr('id');
-              $(input).datepicker('destroy');
-            }
-          }
-          
-          for (let select of selects) {
-            select.name = select.name.replace('chiller1_', `chiller${chillerCount}_`);
-            select.id = select.id ? select.id.replace('chiller1_', `chiller${chillerCount}_`) : '';
-            select.selectedIndex = 0;
-          }
-          
-          rows[i].insertBefore(newCell, rows[i].lastElementChild);
-        }
-        
-        // Reinitialize year pickers and VFD fields for the new column
-        $(document).trigger('columnAdded');
-        $('[name^="chiller' + chillerCount + '_vfd_status"]').each(function() {
-          updateVFDModulationField(this);
-        });
+        chillerCount = addTableColumn(chillerCount, 'chillerTableBody', 'chiller', 'Chiller')
+      }
+      function removeChillerColumn(clickedIndex) {
+        removeColumn(chillerCount, clickedIndex, 'chillerTableBody', 'chiller', 'Chiller')
       }
 
-      function removeChillerColumn() {
-        if (chillerCount <= 1) return;
+    </script>
+  </div>
+
+  <!-- Boiler in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="boilerCheck"> 
+    Boiler Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="boiler-col tbl-col">
+              <div class="boiler-header">
+                <span>Boiler 1</span>
+                <!-- <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeColdRoomColumn(1)" title="Remove ColdRoom" disabled>-</button> -->
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeBoilerColumn(1)" title="Remove Boiler" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addBoilerColumn()" title="Add Boiler">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="boilerTableBody" class ="componenttblBody">
+          
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="boiler1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Type of Unit </td>
+            <td>
+              <select name="boiler1_unit" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Fuel</option>
+                <option>Electricity</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">VFD Install </td>
+            <td>
+              <select name="boiler1_vfd" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+
+          <tr>
+            <td class="fixed-col">Fuel Consumption (Lts/day)</td>
+            <td><input type="text" class="number-format" name="boiler1_fuelConsumption" class="form-control form-control-sm" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Electricity Consumption (kW)</td>
+            <td><input type="text" class="number-format" name="boiler1_electricityConsumption" class="form-control form-control-sm" step="1" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Capacity (TPH)</td>
+            <td><input type="text" class="number-format" name="boiler1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+
+          
+          
+          <tr>
+            <td class="fixed-col">Insulation damage </td>
+            <td>
+              <select name="boiler1_insulationDamage" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Damage (%)</td>
+            <td><input type="text" class="number-format" name="boilder1_damagePercentage" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let boilerCount = 1;
+
+      function addBoilerColumn() {
+        boilerCount = addTableColumn(boilerCount, 'boilerTableBody', 'boiler', 'Boiler')
         
-        const tbody = document.getElementById('chillerTableBody');
-        const headerRow = tbody.previousElementSibling.rows[0];
-        
-        // Remove header
-        headerRow.removeChild(headerRow.cells[headerRow.cells.length - 2]);
-        
-        // Remove cells from each row
-        const rows = tbody.rows;
-        for (let i = 0; i < rows.length; i++) {
-          rows[i].deleteCell(rows[i].cells.length - 2);
-        }
-        
-        chillerCount--;
+      }
+
+      function removeBoilerColumn(clickedIndex) {
+        boilerCount = removeColumn(boilerCount,clickedIndex,'boilerTableBody', 'boiler', 'Boiler')
+
       }
     </script>
   </div>
+  <!-- Boiler in chillers Section (Nikunj)-->
+  
+  
+  <div class="subcategory-header">
+    <input type="checkbox" id="solarhotwaterCheck">
+    Solar Hot Water Details
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="solarhotwater-col tbl-col">
+              <div class="solarhotwater-header">
+                <span>Solar Hot Water 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeSolarHotWaterColumn(1)" title="Remove Solar Hot Water" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addSolarHotWaterColumn()" title="Add Solar Hot Water">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="solarhotwaterTableBody" class ="componenttblBody">
+         
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="solarhotwater1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Type of collector</td>
+            <td>
+              <select name="solarhotwater1_type_of_collector" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Flat Plate</option>
+                <option>Evacuated Tube</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (KLD)</td>
+            <td><input type="text" class="number-format" name="solarhotwater1_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+          <tr>
+            <td class="fixed-col">Insulation Damage</td>
+            <td>
+              <div class="d-grid" style="grid-template-columns: 60% 40%; gap: 0.5rem;">
+                <select name="solarhotwater1_insulation_damage" class="form-control form-control-sm solarhotwater-insulation-select">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                </select>
+                <input type="text" class="number-format" name="solarhotwater1_insulation_damage_pct" class="form-control form-control-sm solarhotwater-insulation-pct" min="0" max="100" placeholder="%" disabled>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+         
+          
+          
+
+         
+          
+          
+          
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let solarhotwaterCount = 1;
+      function addSolarHotWaterColumn() {
+        solarhotwaterCount = addTableColumn(solarhotwaterCount, 'solarhotwaterTableBody', 'solarhotwater', 'Solar Hot Water');
+      }
+      function removeSolarHotWaterColumn(clickedIndex) {
+        solarhotwaterCount = removeColumn(solarhotwaterCount, clickedIndex, 'solarhotwaterTableBody', 'solarhotwater', 'Solar Hot Water');
+      }
+    </script>
+  </div>
+
+  <!-- Fresh air/Exhaust air/Pressurization fan Section -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="FreshAirCheck"> 
+    Fresh air/Exhaust air/Pressurization fan Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="freshair-col tbl-col">
+              <div class="freshair-header">
+                <span>FreshAir 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeFreshAirColumn(1)" title="Remove FreshAir" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addFreshAirColumn()" title="Add FreshAir">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="freshairTableBody" class ="componenttblBody">
+         
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="freshair1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Air flow rate (CFM)</td>
+            <td><input type="text" class="number-format" name="freshair1_airflow_rate" class="form-control form-control-sm" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Motor Capacity (kW)</td>
+            <td><input type="text" class="number-format" name="freshair1_motor_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+          
+         
+          
+          <tr>
+            <td class="fixed-col">Rating </td>
+            <td>
+              <input type="text" name="freshair1_rating" class="form-control form-control-sm" >
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">VFD</td>
+            <td>
+              <select name="freshair1_vfd_status" class="form-control form-control-sm" onchange="updateVFDModulatingfrequencyField(this)">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Modulating frequency range ( Min-Max Hz)</td>
+            <td>
+              <div class="input-group input-group-sm">
+                <input type="text" class="number-format" name="freshair1_vfd_modulation" class="form-control"  disabled>
+                <!-- <span class="input-group-text">Min-Max Hz</span> -->
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let freshairCount = 1;
+      function addFreshAirColumn() {
+        freshairCount = addTableColumn(freshairCount, 'freshairTableBody', 'freshair', 'FreshAir')
+      }
+      function removeFreshAirColumn(clickedIndex) {
+        removeColumn(freshairCount, clickedIndex, 'freshairTableBody', 'freshair', 'FreshAir')
+      }
+    </script>
+  </div>
+
+  <!-- Cold rooms/Walk in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="coldRoomCheck"> 
+    Cold rooms/Walk in chillers Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="coldroom-col tbl-col">
+              <div class="coldroom-header">
+                <span>ColdRoom 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="coldroomCount = removeColumn(coldroomCount, 1, 'coldroomTableBody', 'coldroom', 'ColdRoom')" title="Remove ColdRoom" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="coldroomCount = addTableColumn(coldroomCount, 'coldroomTableBody', 'coldroom', 'ColdRoom')" title="Add ColdRoom">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="coldroomTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Type of Chiller</td>
+            <td>
+              <select name="coldroom1_type" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Deep freeze</option>
+                <option>Normal</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">EER/SEER Rating</td>
+            <td><input type="text" class="number-format" name="coldroom1_eer_rating" class="form-control form-control-sm" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="coldroom1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Number of Chillers</td>
+            <td><input type="text" class="number-format" name="coldroom1_quantity" class="form-control form-control-sm" min="1"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR)</td>
+            <td><input type="text" class="number-format" name="coldroom1_capacity" class="form-control form-control-sm" step="0.01" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+          
+         
+          
+          <tr>
+            <td class="fixed-col">Refrigerant </td>
+            <td>
+              <select name="coldroom1_refrigerant" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>R134a</option>
+                <option>R404</option>
+                <option>R410a</option>
+                <option>Other</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Avg Top-up per year (kg)</td>
+            <td><input type="text" class="number-format" name="coldroom1_refrigerant_topup" class="form-control form-control-sm" step="0.1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          
+          
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let coldroomCount = 1;
+      function addColdRoomColumn() {
+        coldroomCount = addTableColumn(coldroomCount, 'coldroomTableBody', 'coldroom', 'ColdRoom')
+      }
+      function removeColdRoomColumn(clickedIndex) {
+        removeColumn(coldroomCount, clickedIndex, 'coldroomTableBody', 'coldroom', 'ColdRoom')
+      }
+      
+    </script>
+  </div>
+  <!-- Cold rooms/Walk in chillers Section (Nikunj)-->
+
+  <!-- Solar Hot Water Section -->
+  
+
 </div>
 
 <!-- <div class="form-actions">
@@ -1920,28 +1712,29 @@
   function toggleCollapsible(header) {
     const isCategory = header.classList.contains('category-header');
     const content = header.nextElementSibling;
-    const isCollapsed = header.classList.contains('collapsed');
     
-    // Toggle the collapsed state - reversed logic
-    if (isCollapsed) {
-      header.classList.remove('collapsed');
-      if (content) {
-        content.style.display = 'block';
-        content.classList.remove('collapsed');
-      }
-    } else {
+    // Toggle the collapsed state
+    const willCollapse = !header.classList.contains('collapsed');
+    
+    if (willCollapse) {
       header.classList.add('collapsed');
       if (content) {
         content.style.display = 'none';
         content.classList.add('collapsed');
       }
+    } else {
+      header.classList.remove('collapsed');
+      if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+      }
     }
     
-    // Handle checkbox state for subcategories - reversed logic
+    // Handle checkbox state for subcategories
     if (!isCategory) {
       const checkbox = header.querySelector('input[type="checkbox"]');
       if (checkbox) {
-        checkbox.checked = isCollapsed; // Changed from !isCollapsed to isCollapsed
+        checkbox.checked = !willCollapse;
       }
     }
   }
@@ -1951,19 +1744,26 @@
     // Set up category headers
     const categoryHeaders = document.querySelectorAll('.category-header');
     categoryHeaders.forEach(header => {
-      // Initialize state
-      header.classList.add('collapsed');
-      const content = header.nextElementSibling;
-      if (content) {
-        content.style.display = 'none';
-        content.classList.add('collapsed');
-      }
-      
       // Add click handler
       header.addEventListener('click', function(e) {
         e.stopPropagation();
         toggleCollapsible(this);
       });
+      
+      // Initialize state - collapsed by default
+      const content = header.nextElementSibling;
+      const isInitiallyExpanded = header.hasAttribute('data-expanded');
+      
+      if (!isInitiallyExpanded) {
+        header.classList.add('collapsed');
+        if (content) {
+          content.style.display = 'none';
+          content.classList.add('collapsed');
+        }
+      } else if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+      }
     });
     
     // Set up subcategory headers with checkboxes
@@ -1971,12 +1771,20 @@
     subcategoryHeaders.forEach(header => {
       const checkbox = header.querySelector('input[type="checkbox"]');
       const content = header.nextElementSibling;
+      const isInitiallyExpanded = header.hasAttribute('data-expanded');
       
-      // Initialize state
-      header.classList.add('collapsed');
-      if (content) {
-        content.style.display = 'none';
-        content.classList.add('collapsed');
+      // Initialize state - collapsed by default unless specified otherwise
+      if (!isInitiallyExpanded) {
+        header.classList.add('collapsed');
+        if (content) {
+          content.style.display = 'none';
+          content.classList.add('collapsed');
+        }
+        if (checkbox) checkbox.checked = false;
+      } else if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+        if (checkbox) checkbox.checked = true;
       }
       if (checkbox) {
         checkbox.checked = false;
@@ -2257,7 +2065,11 @@
 </script>
 
 <script>
-// Initialize year pickers
+// =========================
+// Utility Functions
+// =========================
+
+// Initialize year pickers for all elements with .year-picker
 function initializeYearPickers() {
   $('.year-picker').not('.hasYearPicker').addClass('hasYearPicker').datepicker({
     changeMonth: false,
@@ -2267,9 +2079,7 @@ function initializeYearPickers() {
     yearRange: '1900:2100',
     beforeShow: function(input, inst) {
       setTimeout(function() {
-        $(".ui-datepicker-month").hide();
-        $(".ui-datepicker-calendar").hide();
-        $(".ui-datepicker-close").hide();
+        $(".ui-datepicker-month, .ui-datepicker-calendar, .ui-datepicker-close").hide();
       }, 0);
     },
     onClose: function(dateText, inst) {
@@ -2281,59 +2091,71 @@ function initializeYearPickers() {
   });
 }
 
-// Initialize on document ready
+// Enable/disable VFD modulation field based on VFD status
+// Enable/disable VFD modulation field based on VFD status (Chiller, Cold Room, etc)
+function updateVFDModulationField(select) {
+  var $td = $(select).closest('td');
+  var colIndex = $td.index();
+  var $nextRow = $(select).closest('tr').next();
+  var $targetTd = $nextRow.find('td').eq(colIndex);
+  var $input = $targetTd.find('input[type="number"]');
+  if ($(select).val() === "Yes") {
+    $input.prop('disabled', false);
+  } else {
+    $input.prop('disabled', true).val('');
+  }
+}
+
+// Enable/disable VFD modulating frequency field for Fresh Air section
+function updateVFDModulatingfrequencyField(select) {
+  var $td = $(select).closest('td');
+  var colIndex = $td.index();
+  var $nextRow = $(select).closest('tr').next();
+  var $targetTd = $nextRow.find('td').eq(colIndex);
+  var $input = $targetTd.find('input[type="number"]');
+  if ($(select).val() === "Yes") {
+    $input.prop('disabled', false);
+  } else {
+    $input.prop('disabled', true).val('');
+  }
+}
+
+
+// =========================
+// Main Initialization
+// =========================
+
 $(document).ready(function() {
-  // Initialize collapsibles
-  if (typeof initializeCollapsibles === 'function') {
-    initializeCollapsibles();
-  }
-  
-  // Handle VFD status change
-  $(document).on('change', '[name$="_vfd_status"]', function() {
-    if (typeof updateVFDModulationField === 'function') {
-      updateVFDModulationField(this);
-    }
-  });
-  
-  // Initialize year pickers when new columns are added
-  $(document).on('columnAdded', function() {
-    if (typeof initializeYearPickers === 'function') {
-      initializeYearPickers();
-    }
-    
-    // Reinitialize VFD fields for new columns
-    if (typeof updateVFDModulationField === 'function') {
-      $('[name^="chiller"][name$="_vfd_status"]').each(function() {
-        if (!$(this).data('vfd-initialized')) {
-          updateVFDModulationField(this);
-          $(this).data('vfd-initialized', true);
-        }
-      });
-    }
-  });
-});
+  // 1. Initialize year pickers on page load
+  initializeYearPickers();
 
-  // Enable/disable VFD modulation field based on VFD status
-  function updateVFDModulationField(select) {
-    const vfdModulationInput = $(select).closest('tr').next().find('input[type="number"]');
-    const isVFD = $(select).val() === 'VFD';
-    vfdModulationInput.prop('disabled', !isVFD);
-    if (!isVFD) {
-      vfdModulationInput.val('');
-    }
-  }
-
-  // Initialize VFD modulation fields on page load
+  // 2. Initialize VFD modulation fields on page load
   $('[name^="chiller"][name$="_vfd_status"]').each(function() {
     updateVFDModulationField(this);
   });
+  // 2b. Initialize Fresh Air VFD modulating frequency fields on page load
+  $('[name^="freshair"][name$="_vfd_status"]').each(function() {
+    updateVFDModulatingfrequencyField(this);
+  });
 
-  // Handle VFD status changes
+  // 3. Handle VFD status changes
   $(document).on('change', '[name^="chiller"][name$="_vfd_status"]', function() {
     updateVFDModulationField(this);
   });
+  // 3b. Handle Fresh Air VFD status changes
+  $(document).on('change', '[name^="freshair"][name$="_vfd_status"]', function() {
+    updateVFDModulatingfrequencyField(this);
+  });
 
-  // Enable/disable insulation damage percentage
+  // 4. Re-initialize year pickers and VFD fields when columns are added
+  $(document).on('columnAdded', function() {
+    initializeYearPickers();
+    $('[name^="chiller"][name$="_vfd_status"]').each(function() {
+      updateVFDModulationField(this);
+    });
+  });
+
+  // 5. Enable/disable insulation damage percentage input based on selection
   $(document).on('change', '[name^="chiller"][name$="_insulation_damage"]', function() {
     const damagePercentInput = $(this).closest('td').find('input[type="number"]');
     const hasDamage = $(this).val() === 'Yes';
@@ -2342,7 +2164,28 @@ $(document).ready(function() {
       damagePercentInput.val('');
     }
   });
+
+  // 6. Collapsible logic for subheadings (e.g., Chiller Details)
+  $('.subcategory-header').css('cursor', 'pointer').on('click', function(e) {
+    // Only toggle if NOT clicking the checkbox
+    if ($(e.target).is('input[type="checkbox"]')) return;
+    $(this).toggleClass('collapsed');
+    $(this).next('.subcategory-content').slideToggle(200);
+  });
 });
 </script>
+  <script src="script.js"></script>
+  <script>
+    // Initialize number formatting on all number inputs on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof initNumberFormatting === 'function') {
+        initNumberFormatting();
+      }
+    });
+  </script>
 </body>
 </html>
+
+
+
+
