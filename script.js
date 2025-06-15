@@ -1,4 +1,23 @@
 //parameter (1, 'coldroomTableBody', 'coldroom', 'ColdRoom')
+function getRemoveFunctionName(ComponentText) {
+  // Map display name to actual remove function name
+  const map = {
+    'Solar Hot Water': 'removeSolarHotWaterColumn',
+    'ColdRoom': 'removeColdRoomColumn',
+    'Boiler': 'removeBoilerColumn',
+    'Chiller': 'removeChillerColumn',
+    'Heat Pump': 'removeHeatPumpColumn',
+    "Split Unit": 'removeSplitUnitColumn',
+    "Unit": 'removePackagedUnitColumn',
+    "Fan Coil Unit": 'removeFanCoilUnitColumn',
+    "Air Handling Unit": 'removeAirHandlingUnitColumn',
+    "Treated Fresh Air Unit": 'removeTreatedFreshAirUnitColumn',
+    "Cooling Tower": 'removeCoolingTowerColumn',
+    // Add more mappings as needed
+  };
+  return map[ComponentText] || `remove${ComponentText}Column`;
+}
+
 function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
   //increase the colcount
   colCount++;
@@ -14,7 +33,7 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
   newHeader.innerHTML = `
       <div class=${componentTypeID}"-header">
       <span>${ComponentText} ${colCount}</span>
-      <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="remove${ComponentText}Column(${colCount - 1})" title="Remove ${ComponentText}">-</button>
+      <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="${getRemoveFunctionName(ComponentText)}(${colCount - 1})" title="Remove ${ComponentText}" ${colCount === 1 ? 'disabled' : ''}>-</button>
       </div>
   `;
 
@@ -35,11 +54,13 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       // Update input names
       const inputs = newCell.getElementsByTagName('input');
       const selects = newCell.getElementsByTagName('select');
+        // regex to match any existing numeric suffix
+        const idRegex = new RegExp(`(${componentTypeID})(\\d+)_`, 'g');
       
       for (let input of inputs) {
-      input.name = input.name.replace(`${componentTypeID}1_`, `${componentTypeID}${colCount}_`);
+      input.name = input.name.replace(idRegex, `$1${colCount}_`);
       input.value = '';
-      input.id = input.id ? input.id.replace(`${componentTypeID}1_`, `${componentTypeID}${colCount}_`) : '';
+      input.id = input.id ? input.id.replace(idRegex, `$1${colCount}_`) : '';
       if (input.type === 'checkbox') {
           input.checked = false;
       }
@@ -52,8 +73,8 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       }
       
       for (let select of selects) {
-      select.name = select.name.replace(`${componentTypeID}1_`, `${componentTypeID}${colCount}_`);
-      select.id = select.id ? select.id.replace(`${componentTypeID}1_`, `${componentTypeID}${colCount}_`) : '';
+      select.name = select.name.replace(idRegex, `$1${colCount}_`);
+      select.id = select.id ? select.id.replace(idRegex, `$1${colCount}_`) : '';
       select.selectedIndex = 0;
       }
       
@@ -66,6 +87,25 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
   $('[name^="'+componentTypeID + colCount + '_vfd_status"]').each(function() {
       updateVFDModulationField(this);
   });
+  // if(componentTypeID === 'boiler') {
+  //   setTimeout(function() {
+  //     $('.boiler-insulation-select[data-col="'+colCount+'"]').on('change', function() {
+  //       var col = $(this).data('col');
+  //       var show = $(this).val() === 'Yes';
+  //       $('.boiler-damage-row[data-col="'+col+'"]').toggle(show);
+  //     }).trigger('change');
+  //   }, 10);
+  // }
+  // // Attach boiler insulation damage dependency logic for the first column
+  // if (colCount === 1) {
+  //   document.addEventListener('DOMContentLoaded', function() {
+  //     console.log('Attaching boiler insulation damage dependency logic');
+  //     $('.boiler-insulation-select[data-col="1"]').on('change', function() {
+  //       var show = $(this).val() === 'Yes';
+  //       $('.boiler-damage-row[data-col="1"]').toggle(show);
+  //     }).trigger('change');
+  //   });
+  // }
   return colCount;
 
 }
@@ -190,3 +230,153 @@ function initNumberFormatting() {
   const observer = new MutationObserver(attachToInputs);
   observer.observe(document.body, { childList: true, subtree: true });
 }
+
+  // Generic dependency configuration: map controller IDs to value-based enable/disable rules
+  const dependencyConfig = {
+    
+    'chiller1_vfd_status': {
+      'Yes': { enable: ['chiller1_vfd_modulation'], disable: [] },
+      'No': { enable: [], disable: ['chiller1_vfd_modulation'] },
+    },
+    'chiller1_insulation_damage': {
+      'Yes': { enable: ['chiller1_insulation_damage_pct'], disable: [] },
+      'No': { enable: [], disable: ['chiller1_insulation_damage_pct'] },
+
+    },
+    'coolingTower1_vfd': {
+      'Yes': { enable: ['coolingTower1_modulatingFrequencyRange'], disable: [] },
+      'No': { enable: [], disable: ['coolingTower1_modulatingFrequencyRange'] },
+    },
+    
+    'treatedairunit1_vfd': {
+      'Yes': { enable: ['treatedairunit1_modulatingFrequencyRange'], disable: [] },
+      'No': { enable: [], disable: ['treatedairunit1_modulatingFrequencyRange'] },
+    },
+    'treatedairunit1_sensortype': {
+      'DP': { enable: ['treatedairunit1_modulatingFrequencyRange'], disable: [] },
+      'Temperature': { enable: [], disable: ['treatedairunit1_modulatingFrequencyRange'] },
+    },
+    'coolingTower1_bmsIntegration': {
+    'Yes': { enable: ['coolingTower1_sensortype'], disable: [] },
+    'No' : { enable: [], disable: ['coolingTower1_sensortype'] }
+    },
+    'treatedairunit1_bmsIntegration': {
+    'Yes': { enable: ['treatedairunit1_sensortype'], disable: [] },
+    'No' : { enable: [], disable: ['treatedairunit1_sensortype'] }
+    },
+    "airhandlingunit1_vfd": {
+      'Yes': { enable: ['airhandlingunit1_modulatingFrequencyRange'], disable: [] },
+      'No': { enable: [], disable: ['airhandlingunit1_modulatingFrequencyRange'] },
+    },
+    "airwasher1_vfd": {
+      'Yes': { enable: ['airwasher1_modulatingFrequencyRange'], disable: [] },
+      'No': { enable: [], disable: ['airwasher1_modulatingFrequencyRange'] },
+    },
+    "airwasher1_bmsIntegration": {
+    'Yes': { enable: ['airwasher1_sensortype'], disable: [] },
+    'No' : { enable: [], disable: ['airwasher1_sensortype'] }
+    },
+    "heatpump1_vfd": {
+    'Yes': { enable: ['heatpump1_modulatingFrequencyRange'], disable: [] },
+    'No' : { enable: [], disable: ['heatpump1_modulatingFrequencyRange'] }
+    },
+    "boiler1_unit": {
+    'Fuel': { enable: ['boiler1_fuelConsumption','boiler1_vfd'], disable: ['boiler1_electricityConsumption'] },
+    'Electricity' : { enable: ['boiler1_electricityConsumption'], disable: ['boiler1_fuelConsumption','boiler1_vfd'] }
+    },
+    "solarhotwater1_insulation_damage": {
+    'Yes': { enable: ['solarhotwater1_insulation_damage_pct'], disable: [] },
+    'No' : { enable: [], disable: ['solarhotwater1_insulation_damage_pct'] }
+    },
+    "freshair1_vfd": {
+    'Yes': { enable: ['freshair1_modulatingFrequencyRange'], disable: [] },
+    'No' : { enable: [], disable: ['freshair1_modulatingFrequencyRange'] }
+    },
+
+    // 'controllerID': {
+    //   'value1': { enable: ['targetId1','targetId2'], disable: ['targetId3'] },
+    //   'value2': { enable: ['targetId3'], disable: ['targetId1'] },
+    // },
+  };
+
+  // Initialize dependency listeners based on dependencyConfig
+function initDependencies() {
+  Object.keys(dependencyConfig).forEach(ctrlId => {
+    const controllers = document.querySelectorAll(`#${ctrlId}, [name=\"${ctrlId}\"]`);
+    controllers.forEach(el => {
+      const eventType = (el.tagName.toLowerCase() === 'select' || el.type === 'checkbox') ? 'change' : 'input';
+      console.log(`initDependencies: binding to ${ctrlId}`);
+      el.addEventListener(eventType, () => {
+        const val = el.type === 'checkbox' ? String(el.checked) : el.value;
+        console.log(`initDependencies: ${ctrlId} changed to ${val}`);
+        const rules = dependencyConfig[ctrlId] && dependencyConfig[ctrlId][val];
+        if (!rules) return;
+        (rules.enable || []).forEach(key => {
+          const target = document.querySelector(`#${key}, [name=\"${key}\"]`);
+          if (target) {
+            target.disabled = false;
+            console.log(`Enabled ${key}`);
+          }
+        });
+        (rules.disable || []).forEach(key => {
+          const target = document.querySelector(`#${key}, [name=\"${key}\"]`);
+          if (target) {
+            target.disabled = true;
+            console.log(`Disabled ${key}`);
+          }
+        });
+      });
+      // Trigger initial state
+      el.dispatchEvent(new Event(eventType));
+    });
+  });
+}
+
+  // -----  UNIVERSAL DEPENDENCY HANDLER  -----
+(function () {
+  // Pre-compute a regex + metadata for every key in dependencyConfig
+  const descriptors = Object.keys(dependencyConfig).map(k => {
+    const m = k.match(/^(.+?)(\d+)(_.*)$/);          // <prefix>1<suffix>
+    if (!m) return null;
+    const [, prefix, origNum, suffix] = m;
+    return {
+      ctrlKey: k,
+      prefix, origNum, suffix,
+      re: new RegExp(`^${prefix}(\\d+)${suffix}$`)   // e.g.  ^chiller(\d+)_vfd_status$
+    };
+  }).filter(Boolean);
+
+  function applyRules(el) {
+    const name = el.name || el.id || '';
+    for (const d of descriptors) {
+      const match = name.match(d.re);
+      if (!match) continue;            // not one of our controllers
+      const col = match[1];            // actual column number clicked
+      const val = el.type === 'checkbox' ? String(el.checked) : el.value;
+      const cfg = dependencyConfig[d.ctrlKey][val];
+      if (!cfg) return;
+
+      // Enable / disable targets, rewriting column 1 -> current column
+      const toggle = (arr, disable) => arr.forEach(targetKey => {
+        const actual = targetKey.replace(d.prefix + d.origNum, d.prefix + col);
+        const t = document.querySelector(`[name="${actual}"], #${actual}`);
+        if (t) t.disabled = disable;
+      });
+      toggle(cfg.enable || [], false);
+      toggle(cfg.disable || [], true);
+      return;
+    }
+  }
+
+  // Delegated listeners (new elements automatically covered)
+  document.addEventListener('change', e => applyRules(e.target), true);
+  document.addEventListener('input',  e => applyRules(e.target), true);
+
+  // Run once on page load so every field starts in the right state
+  window.addEventListener('DOMContentLoaded', () => {
+    descriptors.forEach(d => {
+      const selector = `[name^="${d.prefix}"][name$="${d.suffix}"], [id^="${d.prefix}"][id$="${d.suffix}"]`;
+      document.querySelectorAll(selector).forEach(applyRules);
+    });
+  });
+})();
