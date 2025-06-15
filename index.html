@@ -1148,7 +1148,7 @@
           <tr>
             <td class="fixed-col">VFD</td>
             <td>
-              <select name="chiller1_vfd_status" class="form-control form-control-sm" onchange="updateVFDModulationField(this)">
+              <select id="chiller1_vfd_status" name="chiller1_vfd_status" class="form-control form-control-sm" onchange="updateVFDModulationField(this)">
                 <option value="">Select</option>
                 <option>Yes</option>
                 <option>No</option>
@@ -1160,7 +1160,7 @@
             <td class="fixed-col">VFD Modulation %</td>
             <td>
               <div class="input-group input-group-sm">
-                <input type="text" class="number-format" name="chiller1_vfd_modulation" class="form-control" min="0" max="100" disabled>
+                <input id="chiller1_vfd_modulation" type="text" class="number-format" name="chiller1_vfd_modulation" class="form-control" min="0" max="100" disabled>
                 <span class="input-group-text">%</span>
               </div>
             </td>
@@ -1232,12 +1232,12 @@
             <td class="fixed-col">Chilled Water Line Insulation Damage</td>
             <td>
               <div class="d-grid" style="grid-template-columns: 60% 40%; gap: 0.5rem;">
-                <select name="chiller1_insulation_damage" class="form-control form-control-sm">
+                <select  id="chiller1_insulation_damage" name="chiller1_insulation_damage" class="form-control form-control-sm">
                   <option value="">Select</option>
                   <option>Yes</option>
                   <option>No</option>
                 </select>
-                <input type="text" class="number-format" name="chiller1_insulation_damage_pct" class="form-control form-control-sm" min="0" max="100" placeholder="%" disabled>
+                <input type="text" class="number-format" id="chiller1_insulation_damage_pct" name="chiller1_insulation_damage_pct" class="form-control form-control-sm" min="0" max="100" placeholder="%" disabled>
               </div>
             </td>
             <td class="action-col"></td>
@@ -1257,6 +1257,1151 @@
 
     </script>
   </div>
+
+  <!-- Cooling Tower in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="coolingTowerCheck"> 
+    Cooling Tower Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="coolingTower-col tbl-col">
+              <div class="coolingTower-header">
+                <span>Cooling Tower 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeCoolingTowerColumn(1)" title="Remove Cooling Tower" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addCoolingTowerColumn()" title="Add Cooling Tower">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="coolingTowerTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="coolingTower1_installation_year" class="form-control form-control-sm year-picker" ></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Type of Cooling Tower </td>
+            <td>
+              <select name="coolingTower1_coolingTowerType" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Counter flow</option>
+                <option>Cross flow</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Makeup Water Source </td>
+            <td>
+              <select name="coolingTower1_waterSource" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>STP</option>
+                <option>Portable</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR)</td>
+            <td><input type="number" name="coolingTower1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Quantity</td>
+            <td><input type="number" name="coolingTower1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col"># of Working Tower</td>
+            <td><input type="number" name="coolingTower1_working" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col"># of Stand-by Tower</td>
+            <td><input type="number" name="coolingTower1_standby" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+        
+          <tr>
+            <td class="fixed-col"># of Fan Motors </td>
+            <td><input type="number" name="coolingTower1_fanMotors" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Motor Capacity(kW)</td>
+            <td><input type="number" name="coolingTower1_motorCapacity" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Efficiency Rating </td>
+            <td>
+              <select name="coolingTower1_effRating" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>IE2</option>
+                <option>IE3</option>
+                <option>IE4</option>
+                <option>IE5</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Type of fan blade material  </td>
+            <td>
+              <select name="coolingTower1_bladeMaterial" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Steel</option>
+                <option>Carbon fiber</option>
+                <option>Aluminium</option>
+                <option>FRP</option>
+                <option>Others</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Type of Drive Train  </td>
+            <td>
+              <select name="coolingTower1_driveTrainType" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Belt</option>
+                <option>Shaft</option>
+                <option>Direct</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">EC Motors  </td>
+            <td>
+              <select name="coolingTower1_ecMotors" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">VFD </td>
+            <td>
+              <select id="coolingTower1_vfd" name="coolingTower1_vfd" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+            <td><input id="coolingTower1_modulatingFrequencyRange" type="text" name="coolingTower1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max" disabled></td>
+            <td class="action-col"></td>
+          </tr>
+          
+        
+          <tr>
+            <td class="fixed-col">Integration with BMS</td>
+            <td>
+              <select id="coolingTower1_bmsIntegration" name="coolingTower1_bmsIntegration" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Type of sensor for modulation & control</td>
+            <td>
+              <select id="coolingTower1_sensortype" name="coolingTower1_sensortype" class="form-control form-control-sm" disabled>
+                <option value="">Select</option>
+                <option>DP</option>
+                <option>Temperature</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Chemical treatment for circulating water</td>
+            <td>
+              <select name="coolingTower1_chemicalTreatment" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+               </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+              <td class="fixed-col">Water used from condensate heat recovery from AHU or FCU as make-up water</td>
+              <td>
+                <select name="coolingTower1_waterUsed" class="form-control form-control-sm">
+                  <option value="">Select</option>
+                  <option>Yes</option>
+                  <option>No</option>
+                 </select>
+              </td>
+              <td class="action-col"></td>
+            </tr>
+        
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let coolingTowerCount = 1;
+
+      function addCoolingTowerColumn () {
+        coolingTowerCount = addTableColumn(coolingTowerCount, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower')
+        
+      }
+
+      function removeCoolingTowerColumn(clickedIndex) {
+        coolingTowerCount = removeColumn(coolingTowerCount,clickedIndex,'coolingTowerTableBody', 'coolingTower', 'Cooling Tower')
+
+      }
+    </script>
+  </div>
+  <!--  Cooling Tower in chillers Section (Nikunj)-->
+
+  <!-- Treated Fresh Air Unit in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="treatedairunitCheck"> 
+    Treated Fresh Air Unit Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="treatedairunit-col tbl-col">
+              <div class="treatedairunit-header">
+                <span>Treated Fresh Air Unit 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeTreatedFreshAirUnitColumn(1)" title="Remove Treated Fresh Air Unit" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addTreatedFreshAirUnitColumn()" title="Add Treated Fresh Air Unit">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="treatedairunitTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="treatedairunit1_installation_year" class="form-control form-control-sm year-picker" ></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR/CFM)</td>
+            <td><input type="number" name="treatedairunit1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Quantity</td>
+            <td><input type="number" name="treatedairunit1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col"># of Blowers </td>
+            <td><input type="number" name="treatedairunit1_blowerNo" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Motor Capacity(kW)</td>
+            <td><input type="number" name="treatedairunit1_motorCapacity" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Efficiency Rating </td>
+            <td>
+              <select name="treatedairunit1_effRating" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>IE2</option>
+                <option>IE3</option>
+                <option>IE4</option>
+                <option>IE5</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          
+          <tr>
+            <td class="fixed-col">Type of Drive Train  </td>
+            <td>
+              <select name="treatedairunit1_driveTrainType" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Belt</option>
+                <option>Shaft</option>
+                <option>Direct</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">EC Motors  </td>
+            <td>
+              <select name="treatedairunit1_ecMotors" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">VFD </td>
+            <td>
+              <select id="treatedairunit1_vfd" name="treatedairunit1_vfd" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+            <td><input id="treatedairunit1_modulatingFrequencyRange" type="text" name="treatedairunit1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+        
+          <tr>
+            <td class="fixed-col">Integration with BMS</td>
+            <td>
+              <select name="treatedairunit1_bmsIntegration" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Type of sensor for modulation & control</td>
+            <td>
+              <select name="treatedairunit1_sensortype" class="form-control form-control-sm" disabled>
+                <option value="">Select</option>
+                <option>DP</option>
+                <option>Temperature</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Type of Filter</td>
+            <td>
+              <select name="treatedairunit1_filtertype" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>MERV 1</option>
+                <option>MERV 2</option>
+                <option>MERV 3</option>
+                <option>MERV 4</option>
+                <option>MERV 5</option>
+                <option>MERV 6</option>
+                <option>MERV 7</option>
+                <option>MERV 8</option>
+                <option>MERV 9</option>
+                <option>MERV 10</option>
+                <option>MERV 11</option>
+                <option>MERV 12</option>
+                <option>MERV 13</option>
+                <option>MERV 14</option>
+                <option>MERV 15</option>
+                <option>MERV 16</option>
+                <option>MERV 17</option>
+                <option>MERV 18</option>
+                <option>MERV 19</option>
+                <option>MERV 20</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+        
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let treatedAirUnitCount = 1;
+
+      function addTreatedFreshAirUnitColumn () {
+        treatedAirUnitCount = addTableColumn(treatedAirUnitCount, 'treatedairunitTableBody', 'treatedairunit', 'Treated Fresh Air Unit')
+        
+      }
+
+      function removeTreatedFreshAirUnitColumn(clickedIndex) {
+        treatedAirUnitCount = removeColumn(treatedAirUnitCount,clickedIndex,'treatedairunitTableBody', 'treatedairunit', 'Treated Fresh Air Unit')
+
+      }
+    </script>
+  </div>
+  <!--  Treated Fresh Air Unit in chillers Section (Nikunj)-->
+
+  <div class="subcategory-header">
+    <input type="checkbox" id="airhandlingunitCheck"> 
+    Air Handling Unit Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="airhandlingunit-col tbl-col">
+              <div class="airhandlingunit-header">
+                <span>Air Handling Unit 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeAirHandlingUnitColumn(1)" title="Remove Air Handling Unit" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addAirHandlingUnitColumn()" title="Add Air Handling Unit">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="airhandlingunitTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="airhandlingunit1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR/CFM)</td>
+            <td><input type="number" name="airhandlingunit1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Quantity</td>
+            <td><input type="number" name="airhandlingunit1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col"># of Blowers </td>
+            <td><input type="number" name="airhandlingunit1_blowerNo" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Motor Capacity(kW)</td>
+            <td><input type="number" name="airhandlingunit1_motorCapacity" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Efficiency Rating </td>
+            <td>
+              <select name="airhandlingunit1_effRating" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>IE2</option>
+                <option>IE3</option>
+                <option>IE4</option>
+                <option>IE5</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          
+          <tr>
+            <td class="fixed-col">Type of Drive Train  </td>
+            <td>
+              <select name="airhandlingunit1_driveTrainType" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Belt</option>
+                <option>Shaft</option>
+                <option>Direct</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">EC Motors  </td>
+            <td>
+              <select name="airhandlingunit1_ecMotors" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">VFD </td>
+            <td>
+              <select id="airhandlingunit1_vfd" name="airhandlingunit1_vfd" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+            <td><input id="airhandlingunit1_modulatingFrequencyRange" type="text" name="airhandlingunit1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max" disabled></td>
+            <td class="action-col"></td>
+          </tr>
+          
+        
+          <tr>
+            <td class="fixed-col">Integration with BMS</td>
+            <td>
+              <select name="airhandlingunit1_bmsIntegration" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+
+        
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let airhandlingunitCount = 1;
+
+      function addAirHandlingUnitColumn() {
+        airhandlingunitCount = addTableColumn(airhandlingunitCount, 'airhandlingunitTableBody', 'airhandlingunit', 'Air Handling Unit')
+        
+      }
+
+      function removeAirHandlingUnitColumn(clickedIndex) {
+        airhandlingunitCount = removeColumn(airhandlingunitCount,clickedIndex,'airhandlingunitTableBody', 'airhandlingunit', 'Air Handling Unit')
+
+      }
+    </script>
+  </div>
+
+  <!-- Fan Coil Unit in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="fancoilunitCheck"> 
+    Fan Coil Unit Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="fancoilunit-col tbl-col">
+              <div class="fancoilunit-header">
+                <span>Fan Coil Unit 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeFanCoilUnitColumn(1)" title="Remove Fan Coil Unit" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addFanCoilUnitColumn()" title="Add Fan Coil Unit">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="fancoilunitTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="fancoilunit1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR/CFM)</td>
+            <td><input type="number" name="fancoilunit1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Quantity</td>
+            <td><input type="number" name="fancoilunit1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Fresh Air Mixing Percentage</td>
+            <td><input type="number" name="fancoil1_freshAirMixing" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Type of sensor for modulation & control</td>
+            <td>
+              <select name="fancoilunit1_sensortype" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>DP</option>
+                <option>Temperature</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+
+          <tr>
+            <td class="fixed-col">Variable Air Volume</td>
+            <td>
+              <select name="fancoilunit1_variableAirVol" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          
+
+          <tr>
+            <td class="fixed-col">Thermostat Installed</td>
+            <td>
+              <select name="fancoilunit1_thermostat" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col"># of Blower motor </td>
+            <td><input type="number" name="fancoilunit1_blowerNo" class="form-control form-control-sm" step="1" min="0"></td>              
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+              <td class="fixed-col">Motor Capacity(kW)</td>
+              <td><input type="number" name="fancoilunit1_motorCapacity" class="form-control form-control-sm" step="1" min="0"></td>              
+              <td class="action-col"></td>
+            </tr>
+
+          <tr>
+            <td class="fixed-col">EC Motors  </td>
+            <td>
+              <select name="fancoilunit1_ecMotors" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+        
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let fancoilunitCount = 1;
+
+      function addFanCoilUnitColumn() {
+        fancoilunitCount = addTableColumn(fancoilunitCount, 'fancoilunitTableBody', 'fancoilunit', 'Fan Coil Unit')
+        
+      }
+
+      function removeFanCoilUnitColumn(clickedIndex) {
+        fancoilunitCount = removeColumn(fancoilunitCount,clickedIndex,'fancoilunitTableBody', 'fancoilunit', 'Fan Coil Unit')
+
+      }
+    </script>
+  </div>
+  <!--  Fan Coil Unit in chillers Section (Nikunj)-->
+
+  <!-- DX/VRF/Packaged unit in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="packedunitCheck"> 
+    DX/VRF/Packaged Unit Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="packagedunit-col tbl-col">
+              <div class="packagedunit-header">
+                <span>Unit 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removePackagedUnitColumn(1)" title="Remove Packaged Unit" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addPackagedUnitColumn()" title="Add Packaged Unit">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="packagedunitTableBody" class ="componenttblBody">
+          <tr>
+            <td class="fixed-col">Unit Type</td>
+            <td>
+              <select name="packagedunit1_type" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Indoor</option>
+                <option>Outdoor</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="packagedunit1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Capacity (TR/CFM)</td>
+            <td><input type="number" name="packagedunit1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Quantity</td>
+            <td><input type="number" name="packagedunit1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">EER/SEER Rating </td>
+            <td><input type="number" name="packagedunit1_eerRating" class="form-control form-control-sm" step="1" min="0"></td>
+            
+             
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Refrigerant  </td>
+            <td>
+              <select name="packagedunit1_refrigerant" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>R32</option>
+                <option>R22</option>
+                <option>R407</option>
+                <option>R410a</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          
+          <tr>
+            <td class="fixed-col">Average top-up per year</td>
+            <td><input type="number" name="packagedunit1_avgTopup" class="form-control form-control-sm" placeholder=""></td>
+            <td class="action-col"></td>
+          </tr>
+
+        
+          
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let packagedunitCount = 1;
+
+      function addPackagedUnitColumn() {
+        packagedunitCount = addTableColumn(packagedunitCount, 'packagedunitTableBody', 'packagedunit', 'Unit')
+        
+      }
+
+      function removePackagedUnitColumn(clickedIndex) {
+        packagedunitCount = removeColumn(packagedunitCount,clickedIndex,'packagedunitTableBody', 'packagedunit', 'Unit')
+
+      }
+    </script>
+  </div>
+  <!--  DX/VRF/Packaged unit in chillers Section (Nikunj)-->
+<!-- Split unit in chillers Section (Nikunj) -->
+<div class="subcategory-header">
+  <input type="checkbox" id="splitunitCheck"> 
+  Split Unit Details 
+</div>
+<div class="subcategory-content">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="fixed-col">Parameter</th>
+          <th class="splitunit-col tbl-col">
+            <div class="splitunit-header">
+              <span>Split Unit 1</span>
+              <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeSplitUnitColumn(1)" title="Remove Split Unit" disabled>-</button>
+            </div>
+          </th>
+          <th class="action-col">
+            <button type="button" class="btn btn-sm btn-success" onclick="addSplitUnitColumn()" title="Add Split Unit">+</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="splitunitTableBody" class ="componenttblBody">
+        
+        <tr>
+          <td class="fixed-col">Year of Installation</td>
+          <td><input type="text" name="splitunit1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Capacity (TR/CFM)</td>
+          <td><input type="number" name="splitunit1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Quantity</td>
+          <td><input type="number" name="splitunit1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Star Rating </td>
+          <td>
+            <select name="splitunit1_fanMototRating" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>3 Star</option>
+              <option>4 Star</option>
+              <option>5 Star</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Refrigerant  </td>
+          <td>
+            <select name="splitunit1_refrigerant" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>R32</option>
+              <option>R22</option>
+              <option>R407</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        
+        <tr>
+          <td class="fixed-col">Average top-up per year</td>
+          <td><input type="number" name="splitunit1_avgTopup" class="form-control form-control-sm" placeholder=""></td>
+          <td class="action-col"></td>
+        </tr>
+
+      
+        
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let splitunitCount = 1;
+
+    function addSplitUnitColumn() {
+      splitunitCount = addTableColumn(splitunitCount, 'splitunitTableBody', 'splitunit', 'Split Unit')
+      
+    }
+
+    function removeSplitUnitColumn(clickedIndex) {
+      splitunitCount = removeColumn(splitunitCount,clickedIndex,'splitunitTableBody', 'splitunit', 'Split Unit')
+
+    }
+  </script>
+</div>
+<!--  Split unit in chillers Section (Nikunj)-->
+
+ <!-- Air Washer/Scrubber in chillers Section (Nikunj) -->
+ <div class="subcategory-header">
+  <input type="checkbox" id="airwasherCheck"> 
+  Air Washer/Scrubber Details 
+</div>
+<div class="subcategory-content">
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="fixed-col">Parameter</th>
+          <th class="airwasher-col tbl-col">
+            <div class="airwasher-header">
+              <span>AirWasher 1</span>
+              <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeAirWasherColumn(1)" title="Remove AirWasher" disabled>-</button>
+            </div>
+          </th>
+          <th class="action-col">
+            <button type="button" class="btn btn-sm btn-success" onclick="addAirWasherColumn()" title="Add AirWasher">+</button>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="airwasherTableBody" class ="componenttblBody">
+        
+        <tr>
+          <td class="fixed-col">Year of Installation</td>
+          <td><input type="text" name="airwasher1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Capacity (TR/CFM)</td>
+          <td><input type="number" name="airwasher1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Quantity</td>
+          <td><input type="number" name="airwasher1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Fan Motor Rating </td>
+          <td>
+            <select name="airwasher1_fanMototRating" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>IE2</option>
+              <option>IE3</option>
+              <option>IE4</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">EC Motor </td>
+          <td>
+            <select name="airwasher1_ecMotor" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">VFD </td>
+          <td>
+            <select id="airwasher1_vfd" name="airwasher1_vfd" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+          <td><input id="airwasher1_modulatingFrequencyRange" type="text" name="airwasher1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max" disabled> </td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Filter Type</td>
+          <td><input type="text" name="airwasher1_filterType" class="form-control form-control-sm" placeholder=""></td>
+          <td class="action-col"></td>
+        </tr>
+
+        <tr>
+          <td class="fixed-col">Integration with BMS </td>
+          <td>
+            <select id="airwasher1_bmsIntegration" name="airwasher1_BMS" class="form-control form-control-sm">
+              <option value="">Select</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+
+        
+        <tr>
+          <td class="fixed-col">Type of sensor for modulation & control </td>
+          <td>
+            <select id="airwasher1_sensortype" name="airwasher1_sensorType" class="form-control form-control-sm" >
+              <option value="">Select</option>
+              <option>Temperature</option>
+              <option>Others</option>
+            </select>
+          </td>
+          <td class="action-col"></td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let airwasherCount = 1;
+
+    function addAirWasherColumn() {
+      airwasherCount = addTableColumn(airwasherCount, 'airwasherTableBody', 'airwasher', 'AirWasher')
+      
+    }
+
+    function removeAirWasherColumn(clickedIndex) {
+      airwasherCount = removeColumn(airwasherCount,clickedIndex,'airwasherTableBody', 'airwasher', 'AirWasher')
+
+    }
+  </script>
+</div>
+<!-- Air Washer/Scrubber in chillers Section (Nikunj)-->
+
+  <!-- Heat pump in chillers Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="heatpumpCheck"> 
+    Heat Pump Details 
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="heatpump-col tbl-col">
+              <div class="heatpump-header">
+                <span>Heat Pump 1</span>
+                <!-- <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeColdRoomColumn(1)" title="Remove ColdRoom" disabled>-</button> -->
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeHeatPumpColumn(1)" title="Remove Heat Pump" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addHeatPumpColumn()" title="Add Heat Pump">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="heatpumpTableBody" class ="componenttblBody">
+          
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="heatpump1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Compressure Type</td>
+            <td>
+              <select name="heatpump1_compressure" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Screw</option>
+                <option>Centrifugal</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          
+          <tr>
+            <td class="fixed-col">Capacity (TR/kW)</td>
+            <td><input type="number" name="heatpump1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col"># of HeapPumps</td>
+            <td><input type="number" name="heatpump1_quantity" class="form-control form-control-sm" step="1" min="0"></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">VFD </td>
+            <td>
+              <select id="heatpump1_vfd" name="heatpump1_vfd" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+            <td><input id="heatpump1_modulatingFrequencyRange" type="text" name="heatpump1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max" disabled></td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Evaporator side is looped with chilled water </td>
+            <td>
+              <select name="heatpump1_evaporatorSide" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+          <tr>
+            <td class="fixed-col">Integrated with solar system for pre-heating </td>
+            <td>
+              <select name="heatpump1_solarSystemIntegration" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      let heatpumpCount = 1;
+
+      function addHeatPumpColumn() {
+        heatpumpCount = addTableColumn(heatpumpCount, 'heatpumpTableBody', 'heatpump', 'Heat Pump')
+        
+      }
+
+      function removeHeatPumpColumn(clickedIndex) {
+        heatpumpCount = removeColumn(heatpumpCount,clickedIndex,'heatpumpTableBody', 'heatpump', 'Heat Pump')
+
+      }
+    </script>
+  </div>
+  <!-- heat pump in chillers Section (Nikunj)-->
 
   <!-- Boiler in chillers Section (Nikunj) -->
   <div class="subcategory-header">
@@ -1281,8 +2426,7 @@
             </th>
           </tr>
         </thead>
-        <tbody id="boilerTableBody" class ="componenttblBody">
-          
+        <tbody id="boilerTableBody" class="componenttblBody">
           <tr>
             <td class="fixed-col">Year of Installation</td>
             <td><input type="text" name="boiler1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
@@ -1291,18 +2435,18 @@
           <tr>
             <td class="fixed-col">Type of Unit </td>
             <td>
-              <select name="boiler1_unit" class="form-control form-control-sm">
+              <select id="boiler1_unit" name="boiler1_unit" class="form-control form-control-sm boiler-unit-select">
                 <option value="">Select</option>
-                <option>Fuel</option>
-                <option>Electricity</option>
+                <option value="Fuel">Fuel</option>
+                <option value="Electricity">Electricity</option>
               </select>
             </td>
             <td class="action-col"></td>
           </tr>
-          <tr>
+          <tr class="boiler-vfd-row">
             <td class="fixed-col">VFD Install </td>
             <td>
-              <select name="boiler1_vfd" class="form-control form-control-sm">
+              <select id="boiler1_vfd" name="boiler1_vfd" class="form-control form-control-sm">
                 <option value="">Select</option>
                 <option>Yes</option>
                 <option>No</option>
@@ -1310,35 +2454,25 @@
             </td>
             <td class="action-col"></td>
           </tr>
-
-
-          <tr>
+          <tr class="boiler-fuel-row">
             <td class="fixed-col">Fuel Consumption (Lts/day)</td>
-            <td><input type="text" class="number-format" name="boiler1_fuelConsumption" class="form-control form-control-sm" min="1"></td>
+            <td><input id="boiler1_fuelConsumption" type="text" class="number-format form-control form-control-sm" name="boiler1_fuelConsumption" min="1"></td>
             <td class="action-col"></td>
           </tr>
-
-          <tr>
+          <tr class="boiler-electric-row">
             <td class="fixed-col">Electricity Consumption (kW)</td>
-            <td><input type="text" class="number-format" name="boiler1_electricityConsumption" class="form-control form-control-sm" step="1" min="1"></td>
+            <td><input id="boiler1_electricityConsumption" type="text" class="number-format form-control form-control-sm" name="boiler1_electricityConsumption" step="1" min="1"></td>
             <td class="action-col"></td>
           </tr>
-          
           <tr>
             <td class="fixed-col">Capacity (TPH)</td>
             <td><input type="text" class="number-format" name="boiler1_capacity" class="form-control form-control-sm" step="1" min="0"></td>
             <td class="action-col"></td>
           </tr>
-          
-          
-          
-
-          
-          
           <tr>
             <td class="fixed-col">Insulation damage </td>
             <td>
-              <select name="boiler1_insulationDamage" class="form-control form-control-sm">
+              <select name="boiler1_insulationDamage" class="form-control form-control-sm boiler-insulation-select" data-col="1">
                 <option value="">Select</option>
                 <option>Yes</option>
                 <option>No</option>
@@ -1346,17 +2480,72 @@
             </td>
             <td class="action-col"></td>
           </tr>
-          
-          <tr>
+          <tr class="boiler-damage-row" data-col="1" style="display:none;">
             <td class="fixed-col">Damage (%)</td>
-            <td><input type="text" class="number-format" name="boilder1_damagePercentage" class="form-control form-control-sm" step="1" min="0"></td>
+            <td><input type="text" class="number-format form-control form-control-sm" name="boilder1_damagePercentage" step="1" min="0"></td>
             <td class="action-col"></td>
           </tr>
-          
         </tbody>
-      </table>
-    </div>
+        </table>
+<script>
+// Boiler dependency logic
+function updateBoilerFields(boilerBlock) {
+  const unit = boilerBlock.querySelector('.boiler-unit-select').value;
+  const vfdRow = boilerBlock.querySelector('.boiler-vfd-row');
+  const fuelRow = boilerBlock.querySelector('.boiler-fuel-row');
+  const electricRow = boilerBlock.querySelector('.boiler-electric-row');
+  if (unit === 'Fuel') {
+    vfdRow.style.display = '';
+    fuelRow.style.display = '';
+    electricRow.style.display = 'none';
+  } else if (unit === 'Electricity') {
+    vfdRow.style.display = 'none';
+    fuelRow.style.display = 'none';
+    electricRow.style.display = '';
+  } else {
+    vfdRow.style.display = 'none';
+    fuelRow.style.display = 'none';
+    electricRow.style.display = 'none';
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Support for multiple boiler columns if needed
+  document.querySelectorAll('.boiler-unit-select').forEach(function(select) {
+    const boilerBlock = select.closest('tbody, table, form');
+    select.addEventListener('change', function() {
+      updateBoilerFields(boilerBlock);
+    });
+    // Initialize on load
+    updateBoilerFields(boilerBlock);
+  });
+});
+</script>
+<script>
+// Boiler insulation damage dependency (inline)
+document.addEventListener('DOMContentLoaded', function() {
+  function attachBoilerInsulationListeners() {
+    document.querySelectorAll('.boiler-insulation-select').forEach(function(sel) {
+      sel.removeEventListener('change', sel._boilerInsulationHandler || (()=>{}));
+      sel._boilerInsulationHandler = function() {
+        var col = sel.getAttribute('data-col');
+        var show = sel.value === 'Yes';
+        var row = document.querySelector('.boiler-damage-row[data-col="'+col+'"]');
+        if(row) row.style.display = show ? '' : 'none';
+      };
+      sel.addEventListener('change', sel._boilerInsulationHandler);
+      sel._boilerInsulationHandler();
+    });
+  }
+  attachBoilerInsulationListeners();
+  document.addEventListener('columnAdded', attachBoilerInsulationListeners);
+});
+</script>
+          
+  </tbody>
+</table>
+</div>
 
+    <!-- All boiler field rows are now above this line. No <script> blocks between rows. -->
     <script>
       let boilerCount = 1;
 
@@ -1426,12 +2615,12 @@
             <td class="fixed-col">Insulation Damage</td>
             <td>
               <div class="d-grid" style="grid-template-columns: 60% 40%; gap: 0.5rem;">
-                <select name="solarhotwater1_insulation_damage" class="form-control form-control-sm solarhotwater-insulation-select">
+                <select id="solarhotwater1_insulation_damage" name="solarhotwater1_insulation_damage" class="form-control form-control-sm solarhotwater-insulation-select">
                   <option value="">Select</option>
                   <option>Yes</option>
                   <option>No</option>
                 </select>
-                <input type="text" class="number-format" name="solarhotwater1_insulation_damage_pct" class="form-control form-control-sm solarhotwater-insulation-pct" min="0" max="100" placeholder="%" disabled>
+                <input type="text" class="number-format" id="solarhotwater1_insulation_damage_pct" name="solarhotwater1_insulation_damage_pct" class="form-control form-control-sm solarhotwater-insulation-pct" min="0" max="100" placeholder="%" disabled>
               </div>
             </td>
             <td class="action-col"></td>
@@ -1513,11 +2702,10 @@
             </td>
             <td class="action-col"></td>
           </tr>
-
           <tr>
-            <td class="fixed-col">VFD</td>
+            <td class="fixed-col">VFD </td>
             <td>
-              <select name="freshair1_vfd_status" class="form-control form-control-sm" onchange="updateVFDModulatingfrequencyField(this)">
+              <select id="freshair1_vfd" name="freshair1_vfd" class="form-control form-control-sm">
                 <option value="">Select</option>
                 <option>Yes</option>
                 <option>No</option>
@@ -1525,14 +2713,10 @@
             </td>
             <td class="action-col"></td>
           </tr>
+
           <tr>
-            <td class="fixed-col">Modulating frequency range ( Min-Max Hz)</td>
-            <td>
-              <div class="input-group input-group-sm">
-                <input type="text" class="number-format" name="freshair1_vfd_modulation" class="form-control"  disabled>
-                <!-- <span class="input-group-text">Min-Max Hz</span> -->
-              </div>
-            </td>
+            <td class="fixed-col">Modulating Frequency Range (Hz)</td>
+            <td><input id="freshair1_modulatingFrequencyRange" type="text" name="freshair1_modulatingFrequencyRange" class="form-control form-control-sm" placeholder="e.g. min-max" disabled></td>
             <td class="action-col"></td>
           </tr>
           
@@ -1658,6 +2842,550 @@
   
 
 </div>
+
+<!-- Electrical equipment section start (Nikunj) -->
+<h2 onclick="toggleSection('electricalEquipment')">Electrical Equipments</h2>
+<div id="electricalEquipment" class="section">
+
+  <!-- Lighting in electrical equipment Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="lightingCheck"> 
+    Lighting Details 
+  </div>
+  <div class="subcategory-content">
+    
+      <div class="row form-row">
+          <!-- <div class="form-label required">Occupancy Details</div> -->
+          <div class="form-inputs">
+            <div class="input-group">
+              <span>Load of Indoor Lights</span>
+              <input type="number" id="indoor_light_load" name="indoor_light_load" min=0 step=1>
+            </div>
+            <div class="input-group">
+              <span>Load of Outdoor Lights</span>
+              <input type="number" min="0" max="100" id="outdoor_light_load" name="outdoor_light_load" >
+            </div>
+            <div class="input-group">
+              <span>%age of LED Lights</span>
+              <input type="number" min=0 max=100 step = 1 id="led_light_percentage" name = "led_light_percentage">
+              <span>%</span>
+            </div>
+            <div class="input-group">
+              <span>Dimmer panel available for light</span>
+              <select>
+                <option>Yes</option>
+                <option>No</option>
+                </select>
+            </div>
+            <div class="input-group">
+              <span>Dimmer %age</span>
+              <input type="number" min=0 max=100 step = 1 id="dimmer_percentage" name = "dimmer_percentage">
+            </div>
+
+            <div class="input-group">
+              <span>Occupancy/motion sensor installed</span>
+              <select>
+                <option>Yes</option>
+                <option>No</option>
+                </select>
+            </div>
+            <div class="input-group">
+              <span>Locations of installed motion sensor</span>
+              <select>
+                <option>Washroom</option>
+                <option>Corridor</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <span>LDR sensors/ timers installed for outside lights</span>
+              <select>
+                <option>Yes</option>
+                <option>No</option>
+                </select>
+            </div>
+            <div class="input-group">
+              <span>Type of outdoor lighting</span>
+              <select>
+                <option>Halogen</option>
+                <option>LED</option>
+                <option>Others</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+
+  </div>
+  <!-- Lighting in electrical equipment Section (Nikunj)-->
+
+
+  <!-- Renewable Energy in electrical equipment Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="renewableCheck"> 
+    Renewable Energy Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="renewable_installYear" class="form-control form-control-sm year-picker" readonly>
+        </div>
+
+        <div class="input-group">
+          <span>Installed Capacity (kW) </span>
+          <input type="number" min="0" max="100" id="renewable_installCapacity" name="renewable_installCapacity" >
+        </div>
+        <div class="input-group">
+          <span>Peak power (kWp)</span>
+          <input type="number" min=0 max=100 step = 1 id="renewable_peakPower" name = "renewable_peakPower">
+          <span>%</span>
+        </div>
+        <div class="input-group">
+          <span>Type of PV technology</span>
+          <select>
+            <option>Monocrystalline Silicon</option>
+            <option>Polycrystalline Silicon</option>
+            <option>Thin-Film</option>
+            <option>Bifacial Panels</option>
+          </select>
+        </div>
+        
+
+        <div class="input-group">
+          <span>Type of inverter</span>
+          <select>
+            <option>String Inverter</option>
+            <option>Microinverter</option>
+            <option>Central Inverter</option>
+            <option>Hybrid Inverter</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <span>Balance of system(Bos) installed </span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>Grid type</span>
+          <select>
+            <option>On-grid</option>
+            <option>Off-grid</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <!-- Renewable Energy in electrical equipment Section (Nikunj)-->
+
+  <!-- Dishwasher in electrical equipment Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="dishwasherCheck"> 
+    Dishwasher Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="dishwasher_installYear" class="form-control form-control-sm year-picker" readonly>
+        </div>
+
+        <div class="input-group">
+          <span>Energy efficiency rating </span>
+          <select>
+            <option>1 Star</option>
+            <option>2 Star</option>
+            <option>3 Star</option>
+            <option>4 Star</option>
+            <option>5 Star</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <span>Average water consumption </span>
+          <input type="number" min="0" max="100" id="dishwasher_aggWaterConsumption" name="dishwasher_aggWaterConsumption" >
+        </div>
+        <div class="input-group">
+          <span>Capacity (kW)<span>
+          <input type="number" min=0 max=100 step = 1 id="dishwasher_capacity" name = "dishwasher_capacity">
+        </div>
+        <div class="input-group">
+          <span>Pre-heating of makeup water with used water</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Dishwasher in electrical equipment Section (Nikunj)-->
+
+  <!-- Laundry in electrical equipment Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="laundryCheck"> 
+    Laundry Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+
+        <div class="input-group">
+          <span>Type of boiler </span>
+          <select>
+            <option>Fuel</option>
+            <option>Electric</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <span>Fuel consumption(Lts/day) </span>
+          <input type="number" min="0" max="100" id="laundry_fuelConsumption" name="laundry_fuelConsumption" >
+        </div>
+        <div class="input-group">
+          <span>Electric Consumption (kW)<span>
+          <input type="number" min=0 max=100 step = 1 id="laundry_electricConsumption" name = "laundry_electricConsumption">
+        </div>
+
+        <div class="input-group">
+          <span>Operating range of boiler (Temperature)</span>
+          <input type="number" min="0" max="100" id="laundry_operatingRange" name="laundry_operatingRange" >
+        </div>
+        <div class="input-group">
+          <span>Insulation damage for steam lines<span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>Damage %<span>
+          <input type="number" min=0 max=100 step = 1 id="laundry_damagePercentage" name = "laundry_damagePercentage">
+        </div>
+
+        <div class="input-group">
+          <span>Using Condensate water as a Make Up Water (Hot) for Washing Machines</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+    
+  </div>
+  <!-- Laundry in electrical equipment Section (Nikunj)-->
+
+
+</div>
+
+<!-- Electrical equipment section end (Nikunj) -->
+
+<!-- Plumbing section start (Nikunj) -->
+<h2 onclick="toggleSection('plumbing')">Plumbing</h2>
+<div id="plumbing" class="section">
+
+  <!-- Water treatment plant in plumbing Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="waterTreatmentPlantCheck"> 
+    Water Treatment Plant Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <div class="form-inputs">
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="wtp_installationYear" class="form-control form-control-sm year-picker" readonly>
+        </div>
+
+        <div class="input-group">
+          <span>Type of distribution system</span>
+          <select>
+            <option>Hydro pneumatic</option>
+            <option>Over headed</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+          <span>Float controls available</span>
+          <input type="number" id="wtp_floatControl" name="wtp_floatControl" min=0 step=1>
+        </div>
+        <div class="input-group">
+          <span>Motor rating</span>
+          <select>
+            <option>IE2</option>
+            <option>IE3</option>
+            <option>IE4</option>
+            <option>IE5</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <span>Head rating of motors (m)</span>
+          <input type="number" min=0  step = 1 id="wtp_headRating" name = "wtp_headRating">
+          <span>%</span>
+        </div>
+        <div class="input-group">
+          <span>Type of water treatment</span>
+          <select>
+            <option>RO</option>
+            <option>Softner</option>
+            </select>
+        </div>
+        <div class="input-group">
+          <span>Motor power(kW)</span>
+          <input type="number" min=0 max=100 step = 1 id="wtp_motorPower" name = "wtp_motorPower">
+        </div>
+
+        <div class="input-group">
+          <span>Filter Type</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+            </select>
+        </div>
+        <div class="input-group">
+          <span>replacement frequency</span>
+          <input type="number" min=0 max=100 step = 1 id="wtp_motorPower" name = "wtp_motorPower">
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <!-- Water treatment plant in plumbing Section (Nikunj)-->
+
+
+  <!-- Sewage treatment plant in plumbing Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="stpCheck"> 
+    Sewage treatment plant 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="stp_installYear" class="form-control form-control-sm year-picker" readonly>
+        </div>
+
+        <div class="input-group">
+          <span>Treatment Technology</span>
+          <select>
+            <option>MBBR</option>
+            <option>SBR</option>
+            <option>ASP</option>
+            <option>MBR</option>
+          </select>
+        </div>
+
+
+        <div class="input-group">
+          <span>Design capacity (KLD) </span>
+          <input type="number" min="0" id="stp_Capacity" name="stp_Capacity" >
+        </div>
+        <div class="input-group">
+          <span>Production (KL)</span>
+          <input type="number" min=0  step = 1 id="stp_production" name = "stp_production">
+        </div>
+        
+        <div class="input-group">
+          <span>Usage for irrigation (%)</span>
+          <input type="number" min=0 max=100 step = 1 id="stp_irrigationUsage" name = "stp_irrigationUsage">
+          <span>%</span>
+        </div>
+        <div class="input-group">
+          <span>Usage for flushing  (%)</span>
+          <input type="number" min=0 max=100 step = 1 id="stp_flushingUsage" name = "stp_flushingUsage">
+          <span>%</span>
+        </div>
+        <div class="input-group">
+          <span>Usage for cleaning  (%)</span>
+          <input type="number" min=0 max=100 step = 1 id="stp_cleaningUsage" name = "stp_cleaningUsage">
+          <span>%</span>
+        </div>
+        <div class="input-group">
+          <span>Others (%)</span>
+          <input type="number" min=0 max=100 step = 1 id="stp_othersUsage" name = "stp_othersUsage">
+          <span>%</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- Sewage treatment plant in plumbing Section (Nikunj)-->
+
+  <!-- Pump in plumbing Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="pumpCheck"> 
+    Pump Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="pump_installYear" class="form-control form-control-sm year-picker" >
+        </div>
+
+        <div class="input-group">
+          <span>Capacity (kW)<span>
+          <input type="number" min=0 step = 1 id="pump_capacity" name = "pump_capacity">
+        </div>
+
+        <div class="input-group">
+          <span>Actual Flow (LPM/GPM)<span>
+          <input type="number" min=0 step = 1 id="pump_actualFlow" name = "pump_actualFlow">
+        </div>
+        <div class="input-group">
+          <span>Rated Flow (LPM/GPM)<span>
+          <input type="number" min=0 step = 1 id="pump_ratedFlow" name = "pump_ratedFlow">
+        </div>
+
+        <div class="input-group">
+          <span>Head (m)<span>
+          <input type="number" min=0 step = 1 id="pump_head" name = "pump_head">
+        </div>
+
+        <div class="input-group">
+          <span>VFD</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>Modulating frequency range(Hz)<span>
+          <input type="text" placeholder="min-max" id="pump_modulatingFrequencyRange" name = "pump_modulatingFrequencyRange">
+        </div>
+
+
+
+        <div class="input-group">
+          <span>Motor rating </span>
+          <select>
+            <option>IE2</option>
+            <option>IE3</option>
+            <option>IE4</option>
+            <option>IE5</option>
+          </select>
+        </div>
+        
+        <div class="input-group">
+          <span>EC motors</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>BMS integration</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>Type of sensor for modulation & control </span>
+          <select>
+            <option>DP</option>
+            <option>Temperature</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- Pump  in plumbing Section (Nikunj)-->
+
+  <!-- STP Blower in plumbing Section (Nikunj) -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="stbBlowerCheck"> 
+    STP Blower Details 
+  </div>
+  <div class="subcategory-content">
+    
+    <div class="row form-row">
+      <!-- <div class="form-label required">Occupancy Details</div> -->
+      <div class="form-inputs">
+
+        <div class="input-group">
+          <span>Year of Installation</span>
+          <input type="text" name="stpb_installYear" class="form-control form-control-sm year-picker" >
+        </div>
+        
+        <div class="input-group">
+          <span>Air flow rate (CFM) </span>
+          <input type="number" min="0" max="100" id="stpb_airFlowRate" name="stpb_airFlowRate" >
+        </div>
+        <div class="input-group">
+          <span>Motor capacity (kW)<span>
+          <input type="number" min=0 max=100 step = 1 id="stpb_motorCapacity" name = "stpb_motorCapacity">
+        </div>
+
+        <div class="input-group">
+          <span>Efficiency Rating </span>
+          <select>
+            <option>IE2</option>
+            <option>IE3</option>
+            <option>IE4</option>
+            <option>IE5</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>VFD</span>
+          <select>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <span>Modulating frequency range(Hz)<span>
+          <input type="text" placeholder="min-max" id="stpb_modulatingFrequencyRange" name = "stpb_modulatingFrequencyRange">
+        </div>
+       
+       
+      </div>
+    </div>
+    
+  </div>
+  <!-- STP Blower in plumbing Section (Nikunj)-->
+
+
+</div>
+
+  <!-- STP Blower in plumbing Section (Nikunj)-->
+
+
+</div>
+
+<!-- Plumbing section end (Nikunj) -->
 
 <!-- <div class="form-actions">
   <button type="button" onclick="saveForm()">Save</button>
@@ -2065,65 +3793,7 @@
 </script>
 
 <script>
-// =========================
-// Utility Functions
-// =========================
 
-// Initialize year pickers for all elements with .year-picker
-function initializeYearPickers() {
-  $('.year-picker').not('.hasYearPicker').addClass('hasYearPicker').datepicker({
-    changeMonth: false,
-    changeYear: true,
-    showButtonPanel: true,
-    dateFormat: 'yy',
-    yearRange: '1900:2100',
-    beforeShow: function(input, inst) {
-      setTimeout(function() {
-        $(".ui-datepicker-month, .ui-datepicker-calendar, .ui-datepicker-close").hide();
-      }, 0);
-    },
-    onClose: function(dateText, inst) {
-      const year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
-      if (year) {
-        $(this).val(year).trigger('change');
-      }
-    }
-  });
-}
-
-// Enable/disable VFD modulation field based on VFD status
-// Enable/disable VFD modulation field based on VFD status (Chiller, Cold Room, etc)
-function updateVFDModulationField(select) {
-  var $td = $(select).closest('td');
-  var colIndex = $td.index();
-  var $nextRow = $(select).closest('tr').next();
-  var $targetTd = $nextRow.find('td').eq(colIndex);
-  var $input = $targetTd.find('input[type="number"]');
-  if ($(select).val() === "Yes") {
-    $input.prop('disabled', false);
-  } else {
-    $input.prop('disabled', true).val('');
-  }
-}
-
-// Enable/disable VFD modulating frequency field for Fresh Air section
-function updateVFDModulatingfrequencyField(select) {
-  var $td = $(select).closest('td');
-  var colIndex = $td.index();
-  var $nextRow = $(select).closest('tr').next();
-  var $targetTd = $nextRow.find('td').eq(colIndex);
-  var $input = $targetTd.find('input[type="number"]');
-  if ($(select).val() === "Yes") {
-    $input.prop('disabled', false);
-  } else {
-    $input.prop('disabled', true).val('');
-  }
-}
-
-
-// =========================
-// Main Initialization
-// =========================
 
 $(document).ready(function() {
   // 1. Initialize year pickers on page load
