@@ -1,422 +1,1893 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Building Audit Form</title>
+
+  <!--  Bootstrap 5  -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  
+  <style>    /* Custom styles for mobile responsiveness and form styling */
     input[type="number"], .number-format {
       text-align: right;
     }
+    
+    /* Sub-header styling */
+    .sub-header {
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Navbar brand styling */
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+    
+    .section-header {
+      background: #8c4f34; /* brown */
+      color: #fff;
+      font-weight: 600;
+      padding: 10px 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-header:hover {
+      background: #7a4530;
+    }    .info-box {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .info-box > h6 {
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #333;
+      border-bottom: 2px solid #8c4f34;
+      padding-bottom: 8px;
+    }
+
+    /* Improved form styling for inline appearance */
+    .info-box .form-label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .info-box .form-control,
+    .info-box .form-select {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s ease;
+      background: #fff;
+    }
+
+    .info-box .form-control:focus,
+    .info-box .form-select:focus {
+      border-color: #8c4f34;
+      box-shadow: 0 0 0 0.2rem rgba(140, 79, 52, 0.25);
+      outline: none;
+    }    /* Compact spacing for form groups */
+    .info-box .row.g-2 > * {
+      padding-right: 8px;
+      padding-left: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Area input group styling for compact, balanced appearance */
+    .input-group {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .input-group .form-control {
+      border: none;
+      border-right: 1px solid #ddd;
+      border-radius: 0;
+      flex: 2; /* Give more space to the number input */
+    }
+
+    .input-group .form-select {
+      border: none;
+      border-radius: 0;
+      flex: 1; /* Less space for the unit selector */
+      max-width: 80px; /* Limit unit selector width */
+      background-color: #f8f9fa;
+    }
+
+    .input-group .input-group-text {
+      border: none;
+      border-radius: 0;
+      background-color: #f8f9fa;
+      color: #495057;
+      font-size: 0.85rem;
+    }
+
+    .input-group:focus-within {
+      border-color: #8c4f34;
+      box-shadow: 0 0 0 0.2rem rgba(140, 79, 52, 0.25);
+    }
+
+    .input-group .form-control:focus,
+    .input-group .form-select:focus {
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    /* Special styling for inline form elements */
+    .form-inline-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-inline-group label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 3px;
+    }
+
+    /* Checkbox styling for certifications */
+    .certification-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .form-check {
+      margin-bottom: 8px;
+    }
+
+    .form-check-input {
+      margin-right: 8px;
+    }
+
+    .form-check-label {
+      font-size: 0.9rem;
+      color: #555;
+    }.subcategory-header {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 10px 15px;
+      margin: 10px 0 5px 0;
+      border-radius: 5px;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 500;
+    }
+
+    .subcategory-header:hover {
+      background: #e9ecef;
+    }
+
+    .subcategory-header.collapsed {
+      background: #f1f3f4;
+    }
+
+    .subcategory-content {
+      margin-bottom: 15px;
+      display: none;
+    }
+
+    .subcategory-content.expanded {
+      display: block;
+    }
+
+    .section-header.collapsed::after {
+      content: " (Collapsed)";
+      font-size: 0.85em;
+      opacity: 0.7;
+    }    /* Mobile responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 110px !important;
+      }
+      
+      .info-box {
+        margin-bottom: 15px;
+        padding: 10px;
+      }
+      
+      .navbar-brand {
+        font-size: 1rem;
+      }
+      
+      .navbar-brand img {
+        height: 32px !important;
+      }
+      
+      .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+      }
+      
+      .sub-header .btn-sm {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+      }
+        /* Better table responsiveness */
+      .table-responsive {
+        font-size: 0.8rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .table-responsive table {
+        min-width: 600px; /* Prevent tables from being too squished */
+      }
+      
+      /* Adjust input groups for mobile */
+      .input-group .form-select {
+        max-width: 70px;
+        font-size: 0.8rem;
+      }
+      
+      .input-group .input-group-text {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.5rem;
+      }
+      }
+      
+      .input-table th, .input-table td {
+        padding: 6px 4px;
+        min-width: 80px;
+      }
+      
+      .input-table input, .input-table select {
+        font-size: 0.8rem;
+        min-width: 70px;
+      }
+      
+      /* Stack form fields vertically on mobile */
+      .row.g-3 > .col-md-6,
+      .row.g-3 > .col-md-4,
+      .row.g-3 > .col-md-3 {
+        margin-bottom: 15px;
+      }
+      
+      /* Reduce section header padding */
+      .section-header {
+        padding: 8px 12px;
+        font-size: 0.95rem;
+      }
+      
+      .subcategory-header {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+      
+      /* Better spacing for form groups */
+      .form-group {
+        margin-bottom: 15px;
+      }
+      
+      /* Improve button groups */
+      .action-buttons button {
+        margin: 1px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+      
+      /* Better handling of wide content */
+      .info-box h6 {
+        font-size: 0.95rem;
+      }
+      
+      /* Improve checkbox and radio layouts */
+      .form-check {        margin-bottom: 10px;
+      }
+      
+      .form-check-input {
+        margin-right: 8px;
+      }
+      
+      /* Adjust input groups for mobile */
+      .input-group .form-select {
+        max-width: 70px;
+        font-size: 0.8rem;
+      }
+      
+      .input-group .input-group-text {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .container {
+        padding-left: 3px;
+        padding-right: 3px;
+        padding-top: 120px !important;
+      }
+      
+      .navbar-brand {
+        font-size: 0.85rem;
+      }
+      
+      .navbar-brand img {
+        height: 28px !important;
+      }
+      
+      .sub-header .btn-sm {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.25rem;
+      }
+      
+      /* Even more compact tables on very small screens */
+      .table-responsive {
+        font-size: 0.75rem;
+      }
+      
+      .input-table th, .input-table td {
+        padding: 4px 2px;
+        min-width: 60px;
+      }
+      
+      .input-table input, .input-table select {
+        font-size: 0.75rem;
+        min-width: 50px;
+      }
+      
+      /* Further reduce header sizes */
+      .section-header {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+      }
+      
+      .subcategory-header {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+      
+      /* Stack buttons vertically if needed */
+      .sub-header .row {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .sub-header .col-auto {
+        width: 100%;
+        text-align: center;
+      }
+      
+      /* Better form field sizing */
+      .form-control, .form-select {
+        font-size: 0.9rem;
+      }
+      
+      .info-box {
+        padding: 8px;
+      }
+      
+      .info-box h6 {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+    }
+
+    /* Specific mobile improvements for tables */
+    @media (max-width: 991px) {
+      /* Make wide tables scrollable horizontally */
+      .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Add scroll indicators */
+      .table-responsive::after {
+        content: "← Scroll to see more →";
+        display: block;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #6c757d;
+        padding: 5px;
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+      }
+        /* Hide scroll indicator when table fits */
+      .table-responsive:not([style*="overflow"]) .table-responsive::after {
+        display: none;
+      }
+    }
+    
+    /* Touch-friendly enhancements */
+    @media (hover: none) and (pointer: coarse) {
+      /* Touch device specific styles */
+      .section-header, .subcategory-header {
+        min-height: 44px !important;
+        touch-action: manipulation;
+      }
+      
+      button, .btn {
+        min-height: 44px;
+        min-width: 44px;
+        touch-action: manipulation;
+      }
+      
+      input, select, textarea {
+        font-size: 16px !important; /* Prevent zoom on iOS */
+        touch-action: manipulation;
+      }
+      
+      .table-responsive {
+        touch-action: pan-x;
+      }
+    }
+    
+    /* Prevent text selection on interactive elements */
+    .section-header, .subcategory-header, .btn, button {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Ensure proper spacing for form elements */
+    .form-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .input-group-text {
+      font-size: 0.9rem;
+    }    /* Category content styling */
+    .category-content {
+      margin-bottom: 20px;
+      display: block !important; /* Force show by default */
+    }
+
+    .category-content.collapsed {
+      display: none !important; /* Override when collapsed */
+    }    /* Section headers should always be visible */
+    .section-header,
+    .section-header.collapsed,
+    .category-header,
+    .category-header.collapsed {
+      display: block !important;
+      visibility: visible !important;
+    }/* Table styling for better mobile responsiveness */
+    .input-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .input-table th, .input-table td {
+      padding: 8px;
+      border: 1px solid #dee2e6;
+      text-align: center;
+      word-wrap: break-word;
+    }
+
+    .input-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .input-table input, .input-table select {
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .input-table input:focus, .input-table select:focus {
+      background: #fff;
+      border: 1px solid #007bff;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .action-buttons button {
+      margin: 0 2px;
+      padding: 2px 6px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .remove-row-btn {
+      background: #dc3545;
+      color: white;
+    }
+
+    .remove-row-btn:hover {
+      background: #c82333;
+    }
+
+    /* Better Bootstrap table responsiveness */
+    .table-responsive {
+      border-radius: 0.375rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .table-bordered {
+      border: 1px solid #dee2e6;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: rgba(0,0,0,0.025);
+    }
+
+    /* Improve form controls in tables */
+    .table input[type="number"],
+    .table input[type="text"],
+    .table select {
+      border: 1px solid transparent;
+      background: transparent;
+      font-size: inherit;
+      padding: 0.25rem;
+    }
+
+    .table input[type="number"]:focus,
+    .table input[type="text"]:focus,
+    .table select:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    @media (max-width: 768px) {
+      .input-table {
+        font-size: 0.8rem;
+      }
+      
+      .input-table th, .input-table td {
+        padding: 4px 2px;
+        font-size: 0.75rem;
+      }
+      
+      .input-table th {
+        font-size: 0.7rem;
+      }
+    }
   </style>
-  <meta charset="UTF-8">
-  <title>Building Audit Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="script.js"></script>
+  <script>
+    // Additional toggle function for subcategories
+    function toggleSubcategory(sectionId) {
+      const content = document.getElementById(sectionId);
+      const header = event.target;
+      
+      if (content.style.display === 'none' || content.style.display === '') {
+        content.style.display = 'block';
+        header.classList.add('expanded');
+        header.classList.remove('collapsed');
+      } else {
+        content.style.display = 'none';
+        header.classList.add('collapsed');
+        header.classList.remove('expanded');
+      }
+    }
+  </script>
 </head>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="style.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="script.js"></script>
-<body>
 
-  <div class="header">
-    <img src="EDSlogo.png" alt="Left Logo Placeholder">
-    <div class="title">Building Audit Form</div>
-    <img src="HCL-Technologies-Symbol.png" alt="Right Logo Placeholder">
+<body class="bg-light">
+  <!-- Updated navbar with brown theme and reorganized layout -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background-color: #8c4f34;">
+    <div class="container-fluid">
+      <!-- Left: Logo -->
+      <div class="d-flex align-items-center">
+        <img src="EDSlogo.png" alt="Left Logo" height="40" class="me-3">
+      </div>
+      
+      <!-- Center: Brand Title -->
+      <a class="navbar-brand mx-auto text-center" href="#">
+        <span class="d-none d-md-inline">Building Audit Form</span>
+        <span class="d-md-none">Audit Form</span>
+      </a>
+      
+      <!-- Right: Logo -->
+      <div class="d-flex align-items-center">
+        <img src="HCL-Technologies-Symbol.png" alt="Right Logo" height="40" class="ms-3">
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sub-header with action buttons -->
+  <div class="sub-header bg-light border-bottom" style="position: fixed; top: 56px; left: 0; right: 0; z-index: 1020; padding: 8px 0;">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <!-- Left: Expand/Collapse buttons -->
+        <div class="col-auto">
+          <button type="button" id="expandAllBtn" class="btn btn-sm btn-outline-secondary me-2">Expand All</button>
+          <button type="button" id="collapseAllBtn" class="btn btn-sm btn-outline-secondary">Collapse All</button>
+        </div>
+        
+        <!-- Right: Save/Submit buttons -->
+        <div class="col-auto ms-auto">
+          <button type="button" class="btn btn-sm btn-secondary me-2" onclick="saveForm()">Save</button>
+          <button type="button" class="btn btn-sm btn-success" onclick="submitForm()">Submit</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Add expand/collapse all buttons -->
-  <div class = "container">
-    <div class="expand-collapse-controls">
-      <button type="button" id="expandAllBtn">Expand All</button>
-      <button type="button" id="collapseAllBtn">Collapse All</button>
-    </div>
-    <div class="form-actions">
-      <button type="button" onclick="saveForm()">Save</button>
-      <button type="submit" onclick="submitForm()">Submit</button>
-    </div>
-  </div>
+  <div class="container my-5" style="padding-top: 100px;">
 
-<h2 onclick="toggleSection('buildingInfo')">Building Information</h2>
-<div id="buildingInfo" class="section">
+    <!-- Building Information Section -->
+    <div class="section-header category-header" data-expanded onclick="toggleSection('buildingInfo')">Building Information</div>
+    <div id="buildingInfo" class="category-content" style="display: block !important;">
 
-  <div class="category-header">General Information</div>
-  <div class="category-content">
-  <div class="form-row">
-    <!-- <div class="form-label"></div> -->
-    <div class="form-inputs">
-      <div class = "input-group">
-        <span>Project Name:</span>
-        <input type="text" required style="width: 150px;" name="project_name">
-        </div>
-        <div class = "input-group">
-          <span>Brand:</span>
-          <select name="brand">
-            <option value="">Select Brand</option>
-            <option value="Taj">Taj</option>
-            <option value="SeleQtions">SeleQtions</option>
-            <option value="Vivanta">Vivanta</option>
-            <option value="Gateway">Gateway</option>
-            <option value="Ginger">Ginger</option>
-          </select>
-        </div>
-          <div class = "input-group">
-            <span>Country:</span>
-            <select required id="stateDropdown" name="country">
-              <option value="">Please select</option>
-              <option value="India">India</option>
-            </select>
+    <!-- Row 1: Project Info | Location  -->
+    <div class="row g-3 mb-3">
+      <!-- Project Information (8/12) -->
+      <div class="col-lg-8">
+        <div class="info-box h-100">
+          <h6>Project Information</h6>
+          <div class="row g-2">
+            <div class="col-md-4">
+              <label class="form-label" for="project_name">Project Name</label>
+              <input type="text" class="form-control" id="project_name" name="project_name" required />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="brand">Brand</label>
+              <select class="form-select" id="brand" name="brand">
+                <option value="">Select Brand</option>
+                <option value="Taj">Taj</option>
+                <option value="SeleQtions">SeleQtions</option>
+                <option value="Vivanta">Vivanta</option>
+                <option value="Gateway">Gateway</option>
+                <option value="Ginger">Ginger</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="ownership">Ownership</label>
+              <select class="form-select" id="ownership" name="ownership" required>
+                <option value="">Please select</option>
+                <option>Owned</option><option>Leased</option><option>Managed</option>
+              </select>
+            </div>            <div class="col-md-4">
+              <label class="form-label" for="construction_date">Years of Construction</label>
+              <input type="date" class="form-control" id="construction_date" name="construction_date" required />
+            </div>            <div class="col-md-4">
+              <label class="form-label" for="renovation_date">Last Renovation</label>
+              <input type="date" class="form-control" id="renovation_date" name="renovation_date" />
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="last_audit_date">Last Audit Conducted</label>
+              <input type="date" class="form-control" id="last_audit_date" name="last_audit_date" />
+            </div>
           </div>
-      <div class="input-group">
-        <span>State:</span>
-        <select required id="stateDropdown" name="state">
-          <option value="">Please select</option>
-          <option value="AP">Andhra Pradesh</option>
-          <option value="AR">Arunachal Pradesh</option>
-          <option value="AS">Assam</option>
-          <option value="BR">Bihar</option>
-          <option value="CG">Chhattisgarh</option>
-          <option value="GA">Goa</option>
-          <option value="GJ">Gujarat</option>
-          <option value="HR">Haryana</option>
-          <option value="HP">Himachal Pradesh</option>
-          <option value="JH">Jharkhand</option>
-          <option value="KA">Karnataka</option>
-          <option value="KL">Kerala</option>
-          <option value="MP">Madhya Pradesh</option>
-          <option value="MH">Maharashtra</option>
-          <option value="MN">Manipur</option>
-          <option value="ML">Meghalaya</option>
-          <option value="MZ">Mizoram</option>
-          <option value="NL">Nagaland</option>
-          <option value="OR">Odisha</option>
-          <option value="PB">Punjab</option>
-          <option value="RJ">Rajasthan</option>
-          <option value="SK">Sikkim</option>
-          <option value="TN">Tamil Nadu</option>
-          <option value="TG">Telangana</option>
-          <option value="TR">Tripura</option>
-          <option value="UP">Uttar Pradesh</option>
-          <option value="UK">Uttarakhand</option>
-          <option value="WB">West Bengal</option>
-          <option value="DL">Delhi</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <span>City:</span>
-        <select required id="cityDropdown" name="city">
-          <option value="">Please select a state first</option>
-        </select>
-      </div>
-      <!-- <div class="input-group">
-        <span>Area:</span>
-        <input type="text" style="width: 80px;">
-        <select>
-          <option value="sqm">sq.m</option>
-          <option value="sqft">sq.ft</option>
-          <option value="acre">acre</option>
-        </select>
-      </div> -->
-      <div class="input-group">
-        <span>Years of Construction:</span>
-        <input type="date" required style="width: 118px;" name="construction_date">
-      </div>
-      <div class="input-group">
-        <span>Last Renovation:</span>
-        <input type="date" style="width: 118px;" name="renovation_date">
-      </div>
-    <!-- </div> -->
-  <!-- </div> -->
-  
-  <!-- <div class="form-row"> -->
-    <!-- <div class="form-label "></div> -->
-    <!-- <div class="form-inputs"> -->
-      <div class="input-group">
-        <span>No. of Floors Above grade:</span>
-        <input type="text" class="number-format" min="0" max="99" required style="width: 60px;" name="floors_above_grade">
-      </div>
-      <div class="input-group">
-        <span>No.of Floors Below Grade:</span>
-        <input type="text" class="number-format" min="0" max="9" style="width: 60px;" name="floors_below_grade">
-      </div>
-      <div class="input-group">
-        <span>Ownership:</span>
-        <select required name="ownership">
-          <option value="">Please select</option>
-          <option>Owned</option>
-          <option>Leased</option>
-          <option>Managed</option>
-        </select>
-      <!-- </div> -->
-    </div>
-    <div class="input-group">
-      <span>Certifications/Compliance</span>
-      <select required name="certifications">
-        <option value="">Please select</option>
-        <option>LEED</option>
-        <option>IGBC</option>
-        <option>GRIHA</option>
-      </select>
-    <!-- </div> -->
-  </div>
-  <div class="input-group">
-    <span>Last Audit Conducted:</span>
-    <input type="date" required style="width: 118px;" name="last_audit_date">
-   
-  </div>
-  <!-- </div> -->
-</div>
-</div>
-</div>
-
-<!-- <h2 onclick="toggleSection('siteArea')">Site & Area</h2> -->
- 
-<!-- <div id="siteArea" class="section"> -->
-  <div class="category-header">Site & Area</div>
-  <div class="category-content">
-  <div class="form-row">
-    <!-- <div class="form-label required">Site Details</div> -->
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Site Area:</span>
-        <input type="text" class="number-format" min="0" required style="width: 80px;">
-        <select>
-          <option value="sqm">sq.m</option>
-          <option value="sqft">sq.ft</option>
-          <option value="acre">acre</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <span>Built-up Area:</span>
-        <input type="text" class="number-format" min="0" required style="width: 80px;">
-        <select>
-          <option value="sqm">sq.m</option>
-          <option value="sqft">sq.ft</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <span>Basement Parking:</span>
-        <input type="text" class="number-format" min="0" style="width: 80px;">
-        <select>
-          <option value="sqm">sq.m</option>
-          <option value="sqft">sq.ft</option>
-        </select>
-      </div>
-      <div class="input-group">
-        <span>Ground Coverage:</span>
-        <input type="text" class="number-format" min="0" maxlength="3" style="width: 60px;">
-        <span>%</span>
-      </div>
-      <div class="input-group">
-        <span>Open Area:</span>
-        <input type="text" class="number-format" min="0" style="width: 80px;">
-        <select>
-          <option value="sqm">sq.m</option>
-          <option value="sqft">sq.ft</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- <h2 onclick="toggleSection('occupancy')">Occupancy</h2>
-<div id="occupancy" class="section"> -->
-  <div class="category-header">Occupancy</div>
-  <div class="category-content">
-  <div class="form-row">
-    <!-- <div class="form-label required">Occupancy Details</div> -->
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Number of Keys/Rooms:</span>
-        <input type="text" class="number-format" required style="width: 60px;">
-      </div>
-      <div class="input-group">
-        <span>Peak Occupancy Rate:</span>
-        <input type="text" class="number-format" min="0" max="100" style="width: 60px;">
-        <span>%</span>
-      </div>
-      <div class="input-group">
-        <span>Average Guests/Day:</span>
-        <input type="text" class="number-format" style="width: 60px;">
-      </div>
-      <div class="input-group">
-        <span>Total Staff:</span>
-        <input type="text" class="number-format" style="width: 60px;">
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-
-<h2 onclick="toggleSection('energySystems')">Energy Systems</h2>
-<div id="energySystems" class="section">
-  <div class="form-row">
-    <!-- <div class="form-label required">Energy Details</div> -->
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Connected Load:</span>
-        <input type="text" class="number-format" required style="width: 80px;">
-        <span>kW</span>
-      </div>
-      <div class="input-group">
-        <span>Contract Demand:</span>
-        <input type="text" class="number-format" style="width: 80px;">
-        <span>kVA</span>
-      </div>
-      <div class="input-group">
-        <span>Backup Power:</span>
-        <input type="text" class="number-format" style="width: 80px;">
-        <span>kVA</span>
-      </div>
-      <div class="input-group">
-        <span>Renewable Energy:</span>
-        <input type="text" class="number-format" style="width: 80px;">
-        <span>kWp</span>
-      </div>
-      <div class="input-group">
-        <span>Type:</span>
-        <select>
-          <option value="">Select type</option>
-          <option value="solar">Solar</option>
-          <option value="wind">Wind</option>
-          <option value="biomass">Biomass</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</div>
-
-<h2 onclick="toggleSection('waterSystems')">Water Systems</h2>
-<div id="waterSystems" class="section">
-  <div class="form-row">
-    <div class="form-label required">Water Source</div>
-    <div class="form-inputs">
-      <div class="checkbox-group">
-        <label class="checkbox-option">
-          <input type="checkbox" name="waterSource" value="Municipal"> Municipal
-        </label>
-        <label class="checkbox-option">
-          <input type="checkbox" name="waterSource" value="Borewell"> Borewell
-        </label>
-        <label class="checkbox-option">
-          <input type="checkbox" name="waterSource" value="Tanker"> Tanker
-        </label>
-        <label class="checkbox-option">
-          <input type="checkbox" name="waterSource" value="Other"> Other
-        </label>
-      </div>
-    </div>
-  </div>
-  
-  <div class="form-row">
-    <div class="form-label required">Water Usage</div>
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Daily Water Demand:</span>
-        <input type="text" class="number-format" required style="width: 80px;" name="daily_water_demand">
-        <span>KLD</span>
-      </div>
-      <div class="input-group">
-        <span>STP Capacity:</span>
-        <input type="text" class="number-format" style="width: 80px;" name="stp_capacity">
-        <span>KLD</span>
-      </div>
-      <div class="input-group">
-        <span>Treated Water Reuse:</span>
-        <input type="text" class="number-format" min="0" max="100" style="width: 60px;" name="treated_water_reuse">
-        <span>%</span>
-      </div>
-      <div class="input-group">
-        <span>Purpose:</span>
-        <select>
-          <option value="">Select purpose</option>
-          <option value="flushing">Flushing</option>
-          <option value="gardening">Gardening</option>
-          <option value="cooling">Cooling</option>
-          <option value="multiple">Multiple</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  
-  <div class="form-row">
-    <div class="form-label">Water Features</div>
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Water-saving Fixtures:</span>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="waterFixtures" value="Yes"> Yes
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="waterFixtures" value="No"> No
-          </label>
         </div>
       </div>
-      <div class="input-group">
-        <span>Rainwater Harvesting:</span>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="rainwaterHarvesting" value="Yes"> Yes
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="rainwaterHarvesting" value="No"> No
-          </label>
+
+      <!-- Location (4/12) -->
+      <div class="col-lg-4">
+        <div class="info-box h-100">
+          <h6>Location</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label" for="country">Country</label>
+              <select class="form-select" id="country" name="country" required>
+                <option value="">Please select</option><option value="India">India</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="state">State</label>
+              <select class="form-select" id="state" name="state" required>
+                <option value="">Please select</option>
+                <option value="AP">Andhra Pradesh</option>
+                <option value="AR">Arunachal Pradesh</option>
+                <option value="AS">Assam</option>
+                <option value="BR">Bihar</option>
+                <option value="CG">Chhattisgarh</option>
+                <option value="GA">Goa</option>
+                <option value="GJ">Gujarat</option>
+                <option value="HR">Haryana</option>
+                <option value="HP">Himachal Pradesh</option>
+                <option value="JH">Jharkhand</option>
+                <option value="KA">Karnataka</option>
+                <option value="KL">Kerala</option>
+                <option value="MP">Madhya Pradesh</option>
+                <option value="MH">Maharashtra</option>
+                <option value="MN">Manipur</option>
+                <option value="ML">Meghalaya</option>
+                <option value="MZ">Mizoram</option>
+                <option value="NL">Nagaland</option>
+                <option value="OR">Odisha</option>
+                <option value="PB">Punjab</option>
+                <option value="RJ">Rajasthan</option>
+                <option value="SK">Sikkim</option>
+                <option value="TN">Tamil Nadu</option>
+                <option value="TG">Telangana</option>
+                <option value="TR">Tripura</option>
+                <option value="UP">Uttar Pradesh</option>
+                <option value="UK">Uttarakhand</option>
+                <option value="WB">West Bengal</option>
+                <option value="DL">Delhi</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="city">City</label>
+              <select class="form-select" id="city" name="city" required>
+                <option>Please select a state first</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>    </div>
+
+    <!-- Row 1.5: Compliance/Certification Section -->
+    <div class="row g-3 mb-3">
+      <div class="col-12">
+        <div class="info-box">
+          <h6>Certifications / Compliance</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="LEED" id="cert_leed">
+                <label class="form-check-label" for="cert_leed">LEED</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="IGBC" id="cert_igbc">
+                <label class="form-check-label" for="cert_igbc">IGBC</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="GRIHA" id="cert_griha">
+                <label class="form-check-label" for="cert_griha">GRIHA</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="EDGE" id="cert_edge">
+                <label class="form-check-label" for="cert_edge">EDGE</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="EarthCheck" id="cert_earthcheck">
+                <label class="form-check-label" for="cert_earthcheck">EarthCheck</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="ECBC" id="cert_ecbc">
+                <label class="form-check-label" for="cert_ecbc">ECBC</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="BEE" id="cert_bee">
+                <label class="form-check-label" for="cert_bee">BEE</label>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="International Tourism Partnership" id="cert_itp">
+                <label class="form-check-label" for="cert_itp">International Tourism Partnership</label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="TRUE Zero Waste" id="cert_true">
+                <label class="form-check-label" for="cert_true">TRUE Zero Waste</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="certifications" value="IGBC Zero Waste" id="cert_igbc_zero">
+                <label class="form-check-label" for="cert_igbc_zero">IGBC Zero Waste</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Site Info | Building Info  -->
+    <div class="row g-3"><!-- Site Information -->
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Site Information</h6>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+              <label class="form-label" for="site_area">Site Area</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="site_area" name="site_area" min="0" />
+                <select class="form-select w-auto" name="site_area_unit">
+                  <option>sq.m</option><option>sq.ft</option><option>acre</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="built_up_area">Built-up Area</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="built_up_area" name="built_up_area" min="0" />
+                <select class="form-select w-auto" name="built_up_unit"><option>sq.m</option><option>sq.ft</option></select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="ground_coverage">Ground Coverage (%)</label>
+              <input type="number" class="form-control" id="ground_coverage" name="ground_coverage" min="0" max="100" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="basement_parking">Basement Parking</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="basement_parking" name="basement_parking" min="0" />
+                <select class="form-select w-auto" name="basement_parking_unit"><option>sq.m</option><option>sq.ft</option></select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="open_area">Open Area</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="open_area" name="open_area" min="0" />
+                <select class="form-select w-auto" name="open_area_unit">
+                  <option>sq.m</option><option>%</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="total_green_area">Total Green Area</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="total_green_area" name="total_green_area" min="0" />
+                <span class="input-group-text">sq.m</span>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Green Roofs or Terrace Gardens</label>
+              <div class="row g-2">
+                <div class="col-md-6">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_yes" value="Yes">
+                    <label class="form-check-label" for="green_roofs_yes">Yes</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_no" value="No">
+                    <label class="form-check-label" for="green_roofs_no">No</label>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="green_roof_area" name="green_roof_area" min="0" placeholder="Area if Yes" />
+                    <span class="input-group-text">sq.m</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      <!-- Building Information (box) -->
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Building Information</h6>
+          <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+              <label class="form-label" for="floors_above">No. of Floors Above Grade</label>
+              <input type="number" class="form-control" id="floors_above" name="floors_above_grade" min="0" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="floors_below">No. of Floors Below Grade</label>
+              <input type="number" class="form-control" id="floors_below" name="floors_below_grade" min="0" />
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="wall_type">Wall Type</label>
+              <select class="form-select" id="wall_type" name="wall_type">
+                <option value="">Select Wall Type</option>
+                <option>Brick Wall</option>
+                <option>Concrete Block Wall</option>
+                <option>RCC Wall</option>
+                <option>Cavity Wall</option>
+                <option>Precast Concrete Wall</option>
+                <option>AAC Block Wall</option>
+                <option>Stone Wall</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="window_wall_ratio">Window to Wall Ratio</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="window_wall_ratio" name="window_wall_ratio" min="0" max="100" step="0.1" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Insulated Roof</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="insulated_roof" id="insulated_roof_yes" value="Yes">
+                <label class="form-check-label" for="insulated_roof_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="insulated_roof" id="insulated_roof_no" value="No">
+                <label class="form-check-label" for="insulated_roof_no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div></div><!-- end category-content -->
+  </div>
+
+  <!-- Occupancy Section -->
+  <div class="section-header category-header" onclick="toggleSection('occupancy')">Occupancy</div>
+  <div id="occupancy" class="category-content" style="display: block !important;">
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Occupancy Details</h6>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label" for="num_keys_rooms">Number of Keys/Rooms</label>
+              <input type="number" class="form-control" id="num_keys_rooms" name="num_keys_rooms" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="peak_occupancy_rate">Peak Occupancy Rate</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="peak_occupancy_rate" name="peak_occupancy_rate" min="0" max="100" step="0.1" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="avg_guests_per_day">Average Guests per Day</label>
+              <input type="number" class="form-control" id="avg_guests_per_day" name="avg_guests_per_day" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="total_staff_count">Total Staff (Full-time + Contractual)</label>
+              <input type="number" class="form-control" id="total_staff_count" name="total_staff_count" min="0" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<h2 onclick="toggleSection('wasteManagement')">Waste Management</h2>
-<div id="wasteManagement" class="section">
-  <div class="form-row">
-    <!-- <div class="form-label required">Waste Details</div> -->
-    <div class="form-inputs">
-      <div class="input-group">
-        <span>Total Waste Generation:</span>
-        <input type="text" required style="width: 80px;">
-        <span>kg/day</span>
-      </div>
-      <div class="input-group">
-        <span>Segregation at Source:</span>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="segregation" value="Yes"> Yes
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="segregation" value="No"> No
-          </label>
+  <!-- Energy Systems Section -->
+  <div class="section-header category-header" onclick="toggleSection('energySystems')">Energy Systems</div>
+  <div id="energySystems" class="category-content" style="display: block !important;">
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Energy Details</h6>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label" for="connected_load">Connected Load</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="connected_load" name="connected_load" min="0" required />
+                <span class="input-group-text">kW</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="contract_demand">Contract Demand</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="contract_demand" name="contract_demand" min="0" />
+                <span class="input-group-text">kVA</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="utility_power_factor">Utility Power Factor (PF)</label>
+              <input type="number" class="form-control" id="utility_power_factor" name="utility_power_factor" min="0" max="1" step="0.01" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="backup_power">Backup Power (DG Capacity)</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="backup_power" name="backup_power" min="0" />
+                <span class="input-group-text">kVA</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="renewable_energy">Onsite Renewable Energy</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="renewable_energy" name="renewable_energy" min="0" />
+                <span class="input-group-text">kWp</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="renewable_type">Renewable Type</label>
+              <select class="form-select" id="renewable_type" name="renewable_type">
+                <option value="">Select type</option>
+                <option value="solar">Solar</option>
+                <option value="wind">Wind</option>
+                <option value="biomass">Biomass</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="input-group">
-        <span>Composting Facility:</span>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="composting" value="Yes"> Yes
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="composting" value="No"> No
-          </label>
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Annual Energy Use (kWh) - Month-wise Breakdown</h6>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label" for="grid_electricity">Grid Electricity</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="grid_electricity" name="grid_electricity" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="dg_electricity">DG Generated Electricity</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="dg_electricity" name="dg_electricity" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="renewable_purchased">Renewable Energy - Purchased</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="renewable_purchased" name="renewable_purchased" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="renewable_onsite">Renewable Energy - Onsite</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="renewable_onsite" name="renewable_onsite" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="electricity_laundry">Electricity - Laundry</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="electricity_laundry" name="electricity_laundry" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="electricity_kitchen">Electricity - Kitchen</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="electricity_kitchen" name="electricity_kitchen" min="0" />
+                <span class="input-group-text">kWh</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="input-group">
-        <span>Composting Capacity:</span>
-        <input type="text" style="width: 80px;">
-        <span>kg/day</span>
-      </div>
-      <div class="input-group">
-        <span>Waste Collection Agency:</span>
-        <input type="text" style="width: 120px;">
+    </div>
+    
+    <!-- Fuel Consumption Row -->
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Fuel Consumption (Annual)</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <label class="form-label" for="dg_diesel">DG Diesel</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="dg_diesel" name="dg_diesel" min="0" />
+                <span class="input-group-text">L</span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="boiler_diesel">Boiler Diesel</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="boiler_diesel" name="boiler_diesel" min="0" />
+                <span class="input-group-text">L</span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="natural_gas">Natural Gas</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="natural_gas" name="natural_gas" min="0" />
+                <span class="input-group-text">m³</span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="lpg_png">LPG/PNG</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="lpg_png" name="lpg_png" min="0" />
+                <span class="input-group-text">kg</span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="chaff_fuel">Chaff fuel/Gel fuel</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="chaff_fuel" name="chaff_fuel" min="0" />
+                <span class="input-group-text">kg</span>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="charcoal">Charcoal</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="charcoal" name="charcoal" min="0" />
+                <span class="input-group-text">kg</span>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="other_fuel">Other (Coal, Biodiesel, Wood etc.)</label>
+              <input type="text" class="form-control" id="other_fuel" name="other_fuel" placeholder="Specify fuel type and quantity" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+  <!-- Water Systems Section -->
+  <div class="section-header category-header" onclick="toggleSection('waterSystems')">Water Management</div>
+  <div id="waterSystems" class="category-content" style="display: block !important;">
+    
+    <!-- Row 1: Water Source -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Source of Water</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Municipal" id="water_municipal">
+                <label class="form-check-label" for="water_municipal">Municipal</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Borewell" id="water_borewell">
+                <label class="form-check-label" for="water_borewell">Borewell</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Outsource" id="water_outsource">
+                <label class="form-check-label" for="water_outsource">Outsource (Tanker)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Rainwater" id="water_rainwater">
+                <label class="form-check-label" for="water_rainwater">Rainwater</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Recycled" id="water_recycled">
+                <label class="form-check-label" for="water_recycled">Recycled/Treated Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Municipality_reclaimed" id="water_municipality_reclaimed">
+                <label class="form-check-label" for="water_municipality_reclaimed">Municipality Reclaimed Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Bottled" id="water_bottled">
+                <label class="form-check-label" for="water_bottled">Bottled Drinking Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_source" value="Other" id="water_other">
+                <label class="form-check-label" for="water_other">Other (Specify)</label>
+              </div>
+              <input type="text" class="form-control mt-2" id="water_source_other_specify" name="water_source_other_specify" placeholder="Specify other water source" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-<h2 onclick="toggleSection('spaceInfo')">Space Information</h2>
-<div id="spaceInfo" class="section">
-  <!-- Meeting and Event Spaces Category -->
-  <div class="category-header">Meeting and Event Spaces</div>
-  <div class="category-content">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Consumption of Water</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Irrigation" id="water_irrigation">
+                <label class="form-check-label" for="water_irrigation">Irrigation</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Cooling_tower" id="water_cooling_tower">
+                <label class="form-check-label" for="water_cooling_tower">Cooling Tower Makeup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Laundry" id="water_laundry">
+                <label class="form-check-label" for="water_laundry">Laundry</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Kitchen" id="water_kitchen">
+                <label class="form-check-label" for="water_kitchen">Kitchen</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="RO_plant" id="water_ro_plant">
+                <label class="form-check-label" for="water_ro_plant">RO Water Plant</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Flushing" id="water_flushing">
+                <label class="form-check-label" for="water_flushing">Flushing</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Fountain" id="water_fountain">
+                <label class="form-check-label" for="water_fountain">Fountain</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Swimming" id="water_swimming">
+                <label class="form-check-label" for="water_swimming">Swimming Pool</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Boiler" id="water_boiler">
+                <label class="form-check-label" for="water_boiler">Boiler Makeup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Solar_hot" id="water_solar_hot">
+                <label class="form-check-label" for="water_solar_hot">Solar Hot Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="water_consumption" value="Other_consumption" id="water_consumption_other">
+                <label class="form-check-label" for="water_consumption_other">Other (Specify)</label>
+              </div>
+              <input type="text" class="form-control mt-2" id="water_consumption_other_specify" name="water_consumption_other_specify" placeholder="Specify other consumption" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Water Usage Details -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Water Usage Details</h6>
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label" for="daily_water_demand">Daily Water Demand</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="daily_water_demand" name="daily_water_demand" min="0" required />
+                <span class="input-group-text">KLD</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="stp_capacity">STP Capacity</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="stp_capacity" name="stp_capacity" min="0" />
+                <span class="input-group-text">KLD</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="treated_water_reuse_irrigation">Treated Water Reuse - Irrigation</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="treated_water_reuse_irrigation" name="treated_water_reuse_irrigation" min="0" max="100" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="treated_water_reuse_flushing">Treated Water Reuse - Flushing</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="treated_water_reuse_flushing" name="treated_water_reuse_flushing" min="0" max="100" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="treated_water_reuse_drain">Treated Water Reuse - Drain Out</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="treated_water_reuse_drain" name="treated_water_reuse_drain" min="0" max="100" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="treated_water_reuse_other">Treated Water Reuse - Other</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="treated_water_reuse_other" name="treated_water_reuse_other" min="0" max="100" />
+                <span class="input-group-text">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Rainwater Harvesting & Water Saving</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label">Rainwater Harvesting - Recharge</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_recharge" id="rainwater_recharge_yes" value="Yes">
+                <label class="form-check-label" for="rainwater_recharge_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_recharge" id="rainwater_recharge_no" value="No">
+                <label class="form-check-label" for="rainwater_recharge_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Rainwater Harvesting - Storage</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_storage" id="rainwater_storage_yes" value="Yes">
+                <label class="form-check-label" for="rainwater_storage_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_storage" id="rainwater_storage_no" value="No">
+                <label class="form-check-label" for="rainwater_storage_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="rainwater_area_volume">Area of Pit/Volume of Storage Tank</label>
+              <input type="text" class="form-control" id="rainwater_area_volume" name="rainwater_area_volume" placeholder="Specify area or volume" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">RO Plant Rejected Water Reused</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ro_rejected_reused" id="ro_rejected_yes" value="Yes">
+                <label class="form-check-label" for="ro_rejected_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ro_rejected_reused" id="ro_rejected_no" value="No">
+                <label class="form-check-label" for="ro_rejected_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="ro_rejected_end_use">If Yes, Specify End Use</label>
+              <input type="text" class="form-control" id="ro_rejected_end_use" name="ro_rejected_end_use" placeholder="Specify end use" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Water-saving Fixtures/Aerators in Use</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_saving_fixtures" id="water_saving_yes" value="Yes">
+                <label class="form-check-label" for="water_saving_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_saving_fixtures" id="water_saving_no" value="No">
+                <label class="form-check-label" for="water_saving_no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Water Fixtures -->
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Water Fixtures</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <label class="form-label">Bathroom Faucets</label>
+              <input type="number" class="form-control mb-1" name="bathroom_faucets_qty" placeholder="No. of fixtures" />
+              <input type="number" class="form-control" name="bathroom_faucets_flow" placeholder="Flow rate (LPM)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Kitchen Faucets</label>
+              <input type="number" class="form-control mb-1" name="kitchen_faucets_qty" placeholder="No. of fixtures" />
+              <input type="number" class="form-control" name="kitchen_faucets_flow" placeholder="Flow rate (LPM)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Showers</label>
+              <input type="number" class="form-control mb-1" name="showers_qty" placeholder="No. of fixtures" />
+              <input type="number" class="form-control" name="showers_flow" placeholder="Flow rate (LPM)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Urinals</label>
+              <input type="number" class="form-control mb-1" name="urinals_qty" placeholder="No. of fixtures" />
+              <input type="number" class="form-control" name="urinals_flow" placeholder="Flow rate (LPM)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Other Fixtures</label>
+              <input type="number" class="form-control mb-1" name="other_fixtures_qty" placeholder="No. of fixtures" />
+              <input type="number" class="form-control" name="other_fixtures_flow" placeholder="Flow rate (LPM)" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Toilet WC Type</label>
+              <select class="form-select mb-1" name="toilet_wc_type">
+                <option value="">Select Type</option>
+                <option value="single">Single Flush</option>
+                <option value="dual">Dual Flush</option>
+              </select>
+              <input type="number" class="form-control mb-1" name="toilet_wc_qty" placeholder="Quantity" />            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Water Meters -->
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Water Meter at Supply Sources</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_municipal" value="Municipal" id="meter_supply_municipal">
+                <label class="form-check-label" for="meter_supply_municipal">Municipal</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_borewell" value="Borewell" id="meter_supply_borewell">
+                <label class="form-check-label" for="meter_supply_borewell">Borewell</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_outsource" value="Outsource" id="meter_supply_outsource">
+                <label class="form-check-label" for="meter_supply_outsource">Outsource (Tanker)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_rainwater" value="Rainwater" id="meter_supply_rainwater">
+                <label class="form-check-label" for="meter_supply_rainwater">Rainwater</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_recycled" value="Recycled" id="meter_supply_recycled">
+                <label class="form-check-label" for="meter_supply_recycled">Recycled/Treated Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_municipality_reclaimed" value="Municipality_reclaimed" id="meter_supply_municipality_reclaimed">
+                <label class="form-check-label" for="meter_supply_municipality_reclaimed">Municipality Reclaimed Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_supply_other" value="Other" id="meter_supply_other">
+                <label class="form-check-label" for="meter_supply_other">Other (Specify)</label>
+              </div>
+              <input type="text" class="form-control mt-2" id="meter_supply_other_specify" name="meter_supply_other_specify" placeholder="Specify other supply source with meter" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Water Meter at Consumption End</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_irrigation" value="Irrigation" id="meter_consumption_irrigation">
+                <label class="form-check-label" for="meter_consumption_irrigation">Irrigation</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_cooling_tower" value="Cooling_tower" id="meter_consumption_cooling_tower">
+                <label class="form-check-label" for="meter_consumption_cooling_tower">Cooling Tower Makeup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_laundry" value="Laundry" id="meter_consumption_laundry">
+                <label class="form-check-label" for="meter_consumption_laundry">Laundry</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_kitchen" value="Kitchen" id="meter_consumption_kitchen">
+                <label class="form-check-label" for="meter_consumption_kitchen">Kitchen</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_ro_plant" value="RO_plant" id="meter_consumption_ro_plant">
+                <label class="form-check-label" for="meter_consumption_ro_plant">RO Water Plant</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_flushing" value="Flushing" id="meter_consumption_flushing">
+                <label class="form-check-label" for="meter_consumption_flushing">Flushing</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_fountain" value="Fountain" id="meter_consumption_fountain">
+                <label class="form-check-label" for="meter_consumption_fountain">Fountain</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_swimming" value="Swimming" id="meter_consumption_swimming">
+                <label class="form-check-label" for="meter_consumption_swimming">Swimming Pool</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_boiler" value="Boiler" id="meter_consumption_boiler">
+                <label class="form-check-label" for="meter_consumption_boiler">Boiler Makeup</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_solar_hot" value="Solar_hot" id="meter_consumption_solar_hot">
+                <label class="form-check-label" for="meter_consumption_solar_hot">Solar Hot Water</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="meter_consumption_other" value="Other_consumption" id="meter_consumption_other">
+                <label class="form-check-label" for="meter_consumption_other">Other (Specify)</label>
+              </div>
+              <input type="text" class="form-control mt-2" id="meter_consumption_other_specify" name="meter_consumption_other_specify" placeholder="Specify other consumption end with meter" />
+            </div>
+          </div>        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Waste Management Section -->
+  <div class="section-header category-header" onclick="toggleSection('wasteManagement')">Waste Management</div>
+  <div id="wasteManagement" class="category-content" style="display: block !important;">
+    <!-- Row 1: Waste Management Basics -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Waste Management Practices</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label">Waste Segregation at Source</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="segregation_source" id="segregation_yes" value="Yes">
+                <label class="form-check-label" for="segregation_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="segregation_source" id="segregation_no" value="No">
+                <label class="form-check-label" for="segregation_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Organic Waste Composting Facility</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="composting_facility" id="composting_yes" value="Yes">
+                <label class="form-check-label" for="composting_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="composting_facility" id="composting_no" value="No">
+                <label class="form-check-label" for="composting_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="composting_capacity">Composting Capacity</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="composting_capacity" name="composting_capacity" min="0" />
+                <span class="input-group-text">kg/day</span>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Biogas Plant Installed</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="biogas_plant" id="biogas_yes" value="Yes">
+                <label class="form-check-label" for="biogas_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="biogas_plant" id="biogas_no" value="No">
+                <label class="form-check-label" for="biogas_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="biogas_capacity">Biogas Plant Capacity</label>
+              <div class="input-group">
+                <input type="number" class="form-control" id="biogas_capacity" name="biogas_capacity" min="0" />
+                <span class="input-group-text">m³/day</span>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tie-up with Waste Collection Agency</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="waste_collection_tieup" id="tieup_yes" value="Yes">
+                <label class="form-check-label" for="tieup_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="waste_collection_tieup" id="tieup_no" value="No">
+                <label class="form-check-label" for="tieup_no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Waste Collection & Processing</h6>
+          <div class="row g-2">
+            <div class="col-12">
+              <label class="form-label" for="waste_collection_bags">Type of Waste Collection Bags Used</label>
+              <select class="form-select" id="waste_collection_bags" name="waste_collection_bags">
+                <option value="">Select Type</option>
+                <option value="Black">Black</option>
+                <option value="Transparent">Transparent</option>
+                <option value="Both">Both</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Any Retrofit Works in Last Financial Year</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="retrofit_works" id="retrofit_yes" value="Yes">
+                <label class="form-check-label" for="retrofit_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="retrofit_works" id="retrofit_no" value="No">
+                <label class="form-check-label" for="retrofit_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Category wise Bins Used in Facility</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category_bins" id="category_bins_yes" value="Yes">
+                <label class="form-check-label" for="category_bins_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="category_bins" id="category_bins_no" value="No">
+                <label class="form-check-label" for="category_bins_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Hand Dry Blowers Installed in Washroom</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hand_dryers" id="hand_dryers_yes" value="Yes">
+                <label class="form-check-label" for="hand_dryers_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="hand_dryers" id="hand_dryers_no" value="No">
+                <label class="form-check-label" for="hand_dryers_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Tissue Paper Used in Common Area Washrooms</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tissue_paper" id="tissue_yes" value="Yes">
+                <label class="form-check-label" for="tissue_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="tissue_paper" id="tissue_no" value="No">
+                <label class="form-check-label" for="tissue_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="paper_printing_type">Type of Paper Printing Followed</label>
+              <select class="form-select" id="paper_printing_type" name="paper_printing_type">
+                <option value="">Select Type</option>
+                <option value="single">Single Side</option>
+                <option value="both">Both Side</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Waste Category Bins -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Category of Bins Used (Specify)</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <label class="form-label" for="category_1">Category-1</label>
+              <input type="text" class="form-control" id="category_1" name="category_1" placeholder="Specify" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="category_2">Category-2</label>
+              <input type="text" class="form-control" id="category_2" name="category_2" placeholder="Specify" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="category_3">Category-3</label>
+              <input type="text" class="form-control" id="category_3" name="category_3" placeholder="Specify" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="category_4">Category-4</label>
+              <input type="text" class="form-control" id="category_4" name="category_4" placeholder="Specify" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="category_5">Category-5</label>
+              <input type="text" class="form-control" id="category_5" name="category_5" placeholder="Specify" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="category_6">Category-6</label>
+              <input type="text" class="form-control" id="category_6" name="category_6" placeholder="Specify" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Total Waste Generation Details -->
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Total Waste Generation (kgs) Annually</h6>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label" for="total_waste_generated">Total Waste Generated</label>
+              <input type="number" class="form-control" id="total_waste_generated" name="total_waste_generated" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="total_waste_recycled">Total Waste Recycled</label>
+              <input type="number" class="form-control" id="total_waste_recycled" name="total_waste_recycled" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="total_waste_reused">Total Waste Reused</label>
+              <input type="number" class="form-control" id="total_waste_reused" name="total_waste_reused" min="0" />
+            </div>
+          </div>
+          
+          <!-- Organic/Biodegradable Waste -->
+          <h6 class="mt-3">Organic/Biodegradable Waste</h6>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label" for="kitchen_waste">Kitchen Waste</label>
+              <input type="number" class="form-control" id="kitchen_waste" name="kitchen_waste" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="horticulture_waste">Horticulture Waste</label>
+              <input type="number" class="form-control" id="horticulture_waste" name="horticulture_waste" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="compost_manure">Compost/Manure from Treatment at Site</label>
+              <input type="number" class="form-control" id="compost_manure" name="compost_manure" min="0" />
+            </div>
+          </div>
+
+          <!-- Recyclable Waste -->
+          <h6 class="mt-3">Recyclable Waste</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <label class="form-label" for="waste_paper">Waste Paper/Cardboard</label>
+              <input type="number" class="form-control" id="waste_paper" name="waste_paper" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="wooden_scrap">Wooden Scrap/Furniture</label>
+              <input type="number" class="form-control" id="wooden_scrap" name="wooden_scrap" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="metal_scrap">Metal Scrap</label>
+              <input type="number" class="form-control" id="metal_scrap" name="metal_scrap" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="glass_waste">Glass</label>
+              <input type="number" class="form-control" id="glass_waste" name="glass_waste" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="plastic_waste">Plastic</label>
+              <input type="number" class="form-control" id="plastic_waste" name="plastic_waste" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="fabric_waste">Fabric/Linen/Cloth/Uniforms</label>
+              <input type="number" class="form-control" id="fabric_waste" name="fabric_waste" min="0" />
+            </div>
+          </div>
+
+          <!-- Hazardous Waste -->
+          <h6 class="mt-3">Hazardous Waste</h6>
+          <div class="row g-2">
+            <div class="col-md-2">
+              <label class="form-label" for="burnt_oil">Burnt Oil</label>
+              <input type="number" class="form-control" id="burnt_oil" name="burnt_oil" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="lube_oil_waste">Lube Oil Waste</label>
+              <input type="number" class="form-control" id="lube_oil_waste" name="lube_oil_waste" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="oil_sludge">Oil/Sludge Containers</label>
+              <input type="number" class="form-control" id="oil_sludge" name="oil_sludge" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="oily_rags">Oily Rags</label>
+              <input type="number" class="form-control" id="oily_rags" name="oily_rags" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="rejected_chemicals">Rejected/Discarded Chemicals</label>
+              <input type="number" class="form-control" id="rejected_chemicals" name="rejected_chemicals" min="0" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label" for="batteries_waste">Batteries</label>
+              <input type="number" class="form-control" id="batteries_waste" name="batteries_waste" min="0" />
+            </div>
+          </div>
+
+          <!-- E-Waste and Other Categories -->
+          <h6 class="mt-3">E-Waste & Other Categories</h6>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label" for="e_waste">E-Waste</label>
+              <input type="number" class="form-control" id="e_waste" name="e_waste" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="fused_bulbs">Fused Bulbs/Tube</label>
+              <input type="number" class="form-control" id="fused_bulbs" name="fused_bulbs" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="construction_waste">Construction & Demolition Waste</label>
+              <input type="number" class="form-control" id="construction_waste" name="construction_waste" min="0" />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label" for="stp_sludge">ETP/STP Sludge Waste</label>
+              <input type="number" class="form-control" id="stp_sludge" name="stp_sludge" min="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Space Information Section -->
+  <div class="section-header category-header" onclick="toggleSection('spaceInfo')">Space Information</div>
+  <div id="spaceInfo" class="category-content" style="display: block !important;">
+    
+    <!-- Guest Accommodation Areas Subsection -->
+    <div class="subcategory-header" onclick="toggleSubcategory('guestAccommodation')">Guest Accommodation Areas</div>
+    <div id="guestAccommodation" class="subcategory-content" style="display: block;">
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="guestRoomsCheck"> 
+        Guest Rooms
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of Rooms</th>
+              <th>Area per Room</th>
+              <th>Unit</th>
+              <th>Average occupancy rate (%)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="guestRoomsTableBody">
+            <tr>
+              <td><input type="text" class="number-format" name="guest_rooms_count[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="guest_rooms_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="guest_rooms_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="text" class="number-format" name="guest_rooms_occupancy[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('guestRoomsTableBody', 'guestRooms')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="vipSuitesCheck"> 
+        Presidential/VIP Suites
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of Rooms</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="vipSuitesTableBody">
+            <tr>
+              <td><input type="text" class="number-format" name="vip_suites_count[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('vipSuitesTableBody', 'vipSuites')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="servicedApartmentsCheck"> 
+        Serviced Apartments or Extended Stay Units
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>No. of Rooms</th>
+              <th>Area per Room</th>
+              <th>Unit</th>
+              <th>Average occupancy rate (%)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="servicedApartmentsTableBody">
+            <tr>
+              <td><input type="text" class="number-format" name="serviced_apartments_count[]" style="width: 60px;"></td>
+              <td><input type="text" class="number-format" name="serviced_apartments_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="serviced_apartments_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td><input type="text" class="number-format" name="serviced_apartments_occupancy[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('servicedApartmentsTableBody', 'servicedApartments')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>    </div>
+    
+    <!-- Meeting and Event Spaces Subsection -->
+    <div class="subcategory-header" onclick="toggleSubcategory('meetingEventSpaces')">Meeting and Event Spaces</div>
+    <div id="meetingEventSpaces" class="subcategory-content" style="display: block;">
     
     <div class="subcategory tree-level-2">
       
@@ -555,13 +2026,11 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Food and Beverage Outlets Category -->
-  <div class="category-header">Food and Beverage Outlets</div>
-  <div class="category-content">
+      </div>    </div>
+    
+    <!-- Food and Beverage Outlets Subsection -->
+    <div class="subcategory-header" onclick="toggleSubcategory('foodBeverageOutlets')">Food and Beverage Outlets</div>
+    <div id="foodBeverageOutlets" class="subcategory-content" style="display: block;">
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
@@ -714,13 +2183,11 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Wellness and Recreation Category -->
-  <div class="category-header">Wellness and Recreation</div>
-  <div class="category-content">
+      </div>    </div>
+    
+    <!-- Wellness and Recreation Subsection -->
+    <div class="subcategory-header" onclick="toggleSubcategory('wellnessRecreation')">Wellness and Recreation</div>
+    <div id="wellnessRecreation" class="subcategory-content" style="display: block;">
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
@@ -910,13 +2377,11 @@
             </tr>
           </tbody>
         </table>
-      </div>
-    </div>
-  </div>
-  
-  <!-- BOH & Service Areas Category -->
-  <div class="category-header">BOH & Service Areas</div>
-  <div class="category-content">
+      </div>    </div>
+    
+    <!-- BOH & Service Areas Subsection -->
+    <div class="subcategory-header" onclick="toggleSubcategory('bohServiceAreas')">BOH & Service Areas</div>
+    <div id="bohServiceAreas" class="subcategory-content" style="display: block;">
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
@@ -946,6 +2411,89 @@
               <td class="action-buttons">
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('laundryTableBody', 'laundry')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="kitchenStoresCheck"> 
+        Kitchen Stores (dry store, cold storage, deep freezer, etc.)
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Store Type</th>
+              <th>Storage Capacity</th>
+              <th>Unit</th>
+              <th>Refrigeration Hours</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="kitchenStoresTableBody">
+            <tr>
+              <td>
+                <select name="kitchen_store_type[]">
+                  <option value="dry">Dry Storage</option>
+                  <option value="cold">Cold Storage</option>
+                  <option value="deep_freezer">Deep Freezer</option>
+                </select>
+              </td>
+              <td><input type="text" class="number-format" name="kitchen_store_capacity[]" style="width: 80px;"></td>
+              <td>
+                <select name="kitchen_store_capacity_unit[]">
+                  <option value="kg">kg</option>
+                  <option value="L">L</option>
+                </select>
+              </td>
+              <td><input type="text" class="number-format" name="kitchen_store_hours[]" style="width: 60px;"></td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('kitchenStoresTableBody', 'kitchenStores')" style="color: #4CAF50;">+</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="subcategory tree-level-2">
+      <div class="subcategory-header">
+        <input type="checkbox" id="wasteHandlingCheck"> 
+        Waste Handling Area (segregation, composting, etc.)
+      </div>
+      <div class="subcategory-content">
+        <table class="input-table">
+          <thead>
+            <tr>
+              <th>Area</th>
+              <th>Unit</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="wasteHandlingTableBody">
+            <tr>
+              <td><input type="text" class="number-format" name="waste_handling_area[]" style="width: 80px;"></td>
+              <td>
+                <select name="waste_handling_area_unit[]">
+                  <option value="sqm">sq.m</option>
+                  <option value="sqft">sq.ft</option>
+                </select>
+              </td>
+              <td>
+                <select name="waste_handling_type[]">
+                  <option value="segregation">Segregation</option>
+                  <option value="composting">Composting</option>
+                  <option value="general">General</option>
+                </select>
+              </td>
+              <td class="action-buttons">
+                <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
+                <button type="button" class="remove-row-btn" onclick="addRow('wasteHandlingTableBody', 'wasteHandling')" style="color: #4CAF50;">+</button>
               </td>
             </tr>
           </tbody>
@@ -992,16 +2540,94 @@
                 <button type="button" class="remove-row-btn" onclick="addRow('parkingTableBody', 'parking')" style="color: #4CAF50;">+</button>
               </td>
             </tr>
-          </tbody>
-        </table>
+          </tbody>        </table>
+      </div>
+    </div>
+  </div> <!-- Close Space Information section -->
+
+  <!-- Equipment Information Section -->
+  <div class="section-header category-header" onclick="toggleSection('equipmentInfo')">Equipment Information</div>
+  <div id="equipmentInfo" class="category-content" style="display: block !important;">
+    <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Equipment Information</h6>
+          <div class="row g-2">
+            <div class="col-md-3">
+              <label class="form-label">Water Treatment Plant (STP, WTP, RO plant)</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_treatment_plant" id="wtp_yes" value="Yes">
+                <label class="form-check-label" for="wtp_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_treatment_plant" id="wtp_no" value="No">
+                <label class="form-check-label" for="wtp_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Boiler</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="boiler_equipment" id="boiler_yes" value="Yes">
+                <label class="form-check-label" for="boiler_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="boiler_equipment" id="boiler_no" value="No">
+                <label class="form-check-label" for="boiler_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Diesel Generator</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="diesel_generator" id="dg_yes" value="Yes">
+                <label class="form-check-label" for="dg_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="diesel_generator" id="dg_no" value="No">
+                <label class="form-check-label" for="dg_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Heat Recovery</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="heat_recovery" id="hr_yes" value="Yes">
+                <label class="form-check-label" for="hr_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="heat_recovery" id="hr_no" value="No">
+                <label class="form-check-label" for="hr_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Economiser</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="economiser" id="eco_yes" value="Yes">
+                <label class="form-check-label" for="eco_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="economiser" id="eco_no" value="No">
+                <label class="form-check-label" for="eco_no">No</label>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Condensate Heat Recovery</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="condensate_heat_recovery" id="chr_yes" value="Yes">
+                <label class="form-check-label" for="chr_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="condensate_heat_recovery" id="chr_no" value="No">
+                <label class="form-check-label" for="chr_no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- HVAC Systems Section -->
-<h2 onclick="toggleSection('hvacSystems')">HVAC Systems</h2>
-<div id="hvacSystems" class="section">
+  <!-- HVAC Systems Section -->
+  <div class="section-header category-header" onclick="toggleSection('hvacSystems')">HVAC Systems</div>
+  <div id="hvacSystems" class="category-content" style="display: block !important;">
   
   <!-- Chiller Section -->
   <div class="subcategory-header">
@@ -1013,15 +2639,13 @@
       <table class="table table-bordered table-hover">
         <thead>
           <tr>
-            <th class="fixed-col">Parameter</th>
-            <th class="chiller-col">
+            <th class="fixed-col">Parameter</th>            <th class="chiller-col">
               <div class="chiller-header">
                 <span>Chiller 1</span>
-                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="chillerCount = removeColumn(chillerCount, 1, 'chillerTableBody', 'chiller', 'Chiller')" title="Remove Chiller" disabled>-</button>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removeChillerColumn(0)" title="Remove Chiller" disabled>-</button>
               </div>
-            </th>
-            <th class="action-col">
-              <button type="button" class="btn btn-sm btn-success" onclick="chillerCount = addTableColumn(chillerCount, 'chillerTableBody', 'chiller', 'Chiller')" title="Add Chiller">+</button>
+            </th>            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addTableColumn(0, 'chillerTableBody', 'chiller', 'Chiller')" title="Add Chiller">+</button>
             </th>
           </tr>
         </thead>
@@ -1471,22 +3095,7 @@
           
         </tbody>
       </table>
-    </div>
-
-    <script>
-      let coolingTowerCount = 1;
-
-      function addCoolingTowerColumn () {
-        coolingTowerCount = addTableColumn(coolingTowerCount, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower')
-        
-      }
-
-      function removeCoolingTowerColumn(clickedIndex) {
-        coolingTowerCount = removeColumn(coolingTowerCount,clickedIndex,'coolingTowerTableBody', 'coolingTower', 'Cooling Tower')
-
-      }
-    </script>
-  </div>
+    </div>  </div>
   <!--  Cooling Tower in chillers Section (Nikunj)-->
 
   <!-- Treated Fresh Air Unit in chillers Section (Nikunj) -->
@@ -2843,9 +4452,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div>
 
-<!-- Electrical equipment section start (Nikunj) -->
-<h2 onclick="toggleSection('electricalEquipment')">Electrical Equipments</h2>
-<div id="electricalEquipment" class="section">
+  <!-- Electrical Equipment Section -->
+  <div class="section-header category-header" onclick="toggleSection('electricalEquipment')">Electrical Equipment</div>
+  <div id="electricalEquipment" class="category-content" style="display: block !important;">
 
   <!-- Lighting in electrical equipment Section (Nikunj) -->
   <div class="subcategory-header">
@@ -3097,9 +4706,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <!-- Electrical equipment section end (Nikunj) -->
 
-<!-- Plumbing section start (Nikunj) -->
-<h2 onclick="toggleSection('plumbing')">Plumbing</h2>
-<div id="plumbing" class="section">
+  <!-- Plumbing Section -->
+  <div class="section-header category-header" onclick="toggleSection('plumbing')">Plumbing</div>
+  <div id="plumbing" class="category-content" style="display: block !important;">
 
   <!-- Water treatment plant in plumbing Section (Nikunj) -->
   <div class="subcategory-header">
@@ -3380,11 +4989,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 </div>
 
-  <!-- STP Blower in plumbing Section (Nikunj)-->
-
-
-</div>
-
 <!-- Plumbing section end (Nikunj) -->
 
 <!-- <div class="form-actions">
@@ -3427,14 +5031,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   };
-
-  // Toggle section visibility
-  function toggleSection(id) {
-    const section = document.getElementById(id);
-    if (section) {
-      section.style.display = section.style.display === 'none' ? 'block' : 'none';
-    }
-  }
+  // Toggle section visibility  // First toggleSection function removed (duplicate)
   
   // Toggle collapsible element
   function toggleCollapsible(header) {
@@ -3535,59 +5132,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
-  
-  // Function to expand all sections
-  function expandAll() {
-    // Show all sections
-    document.querySelectorAll('.section').forEach(section => {
-      section.style.display = 'block';
-    });
-    
-    // Expand all category headers
-    document.querySelectorAll('.category-header').forEach(header => {
-      if (header.classList.contains('collapsed')) {
-        toggleCollapsible(header);
-      }
-    });
-    
-    // Expand all subcategory headers and check their checkboxes
-    document.querySelectorAll('.subcategory-header').forEach(header => {
-      if (header.classList.contains('collapsed')) {
-        toggleCollapsible(header);
-      }
-      const checkbox = header.querySelector('input[type="checkbox"]');
-      if (checkbox && !checkbox.checked) {
-        checkbox.checked = true;
-      }
-    });
-  }
-  
-  // Function to collapse all sections
-  function collapseAll() {
-    // Hide all sections
-    document.querySelectorAll('.section').forEach(section => {
-      section.style.display = 'none';
-    });
-    
-    // Collapse every category header
-    document.querySelectorAll('.category-header').forEach(header => {
-      if (!header.classList.contains('collapsed')) {
-        toggleCollapsible(header);
-      }
-    });
-    
-    // Collapse all subcategory headers and uncheck their checkboxes
-    document.querySelectorAll('.subcategory-header').forEach(header => {
-      if (!header.classList.contains('collapsed')) {
-        toggleCollapsible(header);
-      }
-      const checkbox = header.querySelector('input[type="checkbox"]');
-      if (checkbox && checkbox.checked) {
-        checkbox.checked = false;
-      }
-    });
-  }
-
+    // First expandAll and collapseAll functions removed (duplicates)
   // City data based on state selection
   const cityData = {
     "AP": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool"],
@@ -3623,8 +5168,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Update city dropdown based on state selection
   document.addEventListener('DOMContentLoaded', function() {
-    const stateDropdown = document.getElementById('stateDropdown');
-    const cityDropdown = document.getElementById('cityDropdown');
+    const stateDropdown = document.getElementById('state');
+    const cityDropdown = document.getElementById('city');
     
     if (stateDropdown && cityDropdown) {
       stateDropdown.addEventListener('change', function() {
@@ -3656,32 +5201,22 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
     
-    // Toggle input fields based on checkbox selection
-    const checkboxes = document.querySelectorAll('.subcategory-header input[type="checkbox"]');
-      
-    checkboxes.forEach(checkbox => {
-      // Find the closest subcategory content
-      const header = checkbox.closest('.subcategory-header');
-      const subcategoryContent = header ? header.nextElementSibling : null;
-      if (!subcategoryContent) {
-        // Some headers (e.g., Chiller Details) may not have a dedicated content block
-        return;
-      }
-
-      const inputGroups = subcategoryContent.querySelectorAll('.input-group');
-
-      // Initialize visibility based on checkbox state
-      inputGroups.forEach(group => {
-        group.style.display = checkbox.checked ? 'flex' : 'none';
+    // Initialize collapsible elements
+    if (typeof initializeCollapsibles === 'function') {
+      initializeCollapsibles();
+    }
+    
+    // Initialize year pickers
+    if (typeof initializeYearPickers === 'function') {
+      initializeYearPickers();
+    }
+    
+    // Initialize VFD modulation fields
+    if (typeof updateVFDModulationField === 'function') {
+      $('[name^="chiller"][name$="_vfd_status"]').each(function() {
+        updateVFDModulationField(this);
       });
-
-      // Toggle visibility on checkbox change
-      checkbox.addEventListener('change', function () {
-        inputGroups.forEach(group => {
-          group.style.display = this.checked ? 'flex' : 'none';
-        });
-      });
-    });
+    }
     
     // Add event listeners for expand/collapse all buttons
     const expandAllBtn = document.getElementById('expandAllBtn');
@@ -3695,6 +5230,111 @@ document.addEventListener('DOMContentLoaded', function() {
       collapseAllBtn.addEventListener('click', collapseAll);
     }
   });
+  // Toggle section visibility (Bootstrap compatible)
+  function toggleSection(id) {
+    const section = document.getElementById(id);
+    const header = document.querySelector(`[onclick="toggleSection('${id}')"]`);
+    
+    if (section && header) {
+      if (section.style.display === 'none' || section.classList.contains('collapsed')) {
+        section.style.display = 'block';
+        section.classList.remove('collapsed');
+        header.classList.remove('collapsed');
+      } else {
+        section.style.display = 'none';
+        section.classList.add('collapsed');
+        header.classList.add('collapsed');
+      }
+    }
+  }
+  
+  // Toggle collapsible element (Bootstrap compatible)
+  function toggleCollapsible(header) {
+    const isCategory = header.classList.contains('category-header') || header.classList.contains('section-header');
+    const content = header.nextElementSibling;
+    
+    // Toggle the collapsed state
+    const willCollapse = !header.classList.contains('collapsed');
+    
+    if (willCollapse) {
+      header.classList.add('collapsed');
+      if (content) {
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
+    } else {
+      header.classList.remove('collapsed');
+      if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+      }
+    }
+    
+    // Handle checkbox state for subcategories
+    if (!isCategory) {
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = !willCollapse;
+      }
+    }
+  }
+  
+  // Function to expand all sections
+  function expandAll() {
+    // Show all sections
+    document.querySelectorAll('.category-content').forEach(section => {
+      section.style.display = 'block';
+      section.classList.remove('collapsed');
+    });
+    
+    // Expand all category headers
+    document.querySelectorAll('.section-header, .category-header').forEach(header => {
+      header.classList.remove('collapsed');
+    });
+    
+    // Expand all subcategory headers and check their checkboxes
+    document.querySelectorAll('.subcategory-header').forEach(header => {
+      header.classList.remove('collapsed');
+      const content = header.nextElementSibling;
+      if (content) {
+        content.style.display = 'block';
+        content.classList.remove('collapsed');
+      }
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+  }
+    // Function to collapse all sections
+  function collapseAll() {
+    // Hide all sections
+    document.querySelectorAll('.category-content').forEach(section => {
+      section.style.display = 'none';
+      section.classList.add('collapsed');
+    });
+      // Collapse every category header
+    document.querySelectorAll('.section-header, .category-header').forEach(header => {
+      header.classList.add('collapsed');
+      // Ensure headers remain visible
+      header.style.display = 'block';
+      header.style.visibility = 'visible';
+    });
+    
+    // Collapse all subcategory headers and uncheck their checkboxes
+    document.querySelectorAll('.subcategory-header').forEach(header => {
+      header.classList.add('collapsed');
+      const content = header.nextElementSibling;
+      if (content) {
+        content.style.display = 'none';
+        content.classList.add('collapsed');
+      }
+      const checkbox = header.querySelector('input[type="checkbox"]');
+      if (checkbox) {
+        checkbox.checked = false;
+      }
+    });
+  }
 
   function saveForm() {
     alert("Form values saved locally (you can implement actual save logic here).");
@@ -3793,35 +5433,49 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-
-
 $(document).ready(function() {
   // 1. Initialize year pickers on page load
-  initializeYearPickers();
+  if (typeof initializeYearPickers === 'function') {
+    initializeYearPickers();
+  }
 
   // 2. Initialize VFD modulation fields on page load
   $('[name^="chiller"][name$="_vfd_status"]').each(function() {
-    updateVFDModulationField(this);
+    if (typeof updateVFDModulationField === 'function') {
+      updateVFDModulationField(this);
+    }
   });
+  
   // 2b. Initialize Fresh Air VFD modulating frequency fields on page load
   $('[name^="freshair"][name$="_vfd_status"]').each(function() {
-    updateVFDModulatingfrequencyField(this);
+    if (typeof updateVFDModulatingfrequencyField === 'function') {
+      updateVFDModulatingfrequencyField(this);
+    }
   });
 
   // 3. Handle VFD status changes
   $(document).on('change', '[name^="chiller"][name$="_vfd_status"]', function() {
-    updateVFDModulationField(this);
+    if (typeof updateVFDModulationField === 'function') {
+      updateVFDModulationField(this);
+    }
   });
+  
   // 3b. Handle Fresh Air VFD status changes
   $(document).on('change', '[name^="freshair"][name$="_vfd_status"]', function() {
-    updateVFDModulatingfrequencyField(this);
+    if (typeof updateVFDModulatingfrequencyField === 'function') {
+      updateVFDModulatingfrequencyField(this);
+    }
   });
 
   // 4. Re-initialize year pickers and VFD fields when columns are added
   $(document).on('columnAdded', function() {
-    initializeYearPickers();
+    if (typeof initializeYearPickers === 'function') {
+      initializeYearPickers();
+    }
     $('[name^="chiller"][name$="_vfd_status"]').each(function() {
-      updateVFDModulationField(this);
+      if (typeof updateVFDModulationField === 'function') {
+        updateVFDModulationField(this);
+      }
     });
   });
 
@@ -3844,14 +5498,140 @@ $(document).ready(function() {
   });
 });
 </script>
-  <script src="script.js"></script>
-  <script>
-    // Initialize number formatting on all number inputs on page load
+
+  </div> <!-- Close container -->
+
+<!-- <div class="form-actions">
+  <button type="button" onclick="saveForm()">Save</button>
+  <button type="submit" onclick="submitForm()">Submit</button>
+</div> -->
+
+<script>
+  // Show the first section by default
+  window.onload = function() {
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof initNumberFormatting === 'function') {
         initNumberFormatting();
       }
+        // Initialize all sections to be visible (expanded) by default
+      const allSections = document.querySelectorAll('.category-content');
+      const allHeaders = document.querySelectorAll('.section-header, .category-header');
+      
+      console.log('Found sections:', allSections.length);
+      console.log('Found headers:', allHeaders.length);
+      
+      allSections.forEach((section, index) => {
+        console.log(`Section ${index}: ${section.id}, display: ${section.style.display}, classes: ${section.className}`);
+        section.style.display = 'block';
+        section.classList.remove('collapsed');
+      });
+      
+      allHeaders.forEach((header, index) => {
+        console.log(`Header ${index}: ${header.textContent.trim()}, classes: ${header.className}`);
+        header.classList.remove('collapsed');
+      });      console.log('Initialized', allSections.length, 'sections and', allHeaders.length, 'headers');
+      
+      // Debug: Check if all expected sections exist
+      const expectedSections = [
+        'buildingInfo', 'occupancy', 'energySystems', 'waterSystems', 
+        'wasteManagement', 'spaceInfo', 'equipmentInfo', 'hvacSystems', 
+        'electricalEquipment', 'plumbing'
+      ];
+      
+      console.log('=== Section Existence Check ===');
+      expectedSections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        const header = document.querySelector(`[onclick="toggleSection('${sectionId}')"]`);        console.log(`${sectionId}:`, 
+          'Section exists:', !!section, 
+          'Header exists:', !!header,
+          'Section parent:', section ? section.parentElement.tagName : 'N/A',
+          'Header visible:', header ? getComputedStyle(header).display : 'N/A'
+        );
+      });
+      
+      // Mobile responsiveness enhancements
+      enhanceMobileExperience();
     });
+    
+    function enhanceMobileExperience() {
+      // Add touch-friendly features for mobile
+      if (window.innerWidth <= 768) {
+        // Make section headers more touch-friendly
+        document.querySelectorAll('.section-header, .subcategory-header').forEach(header => {
+          header.style.minHeight = '44px'; // iOS recommended touch target size
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+        });
+        
+        // Add swipe indicators for tables
+        document.querySelectorAll('.table-responsive').forEach(table => {
+          if (table.scrollWidth > table.clientWidth) {
+            table.style.position = 'relative';
+            
+            // Add scroll indicator
+            const indicator = document.createElement('div');
+            indicator.style.cssText = `
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              text-align: center;
+              font-size: 0.75rem;
+              color: #6c757d;
+              background: rgba(248, 249, 250, 0.9);
+              padding: 2px;
+              border-top: 1px solid #dee2e6;
+              pointer-events: none;
+              z-index: 1;
+            `;
+            indicator.textContent = '← Swipe to see more →';
+            table.appendChild(indicator);
+            
+            // Hide indicator when scrolled to the end
+            table.addEventListener('scroll', function() {
+              const scrollLeft = this.scrollLeft;
+              const scrollWidth = this.scrollWidth;
+              const clientWidth = this.clientWidth;
+              
+              if (scrollLeft + clientWidth >= scrollWidth - 5) {
+                indicator.style.display = 'none';
+              } else {
+                indicator.style.display = 'block';
+              }
+            });
+          }
+        });
+        
+        // Improve form field focus on mobile
+        document.querySelectorAll('input, select, textarea').forEach(field => {
+          field.addEventListener('focus', function() {
+            this.style.transform = 'scale(1.02)';
+            this.style.transition = 'transform 0.2s ease';
+          });
+          
+          field.addEventListener('blur', function() {
+            this.style.transform = 'scale(1)';
+          });
+        });
+      }
+      
+      // Handle orientation changes
+      window.addEventListener('orientationchange', function() {
+        setTimeout(function() {
+          // Recalculate table scroll indicators
+          document.querySelectorAll('.table-responsive').forEach(table => {
+            const indicator = table.querySelector('div[style*="Swipe to see more"]');
+            if (indicator) {
+              if (table.scrollWidth <= table.clientWidth) {
+                indicator.style.display = 'none';
+              } else {
+                indicator.style.display = 'block';
+              }
+            }
+          });
+        }, 500);
+      });
+    }
   </script>
 </body>
 </html>
