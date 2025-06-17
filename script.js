@@ -1,4 +1,19 @@
 //parameter (1, 'coldroomTableBody', 'coldroom', 'ColdRoom')
+
+// Global counters for different table types
+let chillerCount = 1;
+let boilerCount = 1;
+let heatPumpCount = 1;
+let splitUnitCount = 1;
+let fanCoilUnitCount = 1;
+let coolingTowerCount = 1;
+let treatedFreshAirUnitCount = 1;
+let airHandlingUnitCount = 1;
+let packagedUnitCount = 1;
+let airWasherCount = 1;
+let solarHotWaterCount = 1;
+let freshAirCount = 1;
+
 function getRemoveFunctionName(ComponentText) {
   // Map display name to actual remove function name
   const map = {
@@ -19,21 +34,22 @@ function getRemoveFunctionName(ComponentText) {
 }
 
 function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
-  //increase the colcount
-  colCount++;
-
   //get all rows and header row
   const tbody = document.getElementById(tbodyID);
   const rows = tbody.rows;
   const headerRow = tbody.previousElementSibling.rows[0];
   
+  // Count existing equipment columns (excluding fixed column and action column)
+  const existingCols = headerRow.cells.length - 2; // Subtract fixed col and action col
+  const newColNumber = existingCols + 1;
+  
   // Create new header with remove button
   const newHeader = document.createElement('th');
-  newHeader.className = componentTypeID+'-col'; // add class to header
+  newHeader.className = componentTypeID + '-col'; // add class to header
   newHeader.innerHTML = `
-      <div class=${componentTypeID}"-header">
-      <span>${ComponentText} ${colCount}</span>
-      <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="${getRemoveFunctionName(ComponentText)}(${colCount - 1})" title="Remove ${ComponentText}" ${colCount === 1 ? 'disabled' : ''}>-</button>
+      <div class="${componentTypeID}-header">
+      <span>${ComponentText} ${newColNumber}</span>
+      <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="${getRemoveFunctionName(ComponentText)}(${existingCols})" title="Remove ${ComponentText}">-</button>
       </div>
   `;
 
@@ -41,7 +57,7 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
   headerRow.insertBefore(newHeader, headerRow.lastElementChild);
 
   // Enable remove buttons if this is the second column
-  if (colCount === 2) {
+  if (newColNumber === 2) {
       const removeButtons = headerRow.querySelectorAll('.btn-remove-col');
       removeButtons.forEach(btn => btn.disabled = false);
   }
@@ -50,17 +66,16 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
   for (let i = 0; i < rows.length; i++) {
       const firstCell = rows[i].cells[1];
       const newCell = firstCell.cloneNode(true);
-      
-      // Update input names
+        // Update input names
       const inputs = newCell.getElementsByTagName('input');
       const selects = newCell.getElementsByTagName('select');
         // regex to match any existing numeric suffix
         const idRegex = new RegExp(`(${componentTypeID})(\\d+)_`, 'g');
       
       for (let input of inputs) {
-      input.name = input.name.replace(idRegex, `$1${colCount}_`);
+      input.name = input.name.replace(idRegex, `$1${newColNumber}_`);
       input.value = '';
-      input.id = input.id ? input.id.replace(idRegex, `$1${colCount}_`) : '';
+      input.id = input.id ? input.id.replace(idRegex, `$1${newColNumber}_`) : '';
       if (input.type === 'checkbox') {
           input.checked = false;
       }
@@ -73,20 +88,22 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       }
       
       for (let select of selects) {
-      select.name = select.name.replace(idRegex, `$1${colCount}_`);
-      select.id = select.id ? select.id.replace(idRegex, `$1${colCount}_`) : '';
+      select.name = select.name.replace(idRegex, `$1${newColNumber}_`);
+      select.id = select.id ? select.id.replace(idRegex, `$1${newColNumber}_`) : '';
       select.selectedIndex = 0;
       }
       
       rows[i].insertBefore(newCell, rows[i].lastElementChild);
   }
 
-  
-  // Reinitialize year pickers and VFD fields for the new column
+    // Reinitialize year pickers and VFD fields for the new column
   $(document).trigger('columnAdded');
-  $('[name^="'+componentTypeID + colCount + '_vfd_status"]').each(function() {
+  $('[name^="'+componentTypeID + newColNumber + '_vfd_status"]').each(function() {
       updateVFDModulationField(this);
   });
+  
+  // Return the updated column count
+  return newColNumber;
   // if(componentTypeID === 'boiler') {
   //   setTimeout(function() {
   //     $('.boiler-insulation-select[data-col="'+colCount+'"]').on('change', function() {
@@ -380,3 +397,102 @@ function initDependencies() {
     });
   });
 })();
+
+// Specific remove functions for different equipment types
+function removeChillerColumn(index) {
+  chillerCount = removeColumn(chillerCount, index, 'chillerTableBody', 'chiller', 'Chiller');
+}
+
+function removeBoilerColumn(index) {
+  boilerCount = removeColumn(boilerCount, index, 'boilerTableBody', 'boiler', 'Boiler');
+}
+
+function removeHeatPumpColumn(index) {
+  heatPumpCount = removeColumn(heatPumpCount, index, 'heatPumpTableBody', 'heatpump', 'Heat Pump');
+}
+
+function removeSplitUnitColumn(index) {
+  splitUnitCount = removeColumn(splitUnitCount, index, 'splitUnitTableBody', 'splitunit', 'Split Unit');
+}
+
+function removeFanCoilUnitColumn(index) {
+  fanCoilUnitCount = removeColumn(fanCoilUnitCount, index, 'fanCoilUnitTableBody', 'fancoilunit', 'Fan Coil Unit');
+}
+
+function addCoolingTowerColumn() {
+  coolingTowerCount = addTableColumn(coolingTowerCount, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower');
+}
+
+function removeCoolingTowerColumn(index) {
+  coolingTowerCount = removeColumn(coolingTowerCount, index, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower');
+}
+
+// Add column functions for all dynamic tables
+function addChillerColumn() {
+  chillerCount = addTableColumn(chillerCount, 'chillerTableBody', 'chiller', 'Chiller');
+}
+
+function addBoilerColumn() {
+  boilerCount = addTableColumn(boilerCount, 'boilerTableBody', 'boiler', 'Boiler');
+}
+
+function addHeatPumpColumn() {
+  heatPumpCount = addTableColumn(heatPumpCount, 'heatPumpTableBody', 'heatpump', 'Heat Pump');
+}
+
+function addSplitUnitColumn() {
+  splitUnitCount = addTableColumn(splitUnitCount, 'splitUnitTableBody', 'splitunit', 'Split Unit');
+}
+
+function addFanCoilUnitColumn() {
+  fanCoilUnitCount = addTableColumn(fanCoilUnitCount, 'fanCoilUnitTableBody', 'fancoilunit', 'Fan Coil Unit');
+}
+
+function addTreatedFreshAirUnitColumn() {
+  treatedFreshAirUnitCount = addTableColumn(treatedFreshAirUnitCount, 'treatedairunitTableBody', 'treatedairunit', 'Treated Fresh Air Unit');
+}
+
+function addAirHandlingUnitColumn() {
+  airHandlingUnitCount = addTableColumn(airHandlingUnitCount, 'airHandlingUnitTableBody', 'airhandlingunit', 'Air Handling Unit');
+}
+
+function addPackagedUnitColumn() {
+  packagedUnitCount = addTableColumn(packagedUnitCount, 'packagedUnitTableBody', 'packagedunit', 'Unit');
+}
+
+function addAirWasherColumn() {
+  airWasherCount = addTableColumn(airWasherCount, 'airWasherTableBody', 'airwasher', 'AirWasher');
+}
+
+function addSolarHotWaterColumn() {
+  solarHotWaterCount = addTableColumn(solarHotWaterCount, 'solarHotWaterTableBody', 'solarhotwater', 'Solar Hot Water');
+}
+
+function addFreshAirColumn() {
+  freshAirCount = addTableColumn(freshAirCount, 'freshAirTableBody', 'freshair', 'FreshAir');
+}
+
+// Remove column functions for all dynamic tables
+function removeTreatedFreshAirUnitColumn(index) {
+  treatedFreshAirUnitCount = removeColumn(treatedFreshAirUnitCount, index, 'treatedairunitTableBody', 'treatedairunit', 'Treated Fresh Air Unit');
+}
+
+function removeAirHandlingUnitColumn(index) {
+  airHandlingUnitCount = removeColumn(airHandlingUnitCount, index, 'airHandlingUnitTableBody', 'airhandlingunit', 'Air Handling Unit');
+}
+
+function removePackagedUnitColumn(index) {
+  packagedUnitCount = removeColumn(packagedUnitCount, index, 'packagedUnitTableBody', 'packagedunit', 'Unit');
+}
+
+function removeAirWasherColumn(index) {
+  airWasherCount = removeColumn(airWasherCount, index, 'airWasherTableBody', 'airwasher', 'AirWasher');
+}
+
+function removeSolarHotWaterColumn(index) {
+  solarHotWaterCount = removeColumn(solarHotWaterCount, index, 'solarHotWaterTableBody', 'solarhotwater', 'Solar Hot Water');
+}
+
+function removeFreshAirColumn(index) {
+  freshAirCount = removeColumn(freshAirCount, index, 'freshAirTableBody', 'freshair', 'FreshAir');
+}
