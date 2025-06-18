@@ -28,6 +28,7 @@ function getRemoveFunctionName(ComponentText) {
     "Air Handling Unit": 'removeAirHandlingUnitColumn',
     "Treated Fresh Air Unit": 'removeTreatedFreshAirUnitColumn',
     "Cooling Tower": 'removeCoolingTowerColumn',
+
     // Add more mappings as needed
   };
   return map[ComponentText] || `remove${ComponentText}Column`;
@@ -176,9 +177,19 @@ function removeColumn(colCount,clickedIndex,tbodyID, componentTypeID, ComponentT
 
 // Number formatting utility: formats with commas (e.g., 10000 => 10,000)
 function formatNumberWithCommas(value) {
-  if (value === '' || isNaN(Number(value))) return value;
-  const parts = value.toString().split('.');
+  if (value === '' || value === null || value === undefined) return '';
+  
+  // Convert to string and handle the formatting
+  const str = value.toString();
+  if (isNaN(Number(str.replace(/,/g, '')))) return str;
+  
+  // Split by decimal point
+  const parts = str.replace(/,/g, '').split('.');
+  
+  // Add commas to the integer part
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  
+  // Rejoin with decimal if present
   return parts.join('.');
 }
 
@@ -189,40 +200,63 @@ function unformatNumber(value) {
 
 // Attach event listeners to all .number-format inputs
 function initNumberFormatting() {
-  function handleInput(e) {
-    const input = e.target;
-    let raw = unformatNumber(input.value);
-    if (raw === '' || isNaN(Number(raw))) {
+  function formatAsYouType(input) {
+    let value = input.value;
+    
+    // Remove all non-numeric characters except decimal point
+    value = value.replace(/[^\d.]/g, '');
+    
+    // Handle multiple decimal points
+    if ((value.match(/\./g) || []).length > 1) {
+      let parts = value.split('.');
+      value = parts[0] + '.' + parts.slice(1).join('');
+    }
+    
+    // If empty, return empty
+    if (!value) {
       input.value = '';
       return;
     }
-    input.value = formatNumberWithCommas(raw);
+    
+    // Apply comma formatting
+    let formatted = formatNumberWithCommas(value);
+    input.value = formatted;
+  }
+  function handleInput(e) {
+    formatAsYouType(e.target);
   }
 
   function handleBlur(e) {
     const input = e.target;
-    let raw = unformatNumber(input.value);
-    if (raw === '' || isNaN(Number(raw))) {
-      input.value = '';
-      return;
+    let value = input.value.trim();
+    
+    // If empty, leave it empty
+    if (value === '') return;
+    
+    // Remove existing commas for processing
+    let cleanValue = value.replace(/,/g, '');
+    
+    // Check if it's a valid number and reformat to ensure consistency
+    const numValue = Number(cleanValue);
+    if (!isNaN(numValue) && cleanValue !== '' && isFinite(numValue)) {
+      // Re-format with commas to ensure consistency
+      const formattedValue = formatNumberWithCommas(cleanValue);
+      input.value = formattedValue;
     }
-    input.value = formatNumberWithCommas(raw);
   }
 
   function handleFocus(e) {
-    // On focus, show unformatted value for editing
+    // Just select all text for easy editing
     const input = e.target;
-    let raw = unformatNumber(input.value);
-    input.value = raw;
-    // Optionally select all text
     setTimeout(() => input.select(), 0);
   }
-
   // For form submission: ensure value is unformatted (no commas)
   document.querySelectorAll('form').forEach(form => {
     form.addEventListener('submit', function() {
       form.querySelectorAll('.number-format').forEach(input => {
-        input.value = unformatNumber(input.value);
+        if (input.value) {
+          input.value = unformatNumber(input.value);
+        }
       });
     });
   });
@@ -250,6 +284,12 @@ function initNumberFormatting() {
 
   // Generic dependency configuration: map controller IDs to value-based enable/disable rules
   const dependencyConfig = {
+    "green_roofs_yes": {
+      'Yes': { enable: ['green_roofs_area'], disable: [] },
+    },
+    "green_roofs_no": { 
+      'No': { enable: [], disable: ['green_roofs_area'] },
+    },
     
     'chiller1_vfd_status': {
       'Yes': { enable: ['chiller1_vfd_modulation'], disable: [] },
@@ -384,10 +424,21 @@ function initDependencies() {
       return;
     }
   }
-
   // Delegated listeners (new elements automatically covered)
   document.addEventListener('change', e => applyRules(e.target), true);
   document.addEventListener('input',  e => applyRules(e.target), true);
+
+  // Add event listener for row total calculations in monthly data tables
+  document.addEventListener('input', e => {
+    const input = e.target;
+    // Check if this input is in a monthly data table (has table parent and is not readonly)
+    if (input.type === 'text' && input.classList.contains('number-format') && !input.readOnly) {
+      const table = input.closest('table');
+      if (table && (table.id === 'monthly_electricity_table' || table.id === 'monthly_fuel_table' || table.id === 'monthly_water_table')) {
+        calculateRowTotal(input);
+      }
+    }
+  }, true);
 
   // Run once on page load so every field starts in the right state
   window.addEventListener('DOMContentLoaded', () => {
@@ -498,28 +549,64 @@ function removeFreshAirColumn(index) {
 }
 
 function calculateRowTotal(changedInput) {
+  console.log('calculateRowTotal called with:', changedInput);
+  
   // Get the row containing the changed input
   const row = changedInput.closest('tr');
-  if (!row) return;
+  if (!row) {
+    console.log('No row found');
+    return;
+  }
   
   // Get all input fields in the row (excluding the total field)
-  const inputs = row.querySelectorAll('input[type="number"]:not([readonly])');
+  // Look for both number and text inputs, but exclude readonly fields
+  const inputs = row.querySelectorAll('input:not([readonly])');
   const totalField = row.querySelector('input[readonly]');
   
-  if (!totalField) return;
+  console.log('Found inputs:', inputs.length, 'Total field:', totalField);
+  
+  if (!totalField) {
+    console.log('No total field found');
+    return;
+  }
   
   // Calculate the sum
   let total = 0;
   let hasValue = false;
   
   inputs.forEach(input => {
-    const value = parseFloat(input.value) || 0;
-    if (value > 0) hasValue = true;
-    total += value;
+    // Skip if this is the total field itself
+    if (input === totalField) return;
+    
+    // Get the raw numeric value, removing any commas
+    let rawValue = input.value.trim();
+    console.log('Processing input:', input.name, 'value:', rawValue);
+    
+    if (rawValue) {
+      // Remove commas and get numeric value
+      rawValue = unformatNumber(rawValue);
+      const value = parseFloat(rawValue);
+      console.log('Cleaned value:', rawValue, 'Parsed value:', value);
+      
+      if (!isNaN(value) && value !== 0) {
+        hasValue = true;
+        total += value;
+      }
+    }
   });
   
-  // Update the total field
-  totalField.value = hasValue ? total.toFixed(2) : '';
+  console.log('Final total:', total, 'Has value:', hasValue);
+  
+  // Update the total field with formatted number
+  if (hasValue && total !== 0) {
+    // Format the total with commas if it's large enough, preserve 2 decimal places
+    const formattedTotal = total >= 1000 ? formatNumberWithCommas(total.toFixed(2)) : total.toFixed(2);
+    console.log('Setting total field to:', formattedTotal);
+    totalField.value = formattedTotal;
+  } else {
+    console.log('Clearing total field');
+    totalField.value = '';
+  }
 }
 
 // Rainwater Harvesting conditional logic
@@ -565,4 +652,246 @@ function toggleRainwaterInputs(radio) {
       storageVolumeInput.style.display = 'block';
     }
   }
+}
+
+// Initialize number formatting when script loads
+document.addEventListener('DOMContentLoaded', function() {
+  initNumberFormatting();
+  
+  // Initialize all row totals for monthly data tables
+  initializeRowTotals();
+});
+
+// Function to initialize/recalculate all row totals
+function initializeRowTotals() {
+  const tables = ['monthly_electricity_table', 'monthly_fuel_table', 'monthly_water_table'];
+  
+  tables.forEach(tableId => {
+    const table = document.getElementById(tableId);
+    if (table) {
+      // Find all rows with input fields
+      const rows = table.querySelectorAll('tbody tr');
+      rows.forEach(row => {
+        // Find the first non-readonly input in the row to trigger calculation
+        const firstInput = row.querySelector('input:not([readonly])');
+        if (firstInput) {
+          calculateRowTotal(firstInput);
+        }
+      });
+    }
+  });
+}
+
+// Utility functions for numeric calculations with formatted numbers
+
+// Add two or more formatted number values
+function addFormattedNumbers(...values) {
+  let sum = 0;
+  values.forEach(value => {
+    if (value) {
+      const cleanValue = unformatNumber(value.toString());
+      sum += parseFloat(cleanValue) || 0;
+    }
+  });
+  return sum;
+}
+
+// Subtract formatted numbers (minuend - subtrahend)
+function subtractFormattedNumbers(minuend, subtrahend) {
+  const cleanMinuend = unformatNumber(minuend.toString());
+  const cleanSubtrahend = unformatNumber(subtrahend.toString());
+  return (parseFloat(cleanMinuend) || 0) - (parseFloat(cleanSubtrahend) || 0);
+}
+
+// Multiply formatted numbers
+function multiplyFormattedNumbers(value1, value2) {
+  const clean1 = unformatNumber(value1.toString());
+  const clean2 = unformatNumber(value2.toString());
+  return (parseFloat(clean1) || 0) * (parseFloat(clean2) || 0);
+}
+
+// Divide formatted numbers
+function divideFormattedNumbers(dividend, divisor) {
+  const cleanDividend = unformatNumber(dividend.toString());
+  const cleanDivisor = unformatNumber(divisor.toString());
+  const divisorValue = parseFloat(cleanDivisor) || 0;
+  if (divisorValue === 0) return 0; // Prevent division by zero
+  return (parseFloat(cleanDividend) || 0) / divisorValue;
+}
+
+// Get numeric value from a formatted input field
+function getNumericValue(input) {
+  if (typeof input === 'string') {
+    return parseFloat(unformatNumber(input)) || 0;
+  }
+  if (input && input.value) {
+    return parseFloat(unformatNumber(input.value)) || 0;
+  }
+  return 0;
+}
+
+// Set formatted value to an input field
+function setFormattedValue(input, value) {
+  if (input && typeof value === 'number') {
+    input.value = formatNumberWithCommas(value.toString());
+  }
+}
+
+// Document upload functionality
+let uploadedFiles = [];
+
+function handleFileUpload(event) {
+  const files = Array.from(event.target.files);
+  
+  files.forEach(file => {
+    // Create a unique ID for each file
+    const fileId = Date.now() + Math.random().toString(36).substr(2, 9);
+    
+    const fileInfo = {
+      id: fileId,
+      name: file.name,
+      size: formatFileSize(file.size),
+      type: file.type,
+      file: file,
+      uploadDate: new Date().toLocaleString()
+    };
+    
+    uploadedFiles.push(fileInfo);
+  });
+  
+  // Display uploaded files
+  displayUploadedFiles();
+  
+  // Clear the input to allow uploading the same file again if needed
+  event.target.value = '';
+  
+  // Show success message
+  showUploadMessage(`Successfully uploaded ${files.length} file(s)`);
+}
+
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function displayUploadedFiles() {
+  let existingContainer = document.getElementById('uploadedFilesContainer');
+  
+  if (uploadedFiles.length === 0) {
+    if (existingContainer) {
+      existingContainer.remove();
+    }
+    return;
+  }
+  
+  // Create container if it doesn't exist
+  if (!existingContainer) {
+    existingContainer = document.createElement('div');
+    existingContainer.id = 'uploadedFilesContainer';
+    existingContainer.className = 'uploaded-files';
+    
+    // Insert after the Building Information header
+    const buildingInfoSection = document.getElementById('buildingInfo');
+    buildingInfoSection.insertBefore(existingContainer, buildingInfoSection.firstChild);
+  }
+  
+  // Create the files display
+  existingContainer.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h6 class="mb-0"><i class="fas fa-paperclip me-2"></i>Uploaded Documents (${uploadedFiles.length})</h6>
+      <button type="button" class="btn btn-sm btn-outline-danger" onclick="clearAllFiles()">
+        <i class="fas fa-trash me-1"></i>Clear All
+      </button>
+    </div>
+    <div class="files-list">
+      ${uploadedFiles.map(file => `
+        <div class="file-item" data-file-id="${file.id}">
+          <div class="file-info">
+            <div class="file-name">
+              <i class="fas fa-file me-2"></i>${file.name}
+            </div>
+            <div class="file-size">${file.size} • ${file.uploadDate}</div>
+          </div>
+          <div class="file-actions">
+            <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="downloadFile('${file.id}')">
+              <i class="fas fa-download"></i>
+            </button>
+            <button type="button" class="remove-file" onclick="removeFile('${file.id}')">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function removeFile(fileId) {
+  uploadedFiles = uploadedFiles.filter(file => file.id !== fileId);
+  displayUploadedFiles();
+  showUploadMessage('File removed successfully', 'warning');
+}
+
+function clearAllFiles() {
+  if (confirm('Are you sure you want to remove all uploaded files?')) {
+    uploadedFiles = [];
+    displayUploadedFiles();
+    showUploadMessage('All files cleared', 'info');
+  }
+}
+
+function downloadFile(fileId) {
+  const file = uploadedFiles.find(f => f.id === fileId);
+  if (file) {
+    const url = URL.createObjectURL(file.file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+}
+
+function showUploadMessage(message, type = 'success') {
+  // Create a toast notification
+  const toastContainer = document.getElementById('toastContainer') || createToastContainer();
+  
+  const toast = document.createElement('div');
+  toast.className = `toast align-items-center text-white bg-${type} border-0`;
+  toast.setAttribute('role', 'alert');
+  toast.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        <i class="fas fa-check-circle me-2"></i>${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  
+  // Initialize and show the toast
+  const bsToast = new bootstrap.Toast(toast);
+  bsToast.show();
+  
+  // Remove the toast element after it's hidden
+  toast.addEventListener('hidden.bs.toast', () => {
+    toast.remove();
+  });
+}
+
+function createToastContainer() {
+  const container = document.createElement('div');
+  container.id = 'toastContainer';
+  container.className = 'toast-container position-fixed top-0 end-0 p-3';
+  container.style.zIndex = '9999';
+  document.body.appendChild(container);
+  return container;
 }
