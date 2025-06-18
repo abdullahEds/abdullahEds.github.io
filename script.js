@@ -496,3 +496,73 @@ function removeSolarHotWaterColumn(index) {
 function removeFreshAirColumn(index) {
   freshAirCount = removeColumn(freshAirCount, index, 'freshAirTableBody', 'freshair', 'FreshAir');
 }
+
+function calculateRowTotal(changedInput) {
+  // Get the row containing the changed input
+  const row = changedInput.closest('tr');
+  if (!row) return;
+  
+  // Get all input fields in the row (excluding the total field)
+  const inputs = row.querySelectorAll('input[type="number"]:not([readonly])');
+  const totalField = row.querySelector('input[readonly]');
+  
+  if (!totalField) return;
+  
+  // Calculate the sum
+  let total = 0;
+  let hasValue = false;
+  
+  inputs.forEach(input => {
+    const value = parseFloat(input.value) || 0;
+    if (value > 0) hasValue = true;
+    total += value;
+  });
+  
+  // Update the total field
+  totalField.value = hasValue ? total.toFixed(2) : '';
+}
+
+// Rainwater Harvesting conditional logic
+function toggleRainwaterOptions(radio) {
+  const rainwaterOptions = document.getElementById('rainwater_options');
+  const rechargeAreaInput = document.getElementById('recharge_area_input');
+  const storageVolumeInput = document.getElementById('storage_volume_input');
+  
+  if (radio.value === 'Yes' && radio.checked) {
+    // Show the options
+    rainwaterOptions.style.display = 'block';
+  } else {
+    // Hide the options and reset all inputs
+    rainwaterOptions.style.display = 'none';
+    rechargeAreaInput.style.display = 'none';
+    storageVolumeInput.style.display = 'none';
+    
+    // Clear all related inputs
+    const typeRadios = document.querySelectorAll('input[name="rainwater_type"]');
+    typeRadios.forEach(r => r.checked = false);
+    
+    document.getElementById('rainwater_recharge_area').value = '';
+    document.getElementById('rainwater_storage_volume').value = '';
+  }
+}
+
+function toggleRainwaterInputs(radio) {
+  const rechargeAreaInput = document.getElementById('recharge_area_input');
+  const storageVolumeInput = document.getElementById('storage_volume_input');
+  
+  // Hide both inputs first
+  rechargeAreaInput.style.display = 'none';
+  storageVolumeInput.style.display = 'none';
+  
+  // Clear both inputs
+  document.getElementById('rainwater_recharge_area').value = '';
+  document.getElementById('rainwater_storage_volume').value = '';
+  
+  if (radio.checked) {
+    if (radio.value === 'Recharge') {
+      rechargeAreaInput.style.display = 'block';
+    } else if (radio.value === 'Storage') {
+      storageVolumeInput.style.display = 'block';
+    }
+  }
+}
