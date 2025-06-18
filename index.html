@@ -41,11 +41,107 @@
       margin-bottom: 15px;
       cursor: pointer;
       user-select: none;
+    }    .section-header:hover {
+      background: #7a4530;
     }
 
-    .section-header:hover {
-      background: #7a4530;
-    }    .info-box {
+    /* Upload button styling */
+    .upload-btn {
+      font-size: 0.875rem;
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.5) !important;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .upload-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.8) !important;
+      transform: translateY(-50%) scale(1.02);
+    }
+
+    .upload-btn:active {
+      transform: translateY(-50%) scale(0.98);
+    }
+
+    /* Uploaded files display */
+    .uploaded-files {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 5px;
+      border: 1px solid #dee2e6;
+    }
+
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .file-item:last-child {
+      border-bottom: none;
+    }
+
+    .file-name {
+      font-size: 0.875rem;
+      color: #495057;
+    }
+
+    .file-size {
+      font-size: 0.75rem;
+      color: #6c757d;
+    }
+
+    .remove-file {
+      background: none;
+      border: none;
+      color: #dc3545;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }    .remove-file:hover {
+      background: #dc3545;
+      color: white;
+    }
+
+    /* Mobile responsive styles for upload button */
+    @media (max-width: 768px) {
+      .upload-btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        right: 10px;
+      }
+      
+      .upload-btn .me-1 {
+        margin-right: 0.25rem !important;
+      }
+      
+      .file-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      
+      .file-actions {
+        align-self: flex-end;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .upload-btn span {
+        display: none;
+      }
+      
+      .upload-btn {
+        width: 32px;
+        padding: 6px;
+      }
+    }
+
+    .info-box {
       border: 2px solid #ddd;
       border-radius: 8px;
       padding: 15px;
@@ -194,7 +290,7 @@
     }
 
     .section-header.collapsed::after {
-      content: " (Collapsed)";
+      /* content: " (Collapsed)"; */
       font-size: 0.85em;
       opacity: 0.7;
     }    /* Mobile responsive adjustments */
@@ -450,10 +546,20 @@
     .form-label {
       font-weight: 500;
       margin-bottom: 0.5rem;
+    }    .input-group-text {
+      font-size: 0.9rem;
     }
 
-    .input-group-text {
-      font-size: 0.9rem;
+    /* Disabled field styling */
+    .form-control:disabled {
+      background-color: #e9ecef !important;
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+    
+    .input-group .form-control:disabled + .input-group-text {
+      background-color: #e9ecef;
+      opacity: 0.65;
     }    /* Category content styling */
     .category-content {
       margin-bottom: 20px;
@@ -582,16 +688,124 @@
     .year-picker {
       cursor: pointer;
     }
-    
-    /* Hide datepicker elements we don't need for year-only selection */
+      /* Hide datepicker elements we don't need for year-only selection */
     .ui-datepicker-calendar,
     .ui-datepicker-month,
     .ui-datepicker-close {
       display: none !important;
     }
-  </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    /* HVAC Table Column Sizing - Compact and Uniform */
+    .table-responsive .table {
+      table-layout: fixed;
+      width: auto !important;
+      min-width: auto !important;
+    }
+    
+    .fixed-col {
+      width: 140px !important;
+      min-width: 140px !important;
+      max-width: 140px !important;
+      position: sticky;
+      left: 0;
+      background: #f8f9fa;
+      z-index: 10;
+      border-right: 2px solid #dee2e6;
+      font-weight: 500;
+      padding: 6px 8px !important;
+      font-size: 0.8rem !important;
+      text-align: left;
+      word-wrap: break-word;
+    }
+    
+    .chiller-col, .tbl-col,
+    .coolingTower-col, .treatedairunit-col, .airhandlingunit-col,
+    .fancoilunit-col, .packedunit-col, .splitunit-col,
+    .airwasher-col, .heatpump-col, .boiler-col,
+    .solarhotwater-col, .freshair-col, .coldroom-col {
+      width: 110px !important;
+      min-width: 110px !important;
+      max-width: 110px !important;
+      padding: 4px 6px !important;
+      vertical-align: top;
+      text-align: center;
+      font-size: 0.8rem !important;
+    }
+    
+    .action-col {
+      width: 35px !important;
+      min-width: 35px !important;
+      max-width: 35px !important;
+      position: sticky;
+      right: 0;
+      background: #f8f9fa;
+      z-index: 10;
+      text-align: center;
+      border-left: 1px solid #dee2e6;
+      padding: 2px !important;
+    }
+    
+    /* Make form controls fit in compact columns */
+    .table td:not(.fixed-col):not(.action-col) input,
+    .table td:not(.fixed-col):not(.action-col) select {
+      width: 100% !important;
+      font-size: 0.75rem !important;
+      padding: 3px 5px !important;
+      border: 1px solid #ced4da;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+    
+    /* Input groups in compact columns */
+    .table td:not(.fixed-col):not(.action-col) .input-group {
+      width: 100% !important;
+      font-size: 0.75rem !important;
+    }
+    
+    .table td:not(.fixed-col):not(.action-col) .input-group-text {
+      padding: 3px 6px !important;
+      font-size: 0.7rem !important;
+      min-width: 30px !important;
+    }
+    
+    /* Equipment header styling */
+    .table th .chiller-header,
+    .table th .coolingTower-header,
+    .table th .treatedairunit-header,
+    .table th .airhandlingunit-header,
+    .table th .fancoilunit-header,
+    .table th .packedunit-header,
+    .table th .splitunit-header,
+    .table th .airwasher-header,
+    .table th .heatpump-header,
+    .table th .boiler-header,
+    .table th .solarhotwater-header,
+    .table th .freshair-header,
+    .table th .coldroom-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      padding: 2px 4px;
+      gap: 2px;
+    }
+    
+    .table th .btn-remove-col {
+      font-size: 0.65rem;
+      padding: 1px 3px;
+      margin-left: 2px;
+      min-width: 18px;
+    }
+    
+    .table th .btn-success {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      min-width: 25px;
+    }
+  </style>    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
   <script src="script.js"></script>
   <script>
     // Additional toggle function for subcategories
@@ -651,12 +865,19 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>  <div class="container my-5" style="padding-top: 100px;">
 
-  <div class="container my-5" style="padding-top: 100px;">
+    <!-- Upload Documents Section -->
+    <div class="d-flex justify-content-end mb-3">
+      <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('documentUpload').click();" title="Upload Documents">
+        <i class="fas fa-upload me-1"></i>Upload Documents
+      </button>
+      <input type="file" id="documentUpload" multiple accept="*/*" style="display: none;" onchange="handleFileUpload(event)">
+    </div>
 
-    <!-- Building Information Section -->
-    <div class="section-header category-header" data-expanded onclick="toggleSection('buildingInfo')">Building Information</div>
+    <!-- Building Information Section -->    <div class="section-header category-header" data-expanded onclick="toggleSection('buildingInfo')">
+      Building Information
+    </div>
     <div id="buildingInfo" class="category-content" style="display: block !important;">
 
     <!-- Row 1: Project Info | Location  -->
@@ -856,74 +1077,71 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Row 2: Site Info | Building Info  -->
-    <div class="row g-3"><!-- Site Information -->
+    </div>    <!-- Row 2: Site Info | Building Info  -->
+    <div class="row g-3 mb-3"><!-- Site Information -->
       <div class="col-md-6">
         <div class="info-box h-100">
           <h6>Site Information</h6>
-          <div class="row g-2 align-items-end">
-            <div class="col-md-6">
+          <div class="row g-2 align-items-end">            <div class="col-md-6">
               <label class="form-label" for="site_area">Site Area</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="site_area" name="site_area" min="0" />
+                <input type="text" class="form-control number-format" id="site_area" name="site_area" inputmode="decimal" />
                 <select class="form-select w-auto" name="site_area_unit">
-                  <option>sq.m</option><option>sq.ft</option><option>acre</option>
+                  <option>m²</option><option>ft²</option><option>acres</option>
                 </select>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="built_up_area">Built-up Area</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="built_up_area" name="built_up_area" min="0" />
-                <select class="form-select w-auto" name="built_up_unit"><option>sq.m</option><option>sq.ft</option></select>
+                <input type="text" class="form-control number-format" id="built_up_area" name="built_up_area" inputmode="decimal" />
+                <select class="form-select w-auto" name="built_up_unit"><option>m²</option><option>ft²</option></select>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="ground_coverage">Ground Coverage (%)</label>
-              <input type="number" class="form-control" id="ground_coverage" name="ground_coverage" min="0" max="100" />
-            </div>
-            <div class="col-md-6">
+              <input type="number" class="form-control" id="ground_coverage" name="ground_coverage" min="0" max="100" 
+                     oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
+            </div><div class="col-md-6">
               <label class="form-label" for="basement_parking">Basement Parking</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="basement_parking" name="basement_parking" min="0" />
-                <select class="form-select w-auto" name="basement_parking_unit"><option>sq.m</option><option>sq.ft</option></select>
+                <input type="text" class="form-control number-format" id="basement_parking" name="basement_parking" inputmode="decimal" />
+                <select class="form-select w-auto" name="basement_parking_unit"><option>m²</option><option>ft²</option></select>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="open_area">Open Area</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="open_area" name="open_area" min="0" />
+                <input type="text" class="form-control number-format" id="open_area" name="open_area" inputmode="decimal" />
                 <select class="form-select w-auto" name="open_area_unit">
-                  <option>sq.m</option><option>%</option>
+                  <option>m²</option><option>%</option>
                 </select>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" for="total_green_area">Total Green Area</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="total_green_area" name="total_green_area" min="0" />
-                <span class="input-group-text">sq.m</span>
+            </div>            <div class="col-md-6">
+              <label class="form-label" for="total_green_area">Total Green Area</label>              <div class="input-group">
+                <input type="text" class="form-control number-format" id="total_green_area" name="total_green_area" inputmode="decimal" />
+                <select class="form-select w-auto" name="total_green_area_unit">
+                  <option>m²</option><option>ft²</option>
+                </select>
               </div>
             </div>
             <div class="col-12">
               <label class="form-label">Green Roofs or Terrace Gardens</label>
-              <div class="row g-2">
-                <div class="col-md-6">
+              <div class="row g-2">                <div class="col-md-6">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_yes" value="Yes">
+                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_yes" value="Yes" 
+                           onchange="toggleGreenRoofArea()">
                     <label class="form-check-label" for="green_roofs_yes">Yes</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_no" value="No">
+                    <input class="form-check-input" type="radio" name="green_roofs" id="green_roofs_no" value="No" 
+                           onchange="toggleGreenRoofArea()">
                     <label class="form-check-label" for="green_roofs_no">No</label>
                   </div>
-                </div>
-                <div class="col-md-6">
+                </div>                <div class="col-md-6">
+                  <label class="form-label" for="green_roof_area">Area if Yes</label>
                   <div class="input-group">
-                    <input type="number" class="form-control" id="green_roof_area" name="green_roof_area" min="0" placeholder="Area if Yes" />
-                    <span class="input-group-text">sq.m</span>
+                    <input type="text" class="form-control number-format" id="green_roof_area" name="green_roof_area"                           inputmode="decimal" placeholder="Enter area" disabled />
+                    <select class="form-select w-auto" name="green_roof_area_unit" disabled>
+                      <option>m²</option><option>ft²</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -960,7 +1178,8 @@
             <div class="col-md-6">
               <label class="form-label" for="window_wall_ratio">Window to Wall Ratio</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="window_wall_ratio" name="window_wall_ratio" min="0" max="100" step="0.1" />
+                <input type="number" class="form-control" id="window_wall_ratio" name="window_wall_ratio" min="0" max="100" step="0.1" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
             </div>
@@ -981,31 +1200,28 @@
   </div>
 
   <!-- Occupancy Section -->
-  <div class="section-header category-header" onclick="toggleSection('occupancy')">Occupancy</div>
-  <div id="occupancy" class="category-content" style="display: block !important;">
-    <div class="row g-3">
+  <div class="section-header category-header" onclick="toggleSection('occupancy')">Occupancy</div>  <div id="occupancy" class="category-content" style="display: block !important;">
+    <div class="row g-3 mb-3">
       <div class="col-md-12">
         <div class="info-box">
           <h6>Occupancy Details</h6>
-          <div class="row g-2">
-            <div class="col-md-3">
+          <div class="row g-2">            <div class="col-md-3">
               <label class="form-label" for="num_keys_rooms">Number of Keys/Rooms</label>
-              <input type="number" class="form-control" id="num_keys_rooms" name="num_keys_rooms" min="0" />
+              <input type="text" class="form-control number-format" id="num_keys_rooms" name="num_keys_rooms" inputmode="decimal" />
             </div>
             <div class="col-md-3">
               <label class="form-label" for="peak_occupancy_rate">Peak Occupancy Rate</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="peak_occupancy_rate" name="peak_occupancy_rate" min="0" max="100" step="0.1" />
+                <input type="number" class="form-control" id="peak_occupancy_rate" name="peak_occupancy_rate" min="0" max="100" step="0.1" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
-            </div>
-            <div class="col-md-3">
+            </div>            <div class="col-md-3">
               <label class="form-label" for="avg_guests_per_day">Average Guests per Day</label>
-              <input type="number" class="form-control" id="avg_guests_per_day" name="avg_guests_per_day" min="0" />
-            </div>
-            <div class="col-md-3">
+              <input type="text" class="form-control number-format" id="avg_guests_per_day" name="avg_guests_per_day" inputmode="decimal" />
+            </div>            <div class="col-md-3">
               <label class="form-label" for="total_staff_count">Total Staff (Full-time + Contractual)</label>
-              <input type="number" class="form-control" id="total_staff_count" name="total_staff_count" min="0" />
+              <input type="text" class="form-control number-format" id="total_staff_count" name="total_staff_count" inputmode="decimal" />
             </div>
           </div>
         </div>
@@ -1019,36 +1235,32 @@
       <div class="col-md-6">
         <div class="info-box h-100">
           <h6>Energy Details</h6>
-          <div class="row g-2">
-            <div class="col-md-6">
+          <div class="row g-2">            <div class="col-md-6">
               <label class="form-label" for="connected_load">Connected Load</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="connected_load" name="connected_load" min="0" required />
+                <input type="text" class="form-control number-format" id="connected_load" name="connected_load" inputmode="decimal" required />
                 <span class="input-group-text">kW</span>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="contract_demand">Contract Demand</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="contract_demand" name="contract_demand" min="0" />
+                <input type="text" class="form-control number-format" id="contract_demand" name="contract_demand" inputmode="decimal" />
                 <span class="input-group-text">kVA</span>
               </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="utility_power_factor">Utility Power Factor (PF)</label>
               <input type="number" class="form-control" id="utility_power_factor" name="utility_power_factor" min="0" max="1" step="0.01" />
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="backup_power">Backup Power (DG Capacity)</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="backup_power" name="backup_power" min="0" />
+                <input type="text" class="form-control number-format" id="backup_power" name="backup_power" inputmode="decimal" />
                 <span class="input-group-text">kVA</span>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="renewable_energy">Onsite Renewable Energy</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="renewable_energy" name="renewable_energy" min="0" />
+                <input type="text" class="form-control number-format" id="renewable_energy" name="renewable_energy" inputmode="decimal" />
                 <span class="input-group-text">kWp</span>
               </div>
             </div>
@@ -1162,40 +1374,37 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- Grid Electricity -->
-                <tr>
+                <!-- Grid Electricity -->                <tr>
                   <td><strong>Grid Electricity (kWh)</strong></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="grid_electricity_total" readonly></td>
-                </tr>
-                
-                <!-- DG Generated Electricity -->
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_apr" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_may" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_jun" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_jul" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_aug" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_sep" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_oct" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_nov" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_dec" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_jan" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_feb" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="grid_electricity_mar" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="grid_electricity_total" readonly></td>
+                </tr>                <!-- DG Generated Electricity -->
                 <tr>
                   <td><strong>DG Generated Electricity (kWh)</strong></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="dg_electricity_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_apr" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_may" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_jun" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_jul" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_aug" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_sep" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_oct" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_nov" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_dec" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_jan" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_feb" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm number-format" name="dg_electricity_mar" inputmode="decimal" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="dg_electricity_total" readonly></td>
                 </tr>
                 
                 <!-- Renewable energy - purchased -->
@@ -1213,7 +1422,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="renewable_purchased_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="renewable_purchased_total" readonly></td>
                 </tr>
                 
                 <!-- Renewable energy - onsite -->
@@ -1231,7 +1440,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="renewable_onsite_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="renewable_onsite_total" readonly></td>
                 </tr>
                 
                 <!-- Electricity consumed by laundry -->
@@ -1249,7 +1458,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="electricity_laundry_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="electricity_laundry_total" readonly></td>
                 </tr>
                 
                 <!-- Electricity consumed by kitchen -->
@@ -1267,14 +1476,13 @@
                   <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="electricity_kitchen_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="electricity_kitchen_total" readonly></td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-       <div class="row g-3">
+        </div>      </div>
+       <div class="row g-3 mb-3">
       <div class="col-md-12">
         <div class="info-box">
           <h6>Fuel Consumption - Month-wise Breakdown</h6>
@@ -1316,7 +1524,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="dg_diesel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="dg_diesel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="dg_diesel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="dg_diesel_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="dg_diesel_total" readonly></td>
                 </tr>
                 
                 <!-- Boiler Diesel -->
@@ -1334,7 +1542,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="boiler_diesel_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="boiler_diesel_total" readonly></td>
                 </tr>
                 
                 <!-- Natural Gas -->
@@ -1352,7 +1560,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="natural_gas_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="natural_gas_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="natural_gas_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="natural_gas_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="natural_gas_total" readonly></td>
                 </tr>
                 
                 <!-- LPG/PNG -->
@@ -1370,7 +1578,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="lpg_png_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="lpg_png_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="lpg_png_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="lpg_png_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="lpg_png_total" readonly></td>
                 </tr>
                 
                 <!-- Chaff fuel/Gel fuel -->
@@ -1388,7 +1596,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="chaff_fuel_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="chaff_fuel_total" readonly></td>
                 </tr>
                 
                 <!-- Charcoal -->
@@ -1406,7 +1614,7 @@
                   <td><input type="number" class="form-control form-control-sm" name="charcoal_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="charcoal_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
                   <td><input type="number" class="form-control form-control-sm" name="charcoal_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
-                  <td><input type="number" class="form-control form-control-sm bg-light" name="charcoal_total" readonly></td>
+                  <td><input type="text" class="form-control form-control-sm bg-light" name="charcoal_total" readonly></td>
                 </tr>
                 
                 <!-- Other fuels -->
@@ -1441,11 +1649,10 @@
     
     <!-- Row 1: Water Source -->
     <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <div class="info-box h-100">
+      <div class="col-md-6">        <div class="info-box h-100">
           <h6>Source of Water</h6>
           <div class="row g-2">
-            <div class="col-12">
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="water_source" value="Municipal" id="water_municipal">
                 <label class="form-check-label" for="water_municipal">Municipal</label>
@@ -1462,6 +1669,8 @@
                 <input class="form-check-input" type="checkbox" name="water_source" value="Rainwater" id="water_rainwater">
                 <label class="form-check-label" for="water_rainwater">Rainwater</label>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="water_source" value="Recycled" id="water_recycled">
                 <label class="form-check-label" for="water_recycled">Recycled/Treated Water</label>
@@ -1478,17 +1687,18 @@
                 <input class="form-check-input" type="checkbox" name="water_source" value="Other" id="water_other">
                 <label class="form-check-label" for="water_other">Other (Specify)</label>
               </div>
+            </div>
+            <div class="col-12">
               <input type="text" class="form-control mt-2" id="water_source_other_specify" name="water_source_other_specify" placeholder="Specify other water source" />
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <div class="info-box h-100">
+      <div class="col-md-6">        <div class="info-box h-100">
           <h6>Consumption of Water</h6>
           <div class="row g-2">
-            <div class="col-12">
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="water_consumption" value="Irrigation" id="water_irrigation">
                 <label class="form-check-label" for="water_irrigation">Irrigation</label>
@@ -1513,6 +1723,8 @@
                 <input class="form-check-input" type="checkbox" name="water_consumption" value="Flushing" id="water_flushing">
                 <label class="form-check-label" for="water_flushing">Flushing</label>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="water_consumption" value="Fountain" id="water_fountain">
                 <label class="form-check-label" for="water_fountain">Fountain</label>
@@ -1533,6 +1745,8 @@
                 <input class="form-check-input" type="checkbox" name="water_consumption" value="Other_consumption" id="water_consumption_other">
                 <label class="form-check-label" for="water_consumption_other">Other (Specify)</label>
               </div>
+            </div>
+            <div class="col-12">
               <input type="text" class="form-control mt-2" id="water_consumption_other_specify" name="water_consumption_other_specify" placeholder="Specify other consumption" />
             </div>
           </div>
@@ -1545,46 +1759,48 @@
       <div class="col-md-6">
         <div class="info-box h-100">
           <h6>Water Usage Details</h6>
-          <div class="row g-2">
-            <div class="col-md-6">
+          <div class="row g-2">            <div class="col-md-6">
               <label class="form-label" for="daily_water_demand">Daily Water Demand</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="daily_water_demand" name="daily_water_demand" min="0" required />
+                <input type="text" class="form-control number-format" id="daily_water_demand" name="daily_water_demand" inputmode="decimal" required />
                 <span class="input-group-text">KLD</span>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div>            <div class="col-md-6">
               <label class="form-label" for="stp_capacity">STP Capacity</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="stp_capacity" name="stp_capacity" min="0" />
+                <input type="text" class="form-control number-format" id="stp_capacity" name="stp_capacity" inputmode="decimal" />
                 <span class="input-group-text">KLD</span>
               </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="treated_water_reuse_irrigation">Treated Water Reuse - Irrigation</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="treated_water_reuse_irrigation" name="treated_water_reuse_irrigation" min="0" max="100" />
+                <input type="number" class="form-control" id="treated_water_reuse_irrigation" name="treated_water_reuse_irrigation" min="0" max="100" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="treated_water_reuse_flushing">Treated Water Reuse - Flushing</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="treated_water_reuse_flushing" name="treated_water_reuse_flushing" min="0" max="100" />
+                <input type="number" class="form-control" id="treated_water_reuse_flushing" name="treated_water_reuse_flushing" min="0" max="100" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="treated_water_reuse_drain">Treated Water Reuse - Drain Out</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="treated_water_reuse_drain" name="treated_water_reuse_drain" min="0" max="100" />
+                <input type="number" class="form-control" id="treated_water_reuse_drain" name="treated_water_reuse_drain" min="0" max="100" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="treated_water_reuse_other">Treated Water Reuse - Other</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="treated_water_reuse_other" name="treated_water_reuse_other" min="0" max="100" />
+                <input type="number" class="form-control" id="treated_water_reuse_other" name="treated_water_reuse_other" min="0" max="100" 
+                       oninput="enforceMinMax(this)" onblur="enforceMinMax(this)" />
                 <span class="input-group-text">%</span>
               </div>
             </div>
@@ -1687,7 +1903,7 @@
                 <div id="recharge_area_input" class="col-12" style="display: none;">
                   <label class="form-label" for="rainwater_recharge_area">Area of Recharge Pit</label>
                   <div class="input-group">
-                    <input type="number" class="form-control" id="rainwater_recharge_area" name="rainwater_recharge_area" placeholder="Enter area" min="0" step="0.01">
+                    <input type="text" class="form-control number-format" id="rainwater_recharge_area" name="rainwater_recharge_area" placeholder="Enter area" inputmode="decimal">
                     <span class="input-group-text">m²</span>
                   </div>
                 </div>
@@ -1696,7 +1912,7 @@
                 <div id="storage_volume_input" class="col-12" style="display: none;">
                   <label class="form-label" for="rainwater_storage_volume">Volume of Storage Tank</label>
                   <div class="input-group">
-                    <input type="number" class="form-control" id="rainwater_storage_volume" name="rainwater_storage_volume" placeholder="Enter volume" min="0" step="0.01">
+                    <input type="text" class="form-control number-format" id="rainwater_storage_volume" name="rainwater_storage_volume" placeholder="Enter volume" inputmode="decimal">
                     <span class="input-group-text">L</span>
                   </div>
                 </div>
@@ -1732,19 +1948,19 @@
           </div>
         </div>
       </div> 
-    </div>    <!-- Row 3: Water Fixtures -->
-    <div class="row g-3">
-      <div class="col-md-12">
-        <div class="info-box">
+    </div>    <!-- Row 3: Water Fixtures - Optimized Layout -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-8">
+        <div class="info-box h-100">
           <h6>Water Fixtures</h6>
           <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered table-hover table-sm">
               <thead>
                 <tr>
-                  <th style="width: 25%;">Water Fixture</th>
-                  <th style="width: 25%;">Type</th>
-                  <th style="width: 25%;"># of Fixtures</th>
-                  <th style="width: 25%;">Flow Rate (LPM)</th>
+                  <th style="width: 30%;">Water Fixture</th>
+                  <th style="width: 30%;">Type</th>
+                  <th style="width: 20%;"># of Fixtures</th>
+                  <th style="width: 20%;">Flow Rate (LPM)</th>
                 </tr>
               </thead>
               <tbody id="waterFixturesTableBody">
@@ -1815,27 +2031,7 @@
                   </td>
                   <td>
                     <input type="number" name="urinals_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
-                  </td>
-                </tr>
-                <tr>
-                  <td rowspan="2">Toilet WC</td>
-                  <td>Single Flush</td>
-                  <td>
-                    <input type="number" name="toilet_single_flush_qty" class="form-control form-control-sm" min="0" placeholder="Quantity">
-                  </td>
-                  <td>
-                    <input type="number" name="toilet_single_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate (LPM)">
-                  </td>
-                </tr>
-                <tr>
-                  <td>Dual Flush</td>
-                  <td>
-                    <input type="number" name="toilet_dual_flush_qty" class="form-control form-control-sm" min="0" placeholder="Quantity">
-                  </td>
-                  <td>
-                    <input type="number" name="toilet_dual_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate (LPM)">
-                  </td>
-                </tr>
+                  </td>                </tr>
                 <tr>
                   <td>Other Water Fixtures</td>
                   <td>
@@ -1854,20 +2050,67 @@
                   <td>
                     <input type="number" name="other_fixtures_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
                   </td>
-                </tr>
-              </tbody>            </table>
+                </tr>              </tbody>            </table>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Row 4: Water Meters -->
-    <div class="row g-3">
+      </div>      
+      <!-- Toilet WC Section - Compact -->
+      <div class="col-md-4">
+        <div class="info-box h-100 d-flex flex-column">
+          <h6>Toilet WC</h6>
+          <div class="table-responsive flex-grow-1">
+            <table class="table table-bordered table-hover table-sm h-100">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Qty</th>
+                  <th>Flow (LPF)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Single Flush</strong></td>
+                  <td>
+                    <input type="number" name="toilet_single_flush_qty" class="form-control form-control-sm" min="0" placeholder="Qty">
+                  </td>
+                  <td>
+                    <input type="number" name="toilet_single_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow">
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Dual Flush</strong></td>
+                  <td>
+                    <input type="number" name="toilet_dual_flush_qty" class="form-control form-control-sm" min="0" placeholder="Qty">
+                  </td>
+                  <td>
+                    <input type="number" name="toilet_dual_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow">
+                  </td>
+                </tr>                <!-- Additional spacing rows for height matching -->
+                <tr style="height: 42px; border: none;">
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                </tr>
+                <tr style="height: 42px; border: none;">
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                </tr>
+                <tr style="height: 42px; border: none;">
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                  <td style="border: none; background: transparent;">&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>      </div>
+    </div>    <!-- Row 4: Water Meters -->
+    <div class="row g-3 mb-3">
       <div class="col-md-6">
         <div class="info-box h-100">
-          <h6>Water Meter at Supply Sources</h6>
-          <div class="row g-2">
-            <div class="col-12">
+          <h6>Water Meter at Supply Sources</h6>          <div class="row g-2">
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="meter_supply_municipal" value="Municipal" id="meter_supply_municipal">
                 <label class="form-check-label" for="meter_supply_municipal">Municipal</label>
@@ -1884,6 +2127,8 @@
                 <input class="form-check-input" type="checkbox" name="meter_supply_rainwater" value="Rainwater" id="meter_supply_rainwater">
                 <label class="form-check-label" for="meter_supply_rainwater">Rainwater</label>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="meter_supply_recycled" value="Recycled" id="meter_supply_recycled">
                 <label class="form-check-label" for="meter_supply_recycled">Recycled/Treated Water</label>
@@ -1896,6 +2141,8 @@
                 <input class="form-check-input" type="checkbox" name="meter_supply_other" value="Other" id="meter_supply_other">
                 <label class="form-check-label" for="meter_supply_other">Other (Specify)</label>
               </div>
+            </div>
+            <div class="col-12">
               <input type="text" class="form-control mt-2" id="meter_supply_other_specify" name="meter_supply_other_specify" placeholder="Specify other supply source with meter" />
             </div>
           </div>
@@ -1904,9 +2151,8 @@
 
       <div class="col-md-6">
         <div class="info-box h-100">
-          <h6>Water Meter at Consumption End</h6>
-          <div class="row g-2">
-            <div class="col-12">
+          <h6>Water Meter at Consumption End</h6>          <div class="row g-2">
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="meter_consumption_irrigation" value="Irrigation" id="meter_consumption_irrigation">
                 <label class="form-check-label" for="meter_consumption_irrigation">Irrigation</label>
@@ -1931,6 +2177,8 @@
                 <input class="form-check-input" type="checkbox" name="meter_consumption_flushing" value="Flushing" id="meter_consumption_flushing">
                 <label class="form-check-label" for="meter_consumption_flushing">Flushing</label>
               </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="meter_consumption_fountain" value="Fountain" id="meter_consumption_fountain">
                 <label class="form-check-label" for="meter_consumption_fountain">Fountain</label>
@@ -1951,9 +2199,11 @@
                 <input class="form-check-input" type="checkbox" name="meter_consumption_other" value="Other_consumption" id="meter_consumption_other">
                 <label class="form-check-label" for="meter_consumption_other">Other (Specify)</label>
               </div>
+            </div>
+            <div class="col-12">
               <input type="text" class="form-control mt-2" id="meter_consumption_other_specify" name="meter_consumption_other_specify" placeholder="Specify other consumption end with meter" />
             </div>
-          </div>        </div>
+          </div></div>
       </div>
     </div>
   </div>
@@ -1992,7 +2242,7 @@
             <div class="col-md-6">
               <label class="form-label" for="composting_capacity">Composting Capacity</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="composting_capacity" name="composting_capacity" min="0" />
+                <input type="text" class="form-control number-format" id="composting_capacity" name="composting_capacity" inputmode="decimal" />
                 <span class="input-group-text">kg/day</span>
               </div>
             </div>
@@ -2010,7 +2260,7 @@
             <div class="col-md-6">
               <label class="form-label" for="biogas_capacity">Biogas Plant Capacity</label>
               <div class="input-group">
-                <input type="number" class="form-control" id="biogas_capacity" name="biogas_capacity" min="0" />
+                <input type="text" class="form-control number-format" id="biogas_capacity" name="biogas_capacity" inputmode="decimal" />
                 <span class="input-group-text">m³/day</span>
               </div>
             </div>
@@ -2134,28 +2384,27 @@
       </div>
     </div>
 
-    <!-- Row 3: Total Waste Generation Details -->
-    <div class="row g-3">
+    <!-- Row 3: Total Waste Generation Details -->    <div class="row g-3 mb-3">
       <div class="col-md-12">
         <div class="info-box">
           <h6>Total Waste Generation (kgs) Annually</h6>
           <div class="row g-2">
             <div class="col-md-3">
               <label class="form-label" for="total_waste_generated">Total Waste Generated</label>
-              <input type="number" class="form-control" id="total_waste_generated" name="total_waste_generated" min="0" />
+              <input type="text" class="form-control number-format" id="total_waste_generated" name="total_waste_generated" inputmode="decimal" />
             </div>
             <div class="col-md-3">
               <label class="form-label" for="total_waste_recycled">Total Waste Recycled</label>
-              <input type="number" class="form-control" id="total_waste_recycled" name="total_waste_recycled" min="0" />
+              <input type="text" class="form-control number-format" id="total_waste_recycled" name="total_waste_recycled" inputmode="decimal" />
             </div>
             <div class="col-md-3">
               <label class="form-label" for="total_waste_reused">Total Waste Reused</label>
-              <input type="number" class="form-control" id="total_waste_reused" name="total_waste_reused" min="0" />
+              <input type="text" class="form-control number-format" id="total_waste_reused" name="total_waste_reused" inputmode="decimal" />
             </div>
           </div>
           
           <!-- Organic/Biodegradable Waste -->
-          <h6 class="mt-3">Organic/Biodegradable Waste</h6>
+          <h6 class="mt-3">Organic/Biodegradable Waste(kg)</h6>
           <div class="row g-2">
             <div class="col-md-3">
               <label class="form-label" for="kitchen_waste">Kitchen Waste</label>
@@ -2172,7 +2421,7 @@
           </div>
 
           <!-- Recyclable Waste -->
-          <h6 class="mt-3">Recyclable Waste</h6>
+          <h6 class="mt-3">Recyclable Waste(kg)</h6>
           <div class="row g-2">
             <div class="col-md-2">
               <label class="form-label" for="waste_paper">Waste Paper/Cardboard</label>
@@ -2201,7 +2450,7 @@
           </div>
 
           <!-- Hazardous Waste -->
-          <h6 class="mt-3">Hazardous Waste</h6>
+          <h6 class="mt-3">Hazardous Waste(kg)</h6>
           <div class="row g-2">
             <div class="col-md-2">
               <label class="form-label" for="burnt_oil">Burnt Oil</label>
@@ -2230,7 +2479,7 @@
           </div>
 
           <!-- E-Waste and Other Categories -->
-          <h6 class="mt-3">E-Waste & Other Categories</h6>
+          <h6 class="mt-3">E-Waste & Other Categories(kg)</h6>
           <div class="row g-2">
             <div class="col-md-3">
               <label class="form-label" for="e_waste">E-Waste</label>
@@ -2264,7 +2513,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="guestRoomsCheck"> 
+        <input type="checkbox" id="guestRoomsCheck" name="guest_rooms_check"> 
         Guest Rooms
       </div>
       <div class="subcategory-content">
@@ -2284,8 +2533,8 @@
               <td><input type="text" class="number-format" name="guest_rooms_area[]" style="width: 80px;"></td>
               <td>
                 <select name="guest_rooms_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="guest_rooms_occupancy[]" style="width: 60px;"></td>
@@ -2301,7 +2550,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="vipSuitesCheck"> 
+        <input type="checkbox" id="vipSuitesCheck" name="vip_suites_check"> 
         Presidential/VIP Suites
       </div>
       <div class="subcategory-content">
@@ -2327,7 +2576,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="servicedApartmentsCheck"> 
+        <input type="checkbox" id="servicedApartmentsCheck" name="serviced_apartments_check"> 
         Serviced Apartments or Extended Stay Units
       </div>
       <div class="subcategory-content">
@@ -2347,8 +2596,8 @@
               <td><input type="text" class="number-format" name="serviced_apartments_area[]" style="width: 80px;"></td>
               <td>
                 <select name="serviced_apartments_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="serviced_apartments_occupancy[]" style="width: 60px;"></td>
@@ -2370,7 +2619,7 @@
     <div class="subcategory tree-level-2">
       
       <div class="subcategory-header">
-        <input type="checkbox" id="banquetCheck"> 
+        <input type="checkbox" id="banquetCheck" name="banquet_check"> 
         Banquet Halls
       </div>
       <div class="subcategory-content">
@@ -2389,8 +2638,8 @@
               <td><input type="text" class="number-format" name="banquet_area[]" style="width: 80px;"></td>
               <td>
                 <select name="banquet_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="banquet_capacity[]" style="width: 60px;"></td>
@@ -2407,7 +2656,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="outdoorLawnCheck"> 
+        <input type="checkbox" id="outdoorLawnCheck" name="outdoor_lawn_check"> 
         Outdoor event Lawns
       </div>
       <div class="subcategory-content">
@@ -2427,8 +2676,8 @@
               <td><input type="text" class="number-format" name="outdoor_lawn_area[]" style="width: 80px;"></td>
               <td>
                 <select name="outdoor_lawn_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="outdoor_lawn_events[]" style="width: 60px;"></td>
@@ -2444,7 +2693,7 @@
   
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="conferenceCheck"> 
+        <input type="checkbox" id="conferenceCheck" name="conference_check"> 
         Conference Rooms/Boardrooms
       </div>
       <div class="subcategory-content">
@@ -2464,8 +2713,8 @@
               <td><input type="text" class="number-format" name="conference_area[]" style="width: 80px;"></td>
               <td>
                 <select name="conference_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="conference_hours[]" style="width: 80px;"></td>
@@ -2481,7 +2730,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="businessCentreCheck"> 
+        <input type="checkbox" id="businessCentreCheck" name="business_centre_check"> 
         Business Centre
       </div>
       <div class="subcategory-content">
@@ -2514,7 +2763,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="restaurantCheck"> 
+        <input type="checkbox" id="restaurantCheck" name="restaurant_check"> 
         All Day Dining Restaurants
       </div>
       <div class="subcategory-content">
@@ -2542,7 +2791,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="specialityRestaurantCheck"> 
+        <input type="checkbox" id="specialityRestaurantCheck" name="speciality_restaurant_check"> 
         Speciality Restaurants
       </div>
       <div class="subcategory-content">
@@ -2570,7 +2819,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="cafeCheck"> 
+        <input type="checkbox" id="cafeCheck" name="cafe_check"> 
         Cafe/Coffee Shop
       </div>
       <div class="subcategory-content">
@@ -2598,7 +2847,7 @@
     
     <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="kitchenCheck"> 
+        <input type="checkbox" id="kitchenCheck" name="kitchen_check"> 
         Kitchen
       </div>
       <div class="subcategory-content">
@@ -2616,8 +2865,8 @@
               <td><input type="text" class="number-format" name="kitchen_area[]" style="width: 80px;"></td>
               <td>
                 <select name="kitchen_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="kitchen_meals[]" style="width: 60px;"></td>
@@ -2630,10 +2879,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="staffCafetariaCheck"> 
+        <input type="checkbox" id="staffCafetariaCheck" name="staff_cafetaria_check"> 
         Staff Cafetaria
       </div>
       <div class="subcategory-content">
@@ -2651,8 +2899,8 @@
               <td><input type="text" class="number-format" name="staff_cafetaria_area[]" style="width: 80px;"></td>
               <td>
                 <select name="staff_cafetaria_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="staff_cafetaria_meals[]" style="width: 60px;"></td>
@@ -2670,10 +2918,9 @@
     <!-- Wellness and Recreation Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('wellnessRecreation')">Wellness and Recreation</div>
     <div id="wellnessRecreation" class="subcategory-content" style="display: block;">
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="spaCheck"> 
+        <input type="checkbox" id="spaCheck" name="spa_check"> 
         Spa/Massage Rooms
       </div>
       <div class="subcategory-content">
@@ -2696,10 +2943,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="salonCheck"> 
+        <input type="checkbox" id="salonCheck" name="salon_check"> 
         Salon
       </div>
       <div class="subcategory-content">
@@ -2716,8 +2962,8 @@
               <td><input type="text" class="number-format" name="salon_area[]" style="width: 80px;"></td>
               <td>
                 <select name="salon_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td class="action-buttons">
@@ -2729,10 +2975,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="gymCheck"> 
+        <input type="checkbox" id="gymCheck" name="gym_check"> 
         Fitness center/gym
       </div>
       <div class="subcategory-content">
@@ -2749,8 +2994,8 @@
               <td><input type="text" class="number-format" name="gym_area[]" style="width: 80px;"></td>
               <td>
                 <select name="gym_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td class="action-buttons">
@@ -2762,10 +3007,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="multipurposeCheck"> 
+        <input type="checkbox" id="multipurposeCheck" name="multipurpose_check"> 
         Multipurpose Space
       </div>
       <div class="subcategory-content">
@@ -2782,8 +3026,8 @@
               <td><input type="text" class="number-format" name="multipurpose_area[]" style="width: 80px;"></td>
               <td>
                 <select name="multipurpose_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td class="action-buttons">
@@ -2795,10 +3039,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="indoorPoolCheck"> 
+        <input type="checkbox" id="indoorPoolCheck" name="indoor_pool_check"> 
         Swimming Pool (Indoor)
       </div>
       <div class="subcategory-content">
@@ -2815,8 +3058,8 @@
               <td><input type="text" class="number-format" name="indoor_pool_area[]" style="width: 80px;"></td>
               <td>
                 <select name="indoor_pool_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td class="action-buttons">
@@ -2828,10 +3071,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="outdoorPoolCheck"> 
+        <input type="checkbox" id="outdoorPoolCheck" name="outdoor_pool_check"> 
         Swimming Pool (Outdoor)
       </div>
       <div class="subcategory-content">
@@ -2848,8 +3090,8 @@
               <td><input type="text" class="number-format" name="outdoor_pool_area[]" style="width: 80px;"></td>
               <td>
                 <select name="outdoor_pool_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td class="action-buttons">
@@ -2866,10 +3108,9 @@
     <!-- BOH & Service Areas Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('bohServiceAreas')">BOH & Service Areas</div>
     <div id="bohServiceAreas" class="subcategory-content" style="display: block;">
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="laundryCheck"> 
+        <input type="checkbox" id="laundryCheck" name="laundry_check"> 
         Laundry Rooms
       </div>
       <div class="subcategory-content">
@@ -2887,8 +3128,8 @@
               <td><input type="text" class="number-format" name="laundry_area[]" style="width: 80px;"></td>
               <td>
                 <select name="laundry_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="laundry_kg[]" style="width: 80px;"></td>
@@ -2900,10 +3141,9 @@
           </tbody>
         </table>
       </div>    </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="kitchenStoresCheck"> 
+        <input type="checkbox" id="kitchenStoresCheck" name="kitchen_stores_check"> 
         Kitchen Stores (dry store, cold storage, deep freezer, etc.)
       </div>
       <div class="subcategory-content">
@@ -2943,10 +3183,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="wasteHandlingCheck"> 
+        <input type="checkbox" id="wasteHandlingCheck" name="waste_handling_check"> 
         Waste Handling Area (segregation, composting, etc.)
       </div>
       <div class="subcategory-content">
@@ -2964,8 +3203,8 @@
               <td><input type="text" class="number-format" name="waste_handling_area[]" style="width: 80px;"></td>
               <td>
                 <select name="waste_handling_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td>
@@ -2984,10 +3223,9 @@
         </table>
       </div>
     </div>
-    
-    <div class="subcategory tree-level-2">
+      <div class="subcategory tree-level-2">
       <div class="subcategory-header">
-        <input type="checkbox" id="parkingCheck"> 
+        <input type="checkbox" id="parkingCheck" name="parking_check"> 
         Parking Basement
       </div>
       <div class="subcategory-content">
@@ -3006,8 +3244,8 @@
               <td><input type="text" class="number-format" name="parking_area[]" style="width: 80px;"></td>
               <td>
                 <select name="parking_area_unit[]">
-                  <option value="sqm">sq.m</option>
-                  <option value="sqft">sq.ft</option>
+                  <option value="sqm">m</option>
+                  <option value="sqft">ft</option>
                 </select>
               </td>
               <td><input type="text" class="number-format" name="parking_spaces[]" style="width: 60px;"></td>
@@ -3034,8 +3272,7 @@
 
   <!-- Equipment Information Section -->
   <div class="section-header category-header" onclick="toggleSection('equipmentInfo')">Equipment Information</div>
-  <div id="equipmentInfo" class="category-content" style="display: block !important;">
-    <div class="row g-3">
+  <div id="equipmentInfo" class="category-content" style="display: block !important;">    <div class="row g-3 mb-3">
       <div class="col-md-12">
         <div class="info-box">
           <h6>Equipment Information</h6>
@@ -3115,10 +3352,9 @@
   <!-- HVAC Systems Section -->
   <div class="section-header category-header" onclick="toggleSection('hvacSystems')">HVAC Systems</div>
   <div id="hvacSystems" class="category-content" style="display: block !important;">
-  
-  <!-- Chiller Section -->
+    <!-- Chiller Section -->
   <div class="subcategory-header">
-    <input type="checkbox" id="chillerCheck"> 
+    <input type="checkbox" id="chillerCheck" name="chiller_check"> 
     Chiller Details 
   </div>
   <div class="subcategory-content">
@@ -3364,14 +3600,175 @@
       }
       function removeChillerColumn(clickedIndex) {
         removeColumn(chillerCount, clickedIndex, 'chillerTableBody', 'chiller', 'Chiller')
-      }
+      }    </script>
+  </div>
+  
+  <!-- Pump Section -->
+  <div class="subcategory-header">
+    <input type="checkbox" id="pumpCheck" name="pump_check"> 
+    Pump Details (Primary/Secondary/Condenser/Boiler)
+  </div>
+  <div class="subcategory-content">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th class="fixed-col">Parameter</th>
+            <th class="pump-col tbl-col">
+              <div class="pump-header">
+                <span>Pump 1</span>
+                <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="removePumpColumn(1)" title="Remove Pump" disabled>-</button>
+              </div>
+            </th>
+            <th class="action-col">
+              <button type="button" class="btn btn-sm btn-success" onclick="addPumpColumn()" title="Add Pump">+</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="pumpTableBody">
+          <tr>
+            <td class="fixed-col">Type of Pump</td>
+            <td>
+              <select name="pump1_type" class="form-control form-control-sm">
+                <option value="">Select Type</option>
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="condenser">Condenser</option>
+                <option value="boiler">Boiler</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Year of Installation</td>
+            <td><input type="text" name="pump1_installation_year" class="form-control form-control-sm year-picker" readonly></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Capacity (kW/HP)</td>
+            <td>
+              <div class="input-group">
+                <input type="text" name="pump1_capacity" class="form-control form-control-sm number-format">
+                <select name="pump1_capacity_unit" class="form-select form-select-sm">
+                  <option value="kW">kW</option>
+                  <option value="HP">HP</option>
+                </select>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Actual Flow (LPM/GPM)</td>
+            <td>
+              <div class="input-group">
+                <input type="text" name="pump1_actual_flow" class="form-control form-control-sm number-format">
+                <select name="pump1_actual_flow_unit" class="form-select form-select-sm">
+                  <option value="LPM">LPM</option>
+                  <option value="GPM">GPM</option>
+                </select>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Rated Flow (LPM/GPM)</td>
+            <td>
+              <div class="input-group">
+                <input type="text" name="pump1_rated_flow" class="form-control form-control-sm number-format">
+                <select name="pump1_rated_flow_unit" class="form-select form-select-sm">
+                  <option value="LPM">LPM</option>
+                  <option value="GPM">GPM</option>
+                </select>
+              </div>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Head (m)</td>
+            <td><input type="text" name="pump1_head" class="form-control form-control-sm number-format"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">VFD/Non VFD</td>
+            <td>
+              <select name="pump1_vfd_status" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option value="VFD">VFD</option>
+                <option value="Non VFD">Non VFD</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Modulating Frequency Range (Min-Max Hz)</td>
+            <td><input type="text" name="pump1_frequency_range" class="form-control form-control-sm" placeholder="min-max"></td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Motor Rating</td>
+            <td>
+              <select name="pump1_motor_rating" class="form-control form-control-sm">
+                <option value="">Select Rating</option>
+                <option value="IE2">IE2</option>
+                <option value="IE3">IE3</option>
+                <option value="IE4">IE4</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">EC Motors</td>
+            <td>
+              <select name="pump1_ec_motors" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">BMS Integration</td>
+            <td>
+              <select name="pump1_bms_integration" class="form-control form-control-sm">
+                <option value="">Select</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+          <tr>
+            <td class="fixed-col">Type of Sensor for Modulation & Control</td>
+            <td>
+              <select name="pump1_sensor_type" class="form-control form-control-sm">
+                <option value="">Select Type</option>
+                <option value="DP">DP (Differential Pressure)</option>
+                <option value="Temperature">Temperature</option>
+                <option value="Flow">Flow</option>
+                <option value="Other">Other</option>
+              </select>
+            </td>
+            <td class="action-col"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
+    <script>
+      let pumpCount = 1;
+      function addPumpColumn() {
+        pumpCount = addTableColumn(pumpCount, 'pumpTableBody', 'pump', 'Pump');
+      }
+      function removePumpColumn(clickedIndex) {
+        pumpCount = removeColumn(pumpCount, clickedIndex, 'pumpTableBody', 'pump', 'Pump');
+      }
     </script>
   </div>
-
+  
   <!-- Cooling Tower in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="coolingTowerCheck"> 
+    <input type="checkbox" id="coolingTowerCheck" name="cooling_tower_check"> 
     Cooling Tower Details 
   </div>
   <div class="subcategory-content">
@@ -3579,10 +3976,22 @@
               <td class="action-col"></td>
             </tr>
         
-          
-        </tbody>
+            </tbody>
       </table>
-    </div>  </div>
+    </div>
+
+    <script>
+      let coolingTowerCount = 1;
+
+      function addCoolingTowerColumn() {
+        coolingTowerCount = addTableColumn(coolingTowerCount, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower');
+      }
+
+      function removeCoolingTowerColumn(clickedIndex) {
+        coolingTowerCount = removeColumn(coolingTowerCount, clickedIndex, 'coolingTowerTableBody', 'coolingTower', 'Cooling Tower');
+      }
+    </script>
+  </div>
   <!--  Cooling Tower in chillers Section (Nikunj)-->
 
   <!-- Treated Fresh Air Unit in chillers Section (Nikunj) -->
@@ -3771,9 +4180,8 @@
     </script>
   </div>
   <!--  Treated Fresh Air Unit in chillers Section (Nikunj)-->
-
   <div class="subcategory-header">
-    <input type="checkbox" id="airhandlingunitCheck"> 
+    <input type="checkbox" id="airhandlingunitCheck" name="airhandlingunit_check"> 
     Air Handling Unit Details 
   </div>
   <div class="subcategory-content">
@@ -3916,10 +4324,9 @@
       }
     </script>
   </div>
-
   <!-- Fan Coil Unit in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="fancoilunitCheck"> 
+    <input type="checkbox" id="fancoilunitCheck" name="fancoilunit_check"> 
     Fan Coil Unit Details 
   </div>
   <div class="subcategory-content">
@@ -4047,10 +4454,9 @@
     </script>
   </div>
   <!--  Fan Coil Unit in chillers Section (Nikunj)-->
-
   <!-- DX/VRF/Packaged unit in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="packedunitCheck"> 
+    <input type="checkbox" id="packedunitCheck" name="packedunit_check"> 
     DX/VRF/Packaged Unit Details 
   </div>
   <div class="subcategory-content">
@@ -4152,7 +4558,7 @@
   <!--  DX/VRF/Packaged unit in chillers Section (Nikunj)-->
 <!-- Split unit in chillers Section (Nikunj) -->
 <div class="subcategory-header">
-  <input type="checkbox" id="splitunitCheck"> 
+  <input type="checkbox" id="splitunitCheck" name="splitunit_check"> 
   Split Unit Details 
 </div>
 <div class="subcategory-content">
@@ -4246,10 +4652,9 @@
   </script>
 </div>
 <!--  Split unit in chillers Section (Nikunj)-->
-
  <!-- Air Washer/Scrubber in chillers Section (Nikunj) -->
  <div class="subcategory-header">
-  <input type="checkbox" id="airwasherCheck"> 
+  <input type="checkbox" id="airwasherCheck" name="airwasher_check"> 
   Air Washer/Scrubber Details 
 </div>
 <div class="subcategory-content">
@@ -4382,10 +4787,9 @@
   </script>
 </div>
 <!-- Air Washer/Scrubber in chillers Section (Nikunj)-->
-
   <!-- Heat pump in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="heatpumpCheck"> 
+    <input type="checkbox" id="heatpumpCheck" name="heatpump_check"> 
     Heat Pump Details 
   </div>
   <div class="subcategory-content">
@@ -4498,10 +4902,9 @@
     </script>
   </div>
   <!-- heat pump in chillers Section (Nikunj)-->
-
   <!-- Boiler in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="boilerCheck"> 
+    <input type="checkbox" id="boilerCheck" name="boiler_check"> 
     Boiler Details 
   </div>
   <div class="subcategory-content">
@@ -4658,9 +5061,8 @@ document.addEventListener('DOMContentLoaded', function() {
   </div>
   <!-- Boiler in chillers Section (Nikunj)-->
   
-  
-  <div class="subcategory-header">
-    <input type="checkbox" id="solarhotwaterCheck">
+    <div class="subcategory-header">
+    <input type="checkbox" id="solarhotwaterCheck" name="solarhotwater_check">
     Solar Hot Water Details
   </div>
   <div class="subcategory-content">
@@ -4744,10 +5146,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     </script>
   </div>
-
   <!-- Fresh air/Exhaust air/Pressurization fan Section -->
   <div class="subcategory-header">
-    <input type="checkbox" id="FreshAirCheck"> 
+    <input type="checkbox" id="FreshAirCheck" name="fresh_air_check"> 
     Fresh air/Exhaust air/Pressurization fan Details 
   </div>
   <div class="subcategory-content">
@@ -4833,10 +5234,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     </script>
   </div>
-
   <!-- Cold rooms/Walk in chillers Section (Nikunj) -->
   <div class="subcategory-header">
-    <input type="checkbox" id="coldRoomCheck"> 
+    <input type="checkbox" id="coldRoomCheck" name="cold_room_check"> 
     Cold rooms/Walk in chillers Details 
   </div>
   <div class="subcategory-content">
@@ -6124,8 +6524,48 @@ $(document).ready(function() {
               }
             }
           });
-        }, 500);
-      });    }
+        }, 500);      });    }
+  </script>
+
+  <script>
+    // Function to enforce min and max values on number inputs
+    function enforceMinMax(input) {
+      const value = parseFloat(input.value);
+      const min = parseFloat(input.getAttribute('min'));
+      const max = parseFloat(input.getAttribute('max'));
+      
+      if (!isNaN(value) && !isNaN(min) && value < min) {
+        input.value = min;
+        input.style.borderColor = '#dc3545'; // Red border for invalid
+        setTimeout(() => input.style.borderColor = '', 2000); // Remove after 2 seconds
+      } else if (!isNaN(value) && !isNaN(max) && value > max) {
+        input.value = max;
+        input.style.borderColor = '#dc3545'; // Red border for invalid
+        setTimeout(() => input.style.borderColor = '', 2000); // Remove after 2 seconds      } else if (input.value !== '' && !isNaN(value)) {
+        input.style.borderColor = ''; // Reset border color for valid input
+      }
+    }
+      // Function to toggle Green Roof Area field based on radio selection
+    function toggleGreenRoofArea() {
+      const yesRadio = document.getElementById('green_roofs_yes');
+      const noRadio = document.getElementById('green_roofs_no');
+      const areaField = document.getElementById('green_roof_area');
+      const unitField = document.querySelector('select[name="green_roof_area_unit"]');
+      
+      if (yesRadio.checked) {
+        areaField.disabled = false;
+        unitField.disabled = false;
+        areaField.style.backgroundColor = ''; // Reset background
+        unitField.style.backgroundColor = ''; // Reset background
+        areaField.focus(); // Focus on the field when enabled
+      } else if (noRadio.checked) {
+        areaField.disabled = true;
+        unitField.disabled = true;
+        areaField.value = ''; // Clear the value when disabled
+        areaField.style.backgroundColor = '#e9ecef'; // Grey out when disabled
+        unitField.style.backgroundColor = '#e9ecef'; // Grey out when disabled
+      }
+    }
   </script>
 
   <script>
@@ -6176,11 +6616,14 @@ $(document).ready(function() {
       $('.year-picker').off('click').on('click', function() {
         $(this).datepicker('show');
       });
-    }
-
-    // Initialize on document ready
+    }    // Initialize on document ready
     $(document).ready(function() {
       initializeYearPickers();
+      
+      // Initialize number formatting
+      if (typeof initNumberFormatting === 'function') {
+        initNumberFormatting();
+      }
       
       // Reinitialize year pickers when new columns are added
       $(document).on('columnAdded', function() {
