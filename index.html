@@ -12,8 +12,8 @@
   <link
     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
     rel="stylesheet"
-  />
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  />  <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- <link rel="stylesheet" href="style.css"> -->
   
   <style>    /* Custom styles for mobile responsiveness and form styling */
@@ -563,10 +563,31 @@
         padding: 4px 2px;
         font-size: 0.75rem;
       }
-      
-      .input-table th {
+        .input-table th {
         font-size: 0.7rem;
       }
+    }
+
+    /* Year Picker Styles */
+    .year-picker-icon {
+      cursor: pointer;
+      background-color: #f8f9fa;
+      border-color: #dee2e6;
+    }
+    
+    .year-picker-icon:hover {
+      background-color: #e9ecef;
+    }
+    
+    .year-picker {
+      cursor: pointer;
+    }
+    
+    /* Hide datepicker elements we don't need for year-only selection */
+    .ui-datepicker-calendar,
+    .ui-datepicker-month,
+    .ui-datepicker-close {
+      display: none !important;
     }
   </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -660,22 +681,51 @@
                 <option value="Ginger">Ginger</option>
               </select>
             </div>
+             <div class="col-md-4">
+              <label class="form-label" for="type_of_facility">Type of facility</label>
+              <select class="form-select" id="type_of_facility" name="type_of_facility">
+                <option value="">Select facility</option>
+                <option value="Resort">Resort</option>
+                <option value="Non Resort">Non Resort</option>
+                
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label" for="facility_rating">facility rating</label>
+              <select class="form-select" id="facility_rating" name="facility_rating">
+                <option value="">Select rating</option>
+                <option value="one_star">1 star</option>
+                <option value="two_star">2 star</option>
+                <option value="three_star">3 star</option>
+                <option value="four_star">4 star</option>
+                <option value="five_star">5 star</option>
+                
+              </select>
+            </div>
             <div class="col-md-4">
               <label class="form-label" for="ownership">Ownership</label>
               <select class="form-select" id="ownership" name="ownership" required>
                 <option value="">Please select</option>
                 <option>Owned</option><option>Leased</option><option>Managed</option>
-              </select>
+              </select>            </div>            <div class="col-md-4">
+              <label class="form-label" for="construction_date">Year of Construction</label>
+              <div class="input-group">
+                <input type="text" class="form-control year-picker" id="construction_date" name="construction_date" placeholder="Select Year" readonly required />
+                <span class="input-group-text year-picker-icon" data-target="#construction_date"><i class="fas fa-calendar-alt"></i></span>
+              </div>
             </div>            <div class="col-md-4">
-              <label class="form-label" for="construction_date">Years of Construction</label>
-              <input type="date" class="form-control" id="construction_date" name="construction_date" required />
-            </div>            <div class="col-md-4">
-              <label class="form-label" for="renovation_date">Last Renovation</label>
-              <input type="date" class="form-control" id="renovation_date" name="renovation_date" />
+              <label class="form-label" for="renovation_date">Last Renovation Year</label>
+              <div class="input-group">
+                <input type="text" class="form-control year-picker" id="renovation_date" name="renovation_date" placeholder="Select Year" readonly />
+                <span class="input-group-text year-picker-icon" data-target="#renovation_date"><i class="fas fa-calendar-alt"></i></span>
+              </div>
             </div>
             <div class="col-md-4">
-              <label class="form-label" for="last_audit_date">Last Audit Conducted</label>
-              <input type="date" class="form-control" id="last_audit_date" name="last_audit_date" />
+              <label class="form-label" for="last_audit_date">Last Audit Year</label>
+              <div class="input-group">
+                <input type="text" class="form-control year-picker" id="last_audit_date" name="last_audit_date" placeholder="Select Year" readonly />
+                <span class="input-group-text year-picker-icon" data-target="#last_audit_date"><i class="fas fa-calendar-alt"></i></span>
+              </div>
             </div>
           </div>
         </div>
@@ -1017,112 +1067,374 @@
       </div>
       <div class="col-md-6">
         <div class="info-box h-100">
-          <h6>Annual Energy Use (kWh) - Month-wise Breakdown</h6>
+          <h6>Energy Efficiency Measures</h6>
           <div class="row g-2">
-            <div class="col-md-6">
-              <label class="form-label" for="grid_electricity">Grid Electricity</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="grid_electricity" name="grid_electricity" min="0" />
-                <span class="input-group-text">kWh</span>
+            <div class="col-12">
+              <label class="form-label">LED Lighting Implementation</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="led_lighting" id="led_yes" value="Yes">
+                <label class="form-check-label" for="led_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="led_lighting" id="led_no" value="No">
+                <label class="form-check-label" for="led_no">No</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="led_lighting" id="led_partial" value="Partial">
+                <label class="form-check-label" for="led_partial">Partial</label>
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label" for="dg_electricity">DG Generated Electricity</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="dg_electricity" name="dg_electricity" min="0" />
-                <span class="input-group-text">kWh</span>
+            <div class="col-12">
+              <label class="form-label">Smart Building Management System (BMS)</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="bms_system" id="bms_yes" value="Yes">
+                <label class="form-check-label" for="bms_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="bms_system" id="bms_no" value="No">
+                <label class="form-check-label" for="bms_no">No</label>
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label" for="renewable_purchased">Renewable Energy - Purchased</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="renewable_purchased" name="renewable_purchased" min="0" />
-                <span class="input-group-text">kWh</span>
+            <div class="col-12">
+              <label class="form-label">Energy Monitoring System</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="energy_monitoring" id="monitoring_yes" value="Yes">
+                <label class="form-check-label" for="monitoring_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="energy_monitoring" id="monitoring_no" value="No">
+                <label class="form-check-label" for="monitoring_no">No</label>
               </div>
             </div>
-            <div class="col-md-6">
-              <label class="form-label" for="renewable_onsite">Renewable Energy - Onsite</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="renewable_onsite" name="renewable_onsite" min="0" />
-                <span class="input-group-text">kWh</span>
+            <div class="col-12">
+              <label class="form-label">Variable Frequency Drives (VFDs)</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vfd_system" id="vfd_yes" value="Yes">
+                <label class="form-check-label" for="vfd_yes">Yes</label>
               </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" for="electricity_laundry">Electricity - Laundry</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="electricity_laundry" name="electricity_laundry" min="0" />
-                <span class="input-group-text">kWh</span>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" for="electricity_kitchen">Electricity - Kitchen</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="electricity_kitchen" name="electricity_kitchen" min="0" />
-                <span class="input-group-text">kWh</span>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="vfd_system" id="vfd_no" value="No">
+                <label class="form-check-label" for="vfd_no">No</label>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Fuel Consumption Row -->
-    <div class="row g-3">
       <div class="col-md-12">
         <div class="info-box">
-          <h6>Fuel Consumption (Annual)</h6>
-          <div class="row g-2">
-            <div class="col-md-2">
-              <label class="form-label" for="dg_diesel">DG Diesel</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="dg_diesel" name="dg_diesel" min="0" />
-                <span class="input-group-text">L</span>
-              </div>
+          <h6>Annual Energy Use (kWh) - Month-wise Breakdown</h6>
+          
+          <!-- Year Selection -->
+          <div class="row g-2 mb-3">
+            <div class="col-md-3">
+              <label class="form-label" for="energy_year">Financial Year (April to March)</label>
+              <select class="form-control" id="energy_year" name="energy_year">
+                <option value="">Select Year</option>
+                <option value="2024-25">2024-25</option>
+                <option value="2023-24">2023-24</option>
+                <option value="2022-23">2022-23</option>
+                <option value="2021-22">2021-22</option>
+                <option value="2020-21">2020-21</option>
+              </select>
             </div>
-            <div class="col-md-2">
-              <label class="form-label" for="boiler_diesel">Boiler Diesel</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="boiler_diesel" name="boiler_diesel" min="0" />
-                <span class="input-group-text">L</span>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <label class="form-label" for="natural_gas">Natural Gas</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="natural_gas" name="natural_gas" min="0" />
-                <span class="input-group-text">m³</span>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <label class="form-label" for="lpg_png">LPG/PNG</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="lpg_png" name="lpg_png" min="0" />
-                <span class="input-group-text">kg</span>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <label class="form-label" for="chaff_fuel">Chaff fuel/Gel fuel</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="chaff_fuel" name="chaff_fuel" min="0" />
-                <span class="input-group-text">kg</span>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <label class="form-label" for="charcoal">Charcoal</label>
-              <div class="input-group">
-                <input type="number" class="form-control" id="charcoal" name="charcoal" min="0" />
-                <span class="input-group-text">kg</span>
-              </div>
-            </div>
-            <div class="col-md-12">
-              <label class="form-label" for="other_fuel">Other (Coal, Biodiesel, Wood etc.)</label>
-              <input type="text" class="form-control" id="other_fuel" name="other_fuel" placeholder="Specify fuel type and quantity" />
-            </div>
+          </div>
+
+          <!-- Month-wise Energy Consumption Table -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th style="min-width: 200px;">Energy Type</th>
+                  <th>Apr</th>
+                  <th>May</th>
+                  <th>Jun</th>
+                  <th>Jul</th>
+                  <th>Aug</th>
+                  <th>Sep</th>
+                  <th>Oct</th>
+                  <th>Nov</th>
+                  <th>Dec</th>
+                  <th>Jan</th>
+                  <th>Feb</th>
+                  <th>Mar</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Grid Electricity -->
+                <tr>
+                  <td><strong>Grid Electricity (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="grid_electricity_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="grid_electricity_total" readonly></td>
+                </tr>
+                
+                <!-- DG Generated Electricity -->
+                <tr>
+                  <td><strong>DG Generated Electricity (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_electricity_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="dg_electricity_total" readonly></td>
+                </tr>
+                
+                <!-- Renewable energy - purchased -->
+                <tr>
+                  <td><strong>Renewable Energy - Purchased (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_purchased_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="renewable_purchased_total" readonly></td>
+                </tr>
+                
+                <!-- Renewable energy - onsite -->
+                <tr>
+                  <td><strong>Renewable Energy - Onsite (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="renewable_onsite_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="renewable_onsite_total" readonly></td>
+                </tr>
+                
+                <!-- Electricity consumed by laundry -->
+                <tr>
+                  <td><strong>Electricity - Laundry (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_laundry_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="electricity_laundry_total" readonly></td>
+                </tr>
+                
+                <!-- Electricity consumed by kitchen -->
+                <tr>
+                  <td><strong>Electricity - Kitchen (kWh)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="electricity_kitchen_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="electricity_kitchen_total" readonly></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+       <div class="row g-3">
+      <div class="col-md-12">
+        <div class="info-box">
+          <h6>Fuel Consumption - Month-wise Breakdown</h6>
+          
+          <!-- Month-wise Fuel Consumption Table -->
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th style="min-width: 200px;">Fuel Type</th>
+                  <th>Apr</th>
+                  <th>May</th>
+                  <th>Jun</th>
+                  <th>Jul</th>
+                  <th>Aug</th>
+                  <th>Sep</th>
+                  <th>Oct</th>
+                  <th>Nov</th>
+                  <th>Dec</th>
+                  <th>Jan</th>
+                  <th>Feb</th>
+                  <th>Mar</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- DG Diesel -->
+                <tr>
+                  <td><strong>DG Diesel (L)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="dg_diesel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="dg_diesel_total" readonly></td>
+                </tr>
+                
+                <!-- Boiler Diesel -->
+                <tr>
+                  <td><strong>Boiler Diesel (L)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="boiler_diesel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="boiler_diesel_total" readonly></td>
+                </tr>
+                
+                <!-- Natural Gas -->
+                <tr>
+                  <td><strong>Natural Gas (m³)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="natural_gas_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="natural_gas_total" readonly></td>
+                </tr>
+                
+                <!-- LPG/PNG -->
+                <tr>
+                  <td><strong>LPG/PNG (kg)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="lpg_png_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="lpg_png_total" readonly></td>
+                </tr>
+                
+                <!-- Chaff fuel/Gel fuel -->
+                <tr>
+                  <td><strong>Chaff fuel/Gel fuel (kg)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="chaff_fuel_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="chaff_fuel_total" readonly></td>
+                </tr>
+                
+                <!-- Charcoal -->
+                <tr>
+                  <td><strong>Charcoal (kg)</strong></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_apr" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_may" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_jun" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_jul" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_aug" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_sep" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_oct" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_nov" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_dec" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_jan" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_feb" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm" name="charcoal_mar" min="0" step="0.01" onchange="calculateRowTotal(this)"></td>
+                  <td><input type="number" class="form-control form-control-sm bg-light" name="charcoal_total" readonly></td>
+                </tr>
+                
+                <!-- Other fuels -->
+                <tr>
+                  <td><strong>Other (Coal, Biodiesel, Wood etc.)</strong></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_apr" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_may" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_jun" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_jul" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_aug" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_sep" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_oct" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_nov" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_dec" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_jan" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_feb" placeholder="Type & Qty"></td>
+                  <td><input type="text" class="form-control form-control-sm" name="other_fuel_mar" placeholder="Type & Qty"></td>
+                  <td class="bg-light">-</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
-  </div>
+    </div>
+    
+
   <!-- Water Systems Section -->
   <div class="section-header category-header" onclick="toggleSection('waterSystems')">Water Management</div>
   <div id="waterSystems" class="category-content" style="display: block !important;">
@@ -1280,7 +1592,7 @@
         </div>
       </div>
 
-      <div class="col-md-6">
+      <!-- <div class="col-md-6">
         <div class="info-box h-100">
           <h6>Rainwater Harvesting & Water Saving</h6>
           <div class="row g-2">
@@ -1338,48 +1650,212 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> -->
+    <div class="col-md-6">
+        <div class="info-box h-100">
+          <h6>Rainwater Harvesting & Water Saving</h6>
+          <div class="row g-2">
+            <!-- Primary Rainwater Harvesting Question -->
+            <div class="col-12">
+              <label class="form-label">Rainwater Harvesting Available</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_available" id="rainwater_available_yes" value="Yes" onchange="toggleRainwaterOptions(this)">
+                <label class="form-check-label" for="rainwater_available_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="rainwater_available" id="rainwater_available_no" value="No" onchange="toggleRainwaterOptions(this)">
+                <label class="form-check-label" for="rainwater_available_no">No</label>
+              </div>
+            </div>
 
-    <!-- Row 3: Water Fixtures -->
+            <!-- Rainwater Harvesting Options (hidden by default) -->
+            <div id="rainwater_options" class="col-12" style="display: none;">
+              <div class="row g-2">
+                <div class="col-12">
+                  <label class="form-label">Type of Rainwater Harvesting</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rainwater_type" id="rainwater_recharge" value="Recharge" onchange="toggleRainwaterInputs(this)">
+                    <label class="form-check-label" for="rainwater_recharge">Recharge</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="rainwater_type" id="rainwater_storage" value="Storage" onchange="toggleRainwaterInputs(this)">
+                    <label class="form-check-label" for="rainwater_storage">Storage</label>
+                  </div>
+                </div>
+
+                <!-- Area input for Recharge (hidden by default) -->
+                <div id="recharge_area_input" class="col-12" style="display: none;">
+                  <label class="form-label" for="rainwater_recharge_area">Area of Recharge Pit</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="rainwater_recharge_area" name="rainwater_recharge_area" placeholder="Enter area" min="0" step="0.01">
+                    <span class="input-group-text">m²</span>
+                  </div>
+                </div>
+
+                <!-- Volume input for Storage (hidden by default) -->
+                <div id="storage_volume_input" class="col-12" style="display: none;">
+                  <label class="form-label" for="rainwater_storage_volume">Volume of Storage Tank</label>
+                  <div class="input-group">
+                    <input type="number" class="form-control" id="rainwater_storage_volume" name="rainwater_storage_volume" placeholder="Enter volume" min="0" step="0.01">
+                    <span class="input-group-text">L</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">RO Plant Rejected Water Reused</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ro_rejected_reused" id="ro_rejected_yes" value="Yes">
+                <label class="form-check-label" for="ro_rejected_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="ro_rejected_reused" id="ro_rejected_no" value="No">
+                <label class="form-check-label" for="ro_rejected_no">No</label>
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="ro_rejected_end_use">If Yes, Specify End Use</label>
+              <input type="text" class="form-control" id="ro_rejected_end_use" name="ro_rejected_end_use" placeholder="Specify end use" />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Water-saving Fixtures/Aerators in Use</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_saving_fixtures" id="water_saving_yes" value="Yes">
+                <label class="form-check-label" for="water_saving_yes">Yes</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="water_saving_fixtures" id="water_saving_no" value="No">
+                <label class="form-check-label" for="water_saving_no">No</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div>    <!-- Row 3: Water Fixtures -->
     <div class="row g-3">
       <div class="col-md-12">
         <div class="info-box">
           <h6>Water Fixtures</h6>
-          <div class="row g-2">
-            <div class="col-md-2">
-              <label class="form-label">Bathroom Faucets</label>
-              <input type="number" class="form-control mb-1" name="bathroom_faucets_qty" placeholder="No. of fixtures" />
-              <input type="number" class="form-control" name="bathroom_faucets_flow" placeholder="Flow rate (LPM)" />
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">Kitchen Faucets</label>
-              <input type="number" class="form-control mb-1" name="kitchen_faucets_qty" placeholder="No. of fixtures" />
-              <input type="number" class="form-control" name="kitchen_faucets_flow" placeholder="Flow rate (LPM)" />
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">Showers</label>
-              <input type="number" class="form-control mb-1" name="showers_qty" placeholder="No. of fixtures" />
-              <input type="number" class="form-control" name="showers_flow" placeholder="Flow rate (LPM)" />
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">Urinals</label>
-              <input type="number" class="form-control mb-1" name="urinals_qty" placeholder="No. of fixtures" />
-              <input type="number" class="form-control" name="urinals_flow" placeholder="Flow rate (LPM)" />
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">Other Fixtures</label>
-              <input type="number" class="form-control mb-1" name="other_fixtures_qty" placeholder="No. of fixtures" />
-              <input type="number" class="form-control" name="other_fixtures_flow" placeholder="Flow rate (LPM)" />
-            </div>
-            <div class="col-md-2">
-              <label class="form-label">Toilet WC Type</label>
-              <select class="form-select mb-1" name="toilet_wc_type">
-                <option value="">Select Type</option>
-                <option value="single">Single Flush</option>
-                <option value="dual">Dual Flush</option>
-              </select>
-              <input type="number" class="form-control mb-1" name="toilet_wc_qty" placeholder="Quantity" />            </div>
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Water Fixture</th>
+                  <th style="width: 25%;">Type</th>
+                  <th style="width: 25%;"># of Fixtures</th>
+                  <th style="width: 25%;">Flow Rate (LPM)</th>
+                </tr>
+              </thead>
+              <tbody id="waterFixturesTableBody">
+                <tr>
+                  <td>Bathroom Faucets</td>
+                  <td>
+                    <select name="bathroom_faucets_type" class="form-control form-control-sm">
+                      <option value="">Select Type</option>
+                      <option value="standard">Standard</option>
+                      <option value="low_flow">Low Flow</option>
+                      <option value="sensor">Sensor/Automatic</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="bathroom_faucets_qty" class="form-control form-control-sm" min="0" placeholder="Number of fixtures">
+                  </td>
+                  <td>
+                    <input type="number" name="bathroom_faucets_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Kitchen Faucets</td>
+                  <td>
+                    <select name="kitchen_faucets_type" class="form-control form-control-sm">
+                      <option value="">Select Type</option>
+                      <option value="standard">Standard</option>
+                      <option value="low_flow">Low Flow</option>
+                      <option value="spray">Spray Type</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="kitchen_faucets_qty" class="form-control form-control-sm" min="0" placeholder="Number of fixtures">
+                  </td>
+                  <td>
+                    <input type="number" name="kitchen_faucets_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Showers</td>
+                  <td>
+                    <select name="showers_type" class="form-control form-control-sm">
+                      <option value="">Select Type</option>
+                      <option value="standard">Standard</option>
+                      <option value="low_flow">Low Flow</option>
+                      <option value="rain">Rain Shower</option>
+                      <option value="handheld">Handheld</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="showers_qty" class="form-control form-control-sm" min="0" placeholder="Number of fixtures">
+                  </td>
+                  <td>
+                    <input type="number" name="showers_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
+                  </td>
+                </tr>                <tr>
+                  <td>Urinals</td>
+                  <td>
+                    <select name="urinals_type" class="form-control form-control-sm">
+                      <option value="">Select Type</option>
+                      <option value="standard">Standard</option>
+                      <option value="low_flow">Low Flow</option>
+                      <option value="waterless">Waterless</option>
+                      <option value="sensor">Sensor/Automatic</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="urinals_qty" class="form-control form-control-sm" min="0" placeholder="Number of fixtures">
+                  </td>
+                  <td>
+                    <input type="number" name="urinals_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
+                  </td>
+                </tr>
+                <tr>
+                  <td rowspan="2">Toilet WC</td>
+                  <td>Single Flush</td>
+                  <td>
+                    <input type="number" name="toilet_single_flush_qty" class="form-control form-control-sm" min="0" placeholder="Quantity">
+                  </td>
+                  <td>
+                    <input type="number" name="toilet_single_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate (LPM)">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Dual Flush</td>
+                  <td>
+                    <input type="number" name="toilet_dual_flush_qty" class="form-control form-control-sm" min="0" placeholder="Quantity">
+                  </td>
+                  <td>
+                    <input type="number" name="toilet_dual_flush_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate (LPM)">
+                  </td>
+                </tr>
+                <tr>
+                  <td>Other Water Fixtures</td>
+                  <td>
+                    <select name="other_fixtures_type" class="form-control form-control-sm">
+                      <option value="">Select Type</option>
+                      <option value="drinking_fountain">Drinking Fountain</option>
+                      <option value="utility_sink">Utility Sink</option>
+                      <option value="mop_sink">Mop Sink</option>
+                      <option value="outdoor_faucet">Outdoor Faucet</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input type="number" name="other_fixtures_qty" class="form-control form-control-sm" min="0" placeholder="Number of fixtures">
+                  </td>
+                  <td>
+                    <input type="number" name="other_fixtures_flow" class="form-control form-control-sm" min="0" step="0.1" placeholder="Flow rate">
+                  </td>
+                </tr>
+              </tbody>            </table>
           </div>
         </div>
       </div>
@@ -1780,7 +2256,7 @@
 
   <!-- Space Information Section -->
   <div class="section-header category-header" onclick="toggleSection('spaceInfo')">Space Information</div>
-  <div id="spaceInfo" class="category-content" style="display: block !important;">
+  <div id="spaceInfo" class="category-content" style="display: block;">
     
     <!-- Guest Accommodation Areas Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('guestAccommodation')">Guest Accommodation Areas</div>
@@ -1882,8 +2358,10 @@
               </td>
             </tr>
           </tbody>
-        </table>
-      </div>    </div>
+        </table>      </div>
+    </div>
+    
+    </div> <!-- Close Guest Accommodation Areas subcategory -->
     
     <!-- Meeting and Event Spaces Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('meetingEventSpaces')">Meeting and Event Spaces</div>
@@ -2025,8 +2503,10 @@
               </td>
             </tr>
           </tbody>
-        </table>
-      </div>    </div>
+        </table>      </div>
+    </div>
+    
+    </div> <!-- Close Meeting and Event Spaces subcategory -->
     
     <!-- Food and Beverage Outlets Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('foodBeverageOutlets')">Food and Beverage Outlets</div>
@@ -2182,8 +2662,10 @@
               </td>
             </tr>
           </tbody>
-        </table>
-      </div>    </div>
+        </table>      </div>
+    </div>
+    
+    </div> <!-- Close Food and Beverage Outlets subcategory -->
     
     <!-- Wellness and Recreation Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('wellnessRecreation')">Wellness and Recreation</div>
@@ -2376,8 +2858,10 @@
               </td>
             </tr>
           </tbody>
-        </table>
-      </div>    </div>
+        </table>      </div>
+    </div>
+    
+    </div> <!-- Close Wellness and Recreation subcategory -->
     
     <!-- BOH & Service Areas Subsection -->
     <div class="subcategory-header" onclick="toggleSubcategory('bohServiceAreas')">BOH & Service Areas</div>
@@ -2539,10 +3023,13 @@
                 <button type="button" class="remove-row-btn" onclick="removeRow(this)">−</button>
                 <button type="button" class="remove-row-btn" onclick="addRow('parkingTableBody', 'parking')" style="color: #4CAF50;">+</button>
               </td>
-            </tr>
-          </tbody>        </table>
+            </tr>          </tbody>
+        </table>
       </div>
     </div>
+    
+    </div> <!-- Close BOH & Service Areas subcategory -->
+    
   </div> <!-- Close Space Information section -->
 
   <!-- Equipment Information Section -->
@@ -4539,10 +5026,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="row form-row">
       <!-- <div class="form-label required">Occupancy Details</div> -->
-      <div class="form-inputs">
-        <div class="input-group">
+      <div class="form-inputs">        <div class="input-group">
           <span>Year of Installation</span>
-          <input type="text" name="renewable_installYear" class="form-control form-control-sm year-picker" readonly>
+          <div class="d-flex">
+            <input type="text" name="renewable_installYear" class="form-control form-control-sm year-picker" readonly>
+            <span class="input-group-text year-picker-icon" data-target="input[name='renewable_installYear']" style="margin-left: 2px;"><i class="fas fa-calendar-alt"></i></span>
+          </div>
         </div>
 
         <div class="input-group">
@@ -4605,10 +5094,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     <div class="row form-row">
       <!-- <div class="form-label required">Occupancy Details</div> -->
-      <div class="form-inputs">
-        <div class="input-group">
+      <div class="form-inputs">        <div class="input-group">
           <span>Year of Installation</span>
-          <input type="text" name="dishwasher_installYear" class="form-control form-control-sm year-picker" readonly>
+          <div class="d-flex">
+            <input type="text" name="dishwasher_installYear" class="form-control form-control-sm year-picker" readonly>
+            <span class="input-group-text year-picker-icon" data-target="input[name='dishwasher_installYear']" style="margin-left: 2px;"><i class="fas fa-calendar-alt"></i></span>
+          </div>
         </div>
 
         <div class="input-group">
@@ -5065,10 +5556,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // Initialize collapsible elements
-  function initializeCollapsibles() {
-    // Set up category headers
+  function initializeCollapsibles() {    // Set up category headers
     const categoryHeaders = document.querySelectorAll('.category-header');
     categoryHeaders.forEach(header => {
+      // Skip headers that already have onclick handlers
+      if (header.getAttribute('onclick')) {
+        return;
+      }
+      
       // Add click handler
       header.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -5630,12 +6125,68 @@ $(document).ready(function() {
             }
           });
         }, 500);
+      });    }
+  </script>
+
+  <script>
+    // Initialize Year Picker functionality
+    function initializeYearPickers() {
+      $('.year-picker').each(function() {
+        if (!$(this).hasClass('hasYearPicker')) {
+          $(this).addClass('hasYearPicker').datepicker({
+            changeMonth: false,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'yy',
+            yearRange: '1900:2100',
+            minViewMode: 2,
+            beforeShow: function(input, inst) {
+              setTimeout(function() {
+                $(".ui-datepicker-month, .ui-datepicker-calendar").hide();
+                $(".ui-datepicker-close").hide();
+              }, 0);
+            },
+            onClose: function(dateText, inst) {
+              const year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+              if (year) {
+                $(this).val(year).trigger('change');
+              }
+            }
+          });
+        }
+      });      // Handle calendar icon clicks
+      $('.year-picker-icon').off('click').on('click', function() {
+        const target = $(this).data('target');
+        let targetElement;
+        
+        if (target.startsWith('#')) {
+          // For ID selectors
+          targetElement = $(target);
+        } else {
+          // For other selectors like input[name='field_name']
+          targetElement = $(target);
+        }
+        
+        if (targetElement.length > 0) {
+          targetElement.datepicker('show');
+        }
+      });
+
+      // For table cells with year-picker fields, handle clicks
+      $('.year-picker').off('click').on('click', function() {
+        $(this).datepicker('show');
       });
     }
+
+    // Initialize on document ready
+    $(document).ready(function() {
+      initializeYearPickers();
+      
+      // Reinitialize year pickers when new columns are added
+      $(document).on('columnAdded', function() {
+        initializeYearPickers();
+      });
+    });
   </script>
 </body>
 </html>
-
-
-
-
