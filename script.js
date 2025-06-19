@@ -28,6 +28,7 @@ function getRemoveFunctionName(ComponentText) {
     "Air Handling Unit": 'removeAirHandlingUnitColumn',
     "Treated Fresh Air Unit": 'removeTreatedFreshAirUnitColumn',
     "Cooling Tower": 'removeCoolingTowerColumn',
+    "Pump": 'removePumpColumn',
 
     // Add more mappings as needed
   };
@@ -290,10 +291,9 @@ function initNumberFormatting() {
     "green_roofs_no": { 
       'No': { enable: [], disable: ['green_roofs_area'] },
     },
-    
-    'chiller1_vfd_status': {
-      'Yes': { enable: ['chiller1_vfd_modulation'], disable: [] },
-      'No': { enable: [], disable: ['chiller1_vfd_modulation'] },
+      'chiller1_vfd_status': {
+      'Yes': { enable: ['chiller1_modulatingFrequency'], disable: [] },
+      'No': { enable: [], disable: ['chiller1_modulatingFrequency'] },
     },
     'chiller1_insulation_damage': {
       'Yes': { enable: ['chiller1_insulation_damage_pct'], disable: [] },
@@ -347,8 +347,17 @@ function initNumberFormatting() {
     },
     "freshair1_vfd": {
     'Yes': { enable: ['freshair1_modulatingFrequencyRange'], disable: [] },
-    'No' : { enable: [], disable: ['freshair1_modulatingFrequencyRange'] }
+    'No' : { enable: [], disable: ['freshair1_modulatingFrequencyRange'] }    },    "pump1_vfd_status": {   
+      'Yes': { enable: ['pump1_modulatingFrequencyRange'], disable: [] }, 
+      'No': { enable: [], disable: ['pump1_modulatingFrequencyRange'] },
+    },    "pump_vfd": {
+      'yes': { enable: ['pump_modulatingFrequencyRange'], disable: [] },
+      'no': { enable: [], disable: ['pump_modulatingFrequencyRange'] },
     },
+    "stpb_vfd": {
+      'yes': { enable: ['stpb_modulatingFrequencyRange'], disable: [] },
+      'no': { enable: [], disable: ['stpb_modulatingFrequencyRange'] },
+    }
 
     // 'controllerID': {
     //   'value1': { enable: ['targetId1','targetId2'], disable: ['targetId3'] },
@@ -895,3 +904,8 @@ function createToastContainer() {
   document.body.appendChild(container);
   return container;
 }
+
+// Initialize dependencies when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  initDependencies();
+});
