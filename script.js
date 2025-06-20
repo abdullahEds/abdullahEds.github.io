@@ -53,13 +53,11 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       <span>${ComponentText} ${newColNumber}</span>
       <button type="button" class="btn btn-sm btn-danger btn-remove-col" onclick="${getRemoveFunctionName(ComponentText)}(${existingCols})" title="Remove ${ComponentText}">-</button>
       </div>
-  `;
-
-  // Insert before the action column (last column)
+  `;  // Insert before the action column (last column)
   headerRow.insertBefore(newHeader, headerRow.lastElementChild);
 
-  // Enable remove buttons if this is the second column
-  if (newColNumber === 2) {
+  // Enable remove buttons when there's more than one column
+  if (newColNumber >= 2) {
       const removeButtons = headerRow.querySelectorAll('.btn-remove-col');
       removeButtons.forEach(btn => btn.disabled = false);
   }
@@ -73,19 +71,29 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       const selects = newCell.getElementsByTagName('select');
         // regex to match any existing numeric suffix
         const idRegex = new RegExp(`(${componentTypeID})(\\d+)_`, 'g');
-      
-      for (let input of inputs) {
+        for (let input of inputs) {
       input.name = input.name.replace(idRegex, `$1${newColNumber}_`);
       input.value = '';
       input.id = input.id ? input.id.replace(idRegex, `$1${newColNumber}_`) : '';
       if (input.type === 'checkbox') {
           input.checked = false;
       }
-      // Remove any existing datepicker classes and data
-      if ($(input).hasClass('hasDatepicker')) {
-          $(input).removeClass('hasDatepicker');
-          $(input).removeAttr('id');
-          $(input).datepicker('destroy');
+      
+      // Clean up any existing datepicker (both jQuery UI and Bootstrap DatePicker)
+      const $input = $(input);
+      if ($input.hasClass('hasDatepicker')) {
+          $input.removeClass('hasDatepicker');
+          $input.datepicker('destroy');
+      }
+      if ($input.hasClass('datepicker-initialized')) {
+          $input.removeClass('datepicker-initialized');
+          $input.datepicker('remove');
+      }
+      
+      // Remove datepicker wrapper if it exists
+      if ($input.parent().hasClass('year-picker-group')) {
+          $input.unwrap();
+          $input.siblings('.year-picker-icon').remove();
       }
       }
       
@@ -93,54 +101,55 @@ function addTableColumn(colCount, tbodyID, componentTypeID, ComponentText){
       select.name = select.name.replace(idRegex, `$1${newColNumber}_`);
       select.id = select.id ? select.id.replace(idRegex, `$1${newColNumber}_`) : '';
       select.selectedIndex = 0;
-      }
-      
-      rows[i].insertBefore(newCell, rows[i].lastElementChild);
-  }
-
-    // Reinitialize year pickers and VFD fields for the new column
+      }      
+      rows[i].insertBefore(newCell, rows[i].lastElementChild);    }    // Reinitialize year pickers and VFD fields for the new column
   $(document).trigger('columnAdded');
-  $('[name^="'+componentTypeID + newColNumber + '_vfd_status"]').each(function() {
-      updateVFDModulationField(this);
-  });
+  
+  // Call specific year picker initialization for new columns
+  if (typeof window.initializeYearPickersForNewColumn === 'function') {
+    window.initializeYearPickersForNewColumn();
+  }
+  
+  // VFD fields are handled by the dependency system
   
   // Return the updated column count
   return newColNumber;
-  // if(componentTypeID === 'boiler') {
-  //   setTimeout(function() {
-  //     $('.boiler-insulation-select[data-col="'+colCount+'"]').on('change', function() {
-  //       var col = $(this).data('col');
-  //       var show = $(this).val() === 'Yes';
-  //       $('.boiler-damage-row[data-col="'+col+'"]').toggle(show);
-  //     }).trigger('change');
-  //   }, 10);
-  // }
-  // // Attach boiler insulation damage dependency logic for the first column
-  // if (colCount === 1) {
-  //   document.addEventListener('DOMContentLoaded', function() {
-  //     console.log('Attaching boiler insulation damage dependency logic');
-  //     $('.boiler-insulation-select[data-col="1"]').on('change', function() {
-  //       var show = $(this).val() === 'Yes';
-  //       $('.boiler-damage-row[data-col="1"]').toggle(show);
-  //     }).trigger('change');
-  //   });
-  // }
-  return colCount;
 
 }
 
 
 //remove col function
 function removeColumn(colCount,clickedIndex,tbodyID, componentTypeID, ComponentText) {
-      if (colCount <= 1) return;
+      console.log('removeColumn called:', {colCount, clickedIndex, tbodyID, componentTypeID, ComponentText});
+      
+      // Don't allow removal if it would leave us with no columns
+      if (colCount <= 1) {
+        console.log('Cannot remove: only one column left, colCount =', colCount);
+        return colCount;
+      }
       
       const tbody = document.getElementById(tbodyID);
+      if (!tbody) {
+        console.error('tbody not found with ID:', tbodyID);
+        return colCount;
+      }
+      
       const headerRow = tbody.previousElementSibling.rows[0];
+      if (!headerRow) {
+        console.error('headerRow not found');
+        return colCount;
+      }
+      
+      console.log('tbody found:', tbody);
+      console.log('headerRow found:', headerRow);
+      console.log('headerRow cells length:', headerRow.cells.length);
       
       // The clicked column is at clickedIndex + 1 (accounting for the fixed column)
       const colToRemove = clickedIndex + 1;
+      console.log('Column to remove index:', colToRemove);
       
       if (colToRemove >= 1 && colToRemove < headerRow.cells.length - 1) {
+        console.log('Removing column at index:', colToRemove);
         // Remove header
         headerRow.removeChild(headerRow.cells[colToRemove]);
         
@@ -152,7 +161,9 @@ function removeColumn(colCount,clickedIndex,tbodyID, componentTypeID, ComponentT
           }
         }
         
-        // Update chiller numbers in headers and adjust event handlers
+        colCount--;
+        
+        // Update column numbers in headers and adjust event handlers
         for (let i = 1; i < headerRow.cells.length - 1; i++) {
           const header = headerRow.cells[i];
           header.querySelector('span').textContent = `${ComponentText} ${i}`;
@@ -165,9 +176,7 @@ function removeColumn(colCount,clickedIndex,tbodyID, componentTypeID, ComponentT
           }
         }
         
-        colCount--;
-        
-        // Disable remove buttons if only one column left
+        // Disable all remove buttons if only one column left
         if (colCount === 1) {
           const removeButtons = headerRow.querySelectorAll('.btn-remove-col');
           removeButtons.forEach(btn => btn.disabled = true);
@@ -466,6 +475,7 @@ function removeChillerColumn(index) {
 function removeBoilerColumn(index) {
   boilerCount = removeColumn(boilerCount, index, 'boilerTableBody', 'boiler', 'Boiler');
 }
+
 
 function removeHeatPumpColumn(index) {
   heatPumpCount = removeColumn(heatPumpCount, index, 'heatPumpTableBody', 'heatpump', 'Heat Pump');
